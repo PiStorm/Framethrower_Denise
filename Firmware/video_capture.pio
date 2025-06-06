@@ -5,13 +5,13 @@
 pull
 mov X, OSR
 
-wait 0 gpio 20
-wait 1 gpio 20
+wait 0 gpio 20 [5]
+wait 1 gpio 20 [5]
 irq set 0
 
 pixelloop:
     wait 0 gpio 22
-    wait 1 gpio 22 [2]
+    wait 1 gpio 22 [5]
     in pins, 32
     jmp x-- pixelloop
 .wrap 

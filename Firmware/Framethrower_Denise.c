@@ -1,13 +1,3 @@
-// Copyright (c) 2024 Raspberry Pi (Trading) Ltd.
-
-// Generate DVI output using the command expander and TMDS encoder in HSTX.
-
-// This example requires an external digital video connector connected to
-// GPIOs 12 through 19 (the HSTX-capable GPIOs) with appropriate
-// current-limiting resistors, e.g. 270 ohms. The pinout used in this example
-// matches the Pico DVI Sock board, which can be soldered onto a Pico 2:
-// https://github.com/Wren6991/Pico-DVI-Sock
-
 #pragma GCC optimize("O3")
 
 #include "hardware/dma.h"
@@ -448,7 +438,6 @@ int main(void)
     c = dma_channel_get_default_config(DMACH_PING);
     channel_config_set_chain_to(&c, DMACH_PONG);
     channel_config_set_dreq(&c, DREQ_HSTX);
-    // channel_config_set_high_priority(&c,1);
     dma_channel_configure(
         DMACH_PING,
         &c,
@@ -456,9 +445,9 @@ int main(void)
         vblank_line_vsync_off,
         count_of(vblank_line_vsync_off),
         false);
+
     c = dma_channel_get_default_config(DMACH_PONG);
     channel_config_set_chain_to(&c, DMACH_PING);
-    // channel_config_set_high_priority(&c,1);
     channel_config_set_dreq(&c, DREQ_HSTX);
     dma_channel_configure(
         DMACH_PONG,
@@ -484,10 +473,10 @@ int main(void)
 
     // pio->input_sync_bypass = (1u<<22); //bypass clock sync
 
-    for (uint8_t i = 0; i < 12; i++)
-    {
-        pio->input_sync_bypass = (1u<<i); //bypass clock sync
-    }
+    //for (uint8_t i = 0; i < 12; i++)
+    //{
+    //    pio->input_sync_bypass = (1u<<i); //bypass sync
+    //}
 
     pio_set_irq0_source_enabled(pio,pis_interrupt0, true);
     pio_interrupt_clear(pio, sm);
@@ -500,13 +489,5 @@ int main(void)
     while (1)
     {
         __wfi();
-        /*
-        if (pio_interrupt_triggered)
-            gpio_put(28,1); 
-        else 
-            gpio_put(28,0);
-
-        pio_interrupt_triggered = false;
-        */
     }
 }

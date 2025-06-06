@@ -88,6 +88,7 @@ target_compile_definitions(Framethrower_Denise PRIVATE
         USB_CLK_HZ=140000000
 )
 
+set_property(TARGET Framethrower_Denise APPEND_STRING PROPERTY LINK_FLAGS "-Wl,--print-memory-usage")
 
 pico_add_extra_outputs(Framethrower_Denise)
 
