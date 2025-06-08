@@ -8,10 +8,19 @@ mov X, OSR
 wait 0 gpio 20 [5]
 wait 1 gpio 20 [5]
 irq set 0
+wait 0 gpio 22
+
+;pixelloop:
+;    wait 0 gpio 22
+;    wait 1 gpio 22 [5]
+;    in pins, 32
+;    jmp x-- pixelloop
+;.wrap 
 
 pixelloop:
-    wait 0 gpio 22
-    wait 1 gpio 22 [5]
+    wait 1 gpio 22[4]
+    in pins, 32
+    wait 0 gpio 22[4]
     in pins, 32
     jmp x-- pixelloop
 .wrap 

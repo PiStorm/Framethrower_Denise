@@ -753,12 +753,8 @@ Discarded input sections
                 0x00000000      0x114 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
  .text.set_sys_clock_48mhz
                 0x00000000       0xbc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
- .text.set_sys_clock_pll
-                0x00000000      0x184 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
  .text.check_sys_clock_hz
-                0x00000000      0x158 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
- .text.check_sys_clock_khz
-                0x00000000      0x19c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
+                0x00000000      0x154 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
  .rodata.CSWTCH.25
                 0x00000000       0x2c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
  .rodata.gpin0_src
@@ -2496,7 +2492,7 @@ LOAD C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/1
 .flash_begin    0x10000000        0x0
                 0x10000000                        __flash_binary_start = .
 
-.text           0x10000000     0x2554
+.text           0x10000000     0x28c4
                 0x10000000                        __logical_binary_start = .
  *(.vectors)
  .vectors       0x10000000      0x124 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
@@ -2585,250 +2581,257 @@ LOAD C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/1
  .text.frame_dummy
                 0x10000218       0x24 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtbegin.o
  .text.core1_entry
-                0x1000023c       0x74 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
+                0x1000023c       0x84 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
                 0x1000023c                core1_entry
  .text.startup.main
-                0x100002b0      0x2ac CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
-                0x100002b0                main
+                0x100002c0      0x2e4 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
+                0x100002c0                main
  .text.gpio_set_function
-                0x1000055c       0x3c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
-                0x1000055c                gpio_set_function
+                0x100005a4       0x3c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
+                0x100005a4                gpio_set_function
  .text.gpio_set_input_hysteresis_enabled
-                0x10000598       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
-                0x10000598                gpio_set_input_hysteresis_enabled
+                0x100005e0       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
+                0x100005e0                gpio_set_input_hysteresis_enabled
  .text.gpio_init
-                0x100005b8       0x48 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
-                0x100005b8                gpio_init
- .text.panic    0x10000600       0x30 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
-                0x10000600                panic
+                0x10000600       0x48 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
+                0x10000600                gpio_init
+ .text.panic    0x10000648       0x30 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
+                0x10000648                panic
  .text.hw_claim_lock
-                0x10000630       0x24 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
-                0x10000630                hw_claim_lock
+                0x10000678       0x24 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
+                0x10000678                hw_claim_lock
  .text.hw_claim_unlock
-                0x10000654       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
-                0x10000654                hw_claim_unlock
+                0x1000069c       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
+                0x1000069c                hw_claim_unlock
  .text.hw_claim_or_assert
-                0x10000668       0x58 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
-                0x10000668                hw_claim_or_assert
+                0x100006b0       0x58 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
+                0x100006b0                hw_claim_or_assert
  .text.hw_claim_unused_from_range
-                0x100006c0       0x80 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
-                0x100006c0                hw_claim_unused_from_range
+                0x10000708       0x80 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
+                0x10000708                hw_claim_unused_from_range
  .text.next_striped_spin_lock_num
-                0x10000740       0x18 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
-                0x10000740                next_striped_spin_lock_num
+                0x10000788       0x18 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
+                0x10000788                next_striped_spin_lock_num
  .text.spinlock_set_extexclall
-                0x10000758       0x10 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
+                0x100007a0       0x10 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
  .text.spin_locks_reset
-                0x10000768       0x18 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
-                0x10000768                spin_locks_reset
+                0x100007b0       0x18 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
+                0x100007b0                spin_locks_reset
  .text.runtime_init_per_core_irq_priorities
-                0x10000780       0x40 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
-                0x10000780                runtime_init_per_core_irq_priorities
+                0x100007c8       0x40 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
+                0x100007c8                runtime_init_per_core_irq_priorities
  .text.irq_set_enabled
-                0x100007c0       0x2c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
-                0x100007c0                irq_set_enabled
+                0x10000808       0x2c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
+                0x10000808                irq_set_enabled
  .text.irq_is_enabled
-                0x100007ec       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
-                0x100007ec                irq_is_enabled
+                0x10000834       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
+                0x10000834                irq_is_enabled
  .text.irq_set_exclusive_handler
-                0x1000080c       0x60 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
-                0x1000080c                irq_set_exclusive_handler
+                0x10000854       0x60 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
+                0x10000854                irq_set_exclusive_handler
  .text.lock_init
-                0x1000086c        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
-                0x1000086c                lock_init
+                0x100008b4        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
+                0x100008b4                lock_init
  .text.runtime_init_mutex
-                0x10000878       0x4c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
-                0x10000878                runtime_init_mutex
+                0x100008c0       0x4c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
+                0x100008c0                runtime_init_mutex
  .text.sleep_until_callback
-                0x100008c4       0x3c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+                0x1000090c       0x3c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
  .text.alarm_pool_irq_handler
-                0x10000900      0x2f0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+                0x10000948      0x2f0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
  .text.runtime_init_default_alarm_pool
-                0x10000bf0      0x100 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
-                0x10000bf0                runtime_init_default_alarm_pool
+                0x10000c38      0x100 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+                0x10000c38                runtime_init_default_alarm_pool
  .text.alarm_pool_add_alarm_at_force_in_context
-                0x10000cf0       0xc8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
-                0x10000cf0                alarm_pool_add_alarm_at_force_in_context
+                0x10000d38       0xc8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+                0x10000d38                alarm_pool_add_alarm_at_force_in_context
  .text.alarm_pool_cancel_alarm
-                0x10000db8       0x80 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
-                0x10000db8                alarm_pool_cancel_alarm
+                0x10000e00       0x80 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+                0x10000e00                alarm_pool_cancel_alarm
  .text.sleep_ms
-                0x10000e38       0xdc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
-                0x10000e38                sleep_ms
+                0x10000e80       0xdc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+                0x10000e80                sleep_ms
  .text.best_effort_wfe_or_timeout
-                0x10000f14       0xd4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
-                0x10000f14                best_effort_wfe_or_timeout
+                0x10000f5c       0xd4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+                0x10000f5c                best_effort_wfe_or_timeout
  .text.timer_hardware_alarm_claim
-                0x10000fe8       0x24 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
-                0x10000fe8                timer_hardware_alarm_claim
- .text.timer_time_us_64
-                0x1000100c       0x10 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
-                0x1000100c                timer_time_us_64
- .text.time_us_64
-                0x1000101c       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
-                0x1000101c                time_us_64
- .text.busy_wait_until
                 0x10001030       0x24 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
-                0x10001030                busy_wait_until
+                0x10001030                timer_hardware_alarm_claim
+ .text.timer_time_us_64
+                0x10001054       0x10 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
+                0x10001054                timer_time_us_64
+ .text.time_us_64
+                0x10001064       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
+                0x10001064                time_us_64
+ .text.busy_wait_until
+                0x10001078       0x24 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
+                0x10001078                busy_wait_until
  .text.clock_configure_undivided
-                0x10001054       0xd0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
-                0x10001054                clock_configure_undivided
+                0x1000109c       0xd0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
+                0x1000109c                clock_configure_undivided
  .text.clock_get_hz
-                0x10001124        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
-                0x10001124                clock_get_hz
+                0x1000116c        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
+                0x1000116c                clock_get_hz
+ .text.set_sys_clock_pll
+                0x10001178      0x184 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
+                0x10001178                set_sys_clock_pll
+ .text.check_sys_clock_khz
+                0x100012fc      0x19c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
+                0x100012fc                check_sys_clock_khz
  .text.pll_init
-                0x10001130       0x8c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
-                0x10001130                pll_init
+                0x10001498       0x8c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
+                0x10001498                pll_init
  .text.vreg_set_voltage
-                0x100011bc       0x44 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
-                0x100011bc                vreg_set_voltage
+                0x10001524       0x44 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
+                0x10001524                vreg_set_voltage
  .text.vreg_disable_voltage_limit
-                0x10001200       0x10 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
-                0x10001200                vreg_disable_voltage_limit
+                0x10001568       0x10 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
+                0x10001568                vreg_disable_voltage_limit
  .text.tick_start
-                0x10001210       0x18 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
-                0x10001210                tick_start
+                0x10001578       0x18 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
+                0x10001578                tick_start
  .text.rom_func_lookup
-                0x10001228       0x18 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
-                0x10001228                rom_func_lookup
+                0x10001590       0x18 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
+                0x10001590                rom_func_lookup
  .text.runtime_init_bootrom_locking_enable
-                0x10001240       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
-                0x10001240                runtime_init_bootrom_locking_enable
+                0x100015a8       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
+                0x100015a8                runtime_init_bootrom_locking_enable
  .text.runtime_init_boot_locks_reset
-                0x10001254       0x1c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
-                0x10001254                runtime_init_boot_locks_reset
+                0x100015bc       0x1c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
+                0x100015bc                runtime_init_boot_locks_reset
  .text.xosc_init
-                0x10001270       0x30 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
-                0x10001270                xosc_init
+                0x100015d8       0x30 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
+                0x100015d8                xosc_init
  .text.first_per_core_initializer
-                0x100012a0        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+                0x10001608        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
  .text.hard_assertion_failure
-                0x100012a4        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
-                0x100012a4                hard_assertion_failure
+                0x1000160c        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+                0x1000160c                hard_assertion_failure
  .text.runtime_run_initializers
-                0x100012b0       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
-                0x100012b0                runtime_run_initializers
+                0x10001618       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+                0x10001618                runtime_run_initializers
  .text.runtime_run_per_core_initializers
-                0x100012d0       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
-                0x100012d0                runtime_run_per_core_initializers
+                0x10001638       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+                0x10001638                runtime_run_per_core_initializers
  .text.runtime_init_early_resets
-                0x100012f0       0x34 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x100012f0                runtime_init_early_resets
+                0x10001658       0x34 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x10001658                runtime_init_early_resets
  .text.runtime_init_usb_power_down
-                0x10001324       0x1c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x10001324                runtime_init_usb_power_down
+                0x1000168c       0x1c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x1000168c                runtime_init_usb_power_down
  .text.runtime_init_per_core_enable_coprocessors
-                0x10001340       0x1c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x10001340                runtime_init_per_core_enable_coprocessors
+                0x100016a8       0x1c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x100016a8                runtime_init_per_core_enable_coprocessors
  .text.runtime_init_post_clock_resets
-                0x1000135c       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x1000135c                runtime_init_post_clock_resets
+                0x100016c4       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x100016c4                runtime_init_post_clock_resets
  .text.runtime_init_bootrom_reset
-                0x1000137c       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x1000137c                runtime_init_bootrom_reset
+                0x100016e4       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x100016e4                runtime_init_bootrom_reset
  .text.runtime_init_per_core_bootrom_reset
-                0x10001390       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x10001390                runtime_init_per_core_bootrom_reset
+                0x100016f8       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x100016f8                runtime_init_per_core_bootrom_reset
  .text.runtime_init_spin_locks_reset
-                0x100013a4        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x100013a4                runtime_init_spin_locks_reset
+                0x1000170c        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x1000170c                runtime_init_spin_locks_reset
  .text.runtime_init_install_ram_vector_table
-                0x100013a8       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x100013a8                runtime_init_install_ram_vector_table
+                0x10001710       0x20 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x10001710                runtime_init_install_ram_vector_table
  .text.runtime_init_clocks
-                0x100013c8       0xd8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
-                0x100013c8                runtime_init_clocks
+                0x10001730       0xdc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
+                0x10001730                runtime_init_clocks
  .text.__wrap_malloc
-                0x100014a0       0x38 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
-                0x100014a0                __wrap_malloc
+                0x1000180c       0x38 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
+                0x1000180c                __wrap_malloc
  .text._out_char
-                0x100014d8        0x8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
+                0x10001844        0x8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
  .text.weak_raw_vprintf
-                0x100014e0       0x30 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
-                0x100014e0                weak_raw_vprintf
- .text._exit    0x10001510        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
-                0x10001510                _exit
- .text._sbrk    0x10001514       0x2c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
-                0x10001514                _sbrk
- .text.exit     0x10001540        0x8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
-                0x10001540                exit
+                0x1000184c       0x30 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
+                0x1000184c                weak_raw_vprintf
+ .text._exit    0x1000187c        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
+                0x1000187c                _exit
+ .text._sbrk    0x10001880       0x2c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
+                0x10001880                _sbrk
+ .text.exit     0x100018ac        0x8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
+                0x100018ac                exit
  .text.runtime_init
-                0x10001548       0x24 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
-                0x10001548                runtime_init
+                0x100018b4       0x24 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
+                0x100018b4                runtime_init
  .text.stdio_out_chars_no_crlf
-                0x1000156c        0x8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+                0x100018d8        0x8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
  .text.stdio_out_chars_crlf
-                0x10001574       0xb0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+                0x100018e0       0xb0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
  .text.stdio_put_string
-                0x10001624       0xec CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
-                0x10001624                stdio_put_string
+                0x10001990       0xec CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+                0x10001990                stdio_put_string
  .text.__wrap_putchar
-                0x10001710       0x84 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
-                0x10001710                __wrap_putchar
-                0x10001710                stdio_putchar
+                0x10001a7c       0x84 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+                0x10001a7c                __wrap_putchar
+                0x10001a7c                stdio_putchar
  .text.__wrap_puts
-                0x10001794       0x3c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
-                0x10001794                stdio_puts
-                0x10001794                __wrap_puts
+                0x10001b00       0x3c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+                0x10001b00                stdio_puts
+                0x10001b00                __wrap_puts
  .text.pio_claim_unused_sm
-                0x100017d0       0x38 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
-                0x100017d0                pio_claim_unused_sm
+                0x10001b3c       0x38 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+                0x10001b3c                pio_claim_unused_sm
  .text.pio_add_program
-                0x10001808       0xf4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
-                0x10001808                pio_add_program
+                0x10001b74       0xf4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+                0x10001b74                pio_add_program
  .text.pio_sm_set_consecutive_pindirs
-                0x100018fc       0x8c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
-                0x100018fc                pio_sm_set_consecutive_pindirs
+                0x10001c68       0x8c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+                0x10001c68                pio_sm_set_consecutive_pindirs
  .text.pio_sm_init
-                0x10001988       0xa8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
-                0x10001988                pio_sm_init
+                0x10001cf4       0xa8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+                0x10001cf4                pio_sm_init
  .text.core1_trampoline
-                0x10001a30        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
+                0x10001d9c        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
  .text.core1_wrapper
-                0x10001a34       0x10 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
-                0x10001a34                core1_wrapper
+                0x10001da0       0x10 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
+                0x10001da0                core1_wrapper
  .text.multicore_launch_core1_raw
-                0x10001a44       0x84 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
-                0x10001a44                multicore_launch_core1_raw
+                0x10001db0       0x84 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
+                0x10001db0                multicore_launch_core1_raw
  .text.multicore_launch_core1
-                0x10001ac8       0x48 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
-                0x10001ac8                multicore_launch_core1
- .text.malloc   0x10001b10       0x10 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-malloc.o)
-                0x10001b10                malloc
+                0x10001e34       0x48 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
+                0x10001e34                multicore_launch_core1
+ .text.malloc   0x10001e7c       0x10 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-malloc.o)
+                0x10001e7c                malloc
  .text._malloc_r
-                0x10001b20      0x578 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-mallocr.o)
-                0x10001b20                _malloc_r
+                0x10001e8c      0x578 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-mallocr.o)
+                0x10001e8c                _malloc_r
  .text.__malloc_lock
-                0x10002098        0xc C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-mlock.o)
-                0x10002098                __malloc_lock
+                0x10002404        0xc C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-mlock.o)
+                0x10002404                __malloc_lock
  .text.__malloc_unlock
-                0x100020a4        0xc C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-mlock.o)
-                0x100020a4                __malloc_unlock
- .text._sbrk_r  0x100020b0       0x24 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-sbrkr.o)
-                0x100020b0                _sbrk_r
- .text.__errno  0x100020d4        0xc C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-errno.o)
-                0x100020d4                __errno
+                0x10002410        0xc C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-mlock.o)
+                0x10002410                __malloc_unlock
+ .text._sbrk_r  0x1000241c       0x24 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-sbrkr.o)
+                0x1000241c                _sbrk_r
+ .text.__errno  0x10002440        0xc C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-errno.o)
+                0x10002440                __errno
  .text.__retarget_lock_acquire_recursive
-                0x100020e0        0x4 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-lock.o)
-                0x100020e0                __retarget_lock_acquire_recursive
+                0x1000244c        0x4 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-lock.o)
+                0x1000244c                __retarget_lock_acquire_recursive
  .text.__retarget_lock_release_recursive
-                0x100020e4        0x4 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-lock.o)
-                0x100020e4                __retarget_lock_release_recursive
- .text.sysconf  0x100020e8       0x1c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-sysconf.o)
-                0x100020e8                sysconf
- .text          0x10002104       0xec C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-memcpy.o)
-                0x10002104                memcpy
- .text.strlen   0x100021f0       0x5c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-strlen-stub.o)
-                0x100021f0                strlen
+                0x10002450        0x4 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-lock.o)
+                0x10002450                __retarget_lock_release_recursive
+ .text.sysconf  0x10002454       0x1c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-sysconf.o)
+                0x10002454                sysconf
+ .text          0x10002470       0xec C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-memcpy.o)
+                0x10002470                memcpy
+ .text.strlen   0x1000255c       0x5c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-strlen-stub.o)
+                0x1000255c                strlen
  .text._malloc_trim_r
-                0x1000224c       0xb8 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-freer.o)
-                0x1000224c                _malloc_trim_r
- .text._free_r  0x10002304      0x1e8 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-freer.o)
-                0x10002304                _free_r
+                0x100025b8       0xb8 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-freer.o)
+                0x100025b8                _malloc_trim_r
+ .text._free_r  0x10002670      0x1e8 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-freer.o)
+                0x10002670                _free_r
  *(.fini)
- .fini          0x100024ec        0x4 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crti.o
-                0x100024ec                _fini
- .fini.__stub   0x100024f0       0x20 linker stubs
+ .fini          0x10002858        0x4 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crti.o
+                0x10002858                _fini
+ *fill*         0x1000285c        0x4 
+ .fini.__stub   0x10002860       0x20 linker stubs
  *crtbegin.o(.ctors)
  *crtbegin?.o(.ctors)
  *(EXCLUDE_FILE(*crtend.o *crtend?.o) .ctors)
@@ -2839,171 +2842,173 @@ LOAD C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/1
  *(EXCLUDE_FILE(*crtend.o *crtend?.o) .dtors)
  *(SORT_BY_NAME(.dtors.*))
  *(.dtors)
-                0x10002510                        . = ALIGN (0x4)
-                0x10002510                        PROVIDE (__preinit_array_start = .)
+                0x10002880                        . = ALIGN (0x4)
+                0x10002880                        PROVIDE (__preinit_array_start = .)
  *(SORT_BY_NAME(.preinit_array.*))
  .preinit_array.00050
-                0x10002510        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x10002510                __pre_init_runtime_init_bootrom_reset
+                0x10002880        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x10002880                __pre_init_runtime_init_bootrom_reset
  .preinit_array.00100
-                0x10002514        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x10002514                __pre_init_runtime_init_early_resets
+                0x10002884        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x10002884                __pre_init_runtime_init_early_resets
  .preinit_array.00101
-                0x10002518        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x10002518                __pre_init_runtime_init_usb_power_down
+                0x10002888        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x10002888                __pre_init_runtime_init_usb_power_down
  .preinit_array.00500
-                0x1000251c        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x1000251c                __pre_init_runtime_init_clocks
+                0x1000288c        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x1000288c                __pre_init_runtime_init_clocks
  .preinit_array.00600
-                0x10002520        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x10002520                __pre_init_runtime_init_post_clock_resets
+                0x10002890        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x10002890                __pre_init_runtime_init_post_clock_resets
  .preinit_array.01000
-                0x10002524        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
-                0x10002524                __pre_init_runtime_init_boot_locks_reset
+                0x10002894        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
+                0x10002894                __pre_init_runtime_init_boot_locks_reset
  .preinit_array.01000
-                0x10002528        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x10002528                __pre_init_runtime_init_spin_locks_reset
+                0x10002898        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x10002898                __pre_init_runtime_init_spin_locks_reset
  .preinit_array.01010
-                0x1000252c        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
-                0x1000252c                __pre_init_runtime_init_bootrom_locking_enable
+                0x1000289c        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
+                0x1000289c                __pre_init_runtime_init_bootrom_locking_enable
  .preinit_array.01100
-                0x10002530        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
-                0x10002530                __pre_init_runtime_init_mutex
+                0x100028a0        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
+                0x100028a0                __pre_init_runtime_init_mutex
  .preinit_array.10080
-                0x10002534        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x10002534                __pre_init_runtime_init_install_ram_vector_table
+                0x100028a4        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x100028a4                __pre_init_runtime_init_install_ram_vector_table
  .preinit_array.11000
-                0x10002538        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
-                0x10002538                __pre_init_runtime_init_default_alarm_pool
+                0x100028a8        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+                0x100028a8                __pre_init_runtime_init_default_alarm_pool
  .preinit_array.YYYYY
-                0x1000253c        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
-                0x1000253c                __pre_init_first_per_core_initializer
+                0x100028ac        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+                0x100028ac                __pre_init_first_per_core_initializer
  .preinit_array.ZZZZZ.00051
-                0x10002540        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x10002540                __pre_init_runtime_init_per_core_bootrom_reset
+                0x100028b0        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x100028b0                __pre_init_runtime_init_per_core_bootrom_reset
  .preinit_array.ZZZZZ.00200
-                0x10002544        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
-                0x10002544                __pre_init_runtime_init_per_core_enable_coprocessors
+                0x100028b4        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x100028b4                __pre_init_runtime_init_per_core_enable_coprocessors
  .preinit_array.ZZZZZ.01000
-                0x10002548        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
-                0x10002548                __pre_init_spinlock_set_extexclall
+                0x100028b8        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
+                0x100028b8                __pre_init_spinlock_set_extexclall
  .preinit_array.ZZZZZ.01200
-                0x1000254c        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
-                0x1000254c                __pre_init_runtime_init_per_core_irq_priorities
+                0x100028bc        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
+                0x100028bc                __pre_init_runtime_init_per_core_irq_priorities
  *(.preinit_array)
-                0x10002550                        PROVIDE (__preinit_array_end = .)
-                0x10002550                        . = ALIGN (0x4)
-                0x10002550                        PROVIDE (__init_array_start = .)
+                0x100028c0                        PROVIDE (__preinit_array_end = .)
+                0x100028c0                        . = ALIGN (0x4)
+                0x100028c0                        PROVIDE (__init_array_start = .)
  *(SORT_BY_NAME(.init_array.*))
  *(.init_array)
- .init_array    0x10002550        0x4 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtbegin.o
-                0x10002554                        PROVIDE (__init_array_end = .)
-                0x10002554                        . = ALIGN (0x4)
+ .init_array    0x100028c0        0x4 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtbegin.o
+                0x100028c4                        PROVIDE (__init_array_end = .)
+                0x100028c4                        . = ALIGN (0x4)
                 [!provide]                        PROVIDE (__fini_array_start = .)
  *(SORT_BY_NAME(.fini_array.*))
  *(.fini_array)
                 [!provide]                        PROVIDE (__fini_array_end = .)
  *(.eh_frame*)
- .eh_frame      0x10002554        0x0 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtbegin.o
-                0x10002554                        . = ALIGN (0x4)
+ .eh_frame      0x100028c4        0x0 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtbegin.o
+                0x100028c4                        . = ALIGN (0x4)
 
-.glue_7         0x10002554        0x0
- .glue_7        0x10002554        0x0 linker stubs
+.glue_7         0x100028c4        0x0
+ .glue_7        0x100028c4        0x0 linker stubs
 
-.glue_7t        0x10002554        0x0
- .glue_7t       0x10002554        0x0 linker stubs
+.glue_7t        0x100028c4        0x0
+ .glue_7t       0x100028c4        0x0 linker stubs
 
-.vfp11_veneer   0x10002554        0x0
- .vfp11_veneer  0x10002554        0x0 linker stubs
+.vfp11_veneer   0x100028c4        0x0
+ .vfp11_veneer  0x100028c4        0x0 linker stubs
 
-.v4_bx          0x10002554        0x0
- .v4_bx         0x10002554        0x0 linker stubs
+.v4_bx          0x100028c4        0x0
+ .v4_bx         0x100028c4        0x0 linker stubs
 
-.iplt           0x10002554        0x0
- .iplt          0x10002554        0x0 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtbegin.o
+.iplt           0x100028c4        0x0
+ .iplt          0x100028c4        0x0 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtbegin.o
 
-.boot2          0x10002554        0x0
-                0x10002554                        __boot2_start__ = .
+.boot2          0x100028c4        0x0
+                0x100028c4                        __boot2_start__ = .
  *(.boot2)
-                0x10002554                        __boot2_end__ = .
+                0x100028c4                        __boot2_end__ = .
                 0x00000001                        ASSERT (((__boot2_end__ - __boot2_start__) <= 0x100), ERROR: Pico second stage bootloader must be no more than 256 bytes in size)
 
-.rodata         0x10002554      0x144
+.rodata         0x100028c4      0x17c
  *(EXCLUDE_FILE(*libm.a: *libc.a:*lib_a-mem*.o *libgcc.a:) .rodata*)
+ .rodata.main.str1.4
+                0x100028c4       0xf8 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
+                                 0x32 (size before relaxing)
  .rodata.video_capture_program
-                0x10002554        0x8 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
+                0x100029bc        0x8 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
  .rodata.video_capture_program_instructions
-                0x1000255c       0x12 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
- *fill*         0x1000256e        0x2 
+                0x100029c4       0x16 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
  .rodata.panic.str1.4
-                0x10002570       0xc4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
-                                 0x12 (size before relaxing)
+                0x100029da       0x12 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
  .rodata.timer_hardware_alarm_claim.str1.4
-                0x10002634       0x22 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
+                0x100029da       0x22 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
  .rodata.hard_assertion_failure.str1.4
-                0x10002634        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+                0x100029da        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
  .rodata.__wrap_malloc.str1.4
-                0x10002634        0xe CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
+                0x100029da        0xe CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
  .rodata.str1.4
-                0x10002634       0x4c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x100029da       0x4c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+ *fill*         0x100029da        0x2 
  .rodata.__bi_84
-                0x10002634        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x100029dc        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .rodata.__bi_78
-                0x10002640        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x100029e8        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .rodata.__bi_60
-                0x1000264c        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x100029f4        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .rodata.__bi_54
-                0x10002658        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a00        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .rodata.__bi_48
-                0x10002664        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a0c        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .rodata.__bi_42
-                0x10002670        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a18        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .rodata.__bi_34
-                0x1000267c        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a24        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .rodata.__bi_26
-                0x10002688        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a30        0xc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .rodata.crlf_str.0
-                0x10002694        0x2 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+                0x10002a3c        0x2 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
  .rodata.pio_claim_unused_sm.str1.4
-                0x10002696       0x24 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+                0x10002a3e       0x24 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
  *(.srodata*)
-                0x100026bc                        . = ALIGN (0x4)
- *fill*         0x10002696        0x2 
+                0x10002a64                        . = ALIGN (0x4)
+ *fill*         0x10002a3e        0x2 
  *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.flashdata*)))
-                0x10002698                        . = ALIGN (0x4)
+                0x10002a40                        . = ALIGN (0x4)
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x10002698                        __exidx_start = .
+                0x10002a40                        __exidx_start = .
 
-.ARM.exidx      0x10002698        0x8
+.ARM.exidx      0x10002a40        0x8
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
- .ARM.exidx     0x10002698        0x8 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-memcpy.o)
-                0x100026a0                        __exidx_end = .
-                0x100026a0                        . = ALIGN (0x4)
-                0x100026a0                        __binary_info_start = .
+ .ARM.exidx     0x10002a40        0x8 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-memcpy.o)
+                0x10002a48                        __exidx_end = .
+                0x10002a48                        . = ALIGN (0x4)
+                0x10002a48                        __binary_info_start = .
 
-.binary_info    0x100026a0       0x20
+.binary_info    0x10002a48       0x20
  *(.binary_info.keep.*)
  .binary_info.keep.__bi_ptr84
-                0x100026a0        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a48        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .binary_info.keep.__bi_ptr78
-                0x100026a4        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a4c        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .binary_info.keep.__bi_ptr60
-                0x100026a8        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a50        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .binary_info.keep.__bi_ptr54
-                0x100026ac        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a54        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .binary_info.keep.__bi_ptr48
-                0x100026b0        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a58        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .binary_info.keep.__bi_ptr42
-                0x100026b4        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a5c        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .binary_info.keep.__bi_ptr34
-                0x100026b8        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a60        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  .binary_info.keep.__bi_ptr26
-                0x100026bc        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+                0x10002a64        0x4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
  *(.binary_info.*)
-                0x100026c0                        __binary_info_end = .
-                0x100026c0                        . = ALIGN (0x4)
+                0x10002a68                        __binary_info_end = .
+                0x10002a68                        . = ALIGN (0x4)
 
 .ram_vector_table
                 0x20000000      0x110
@@ -3017,7 +3022,7 @@ LOAD C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/1
                 0x20000110                        . = ALIGN (0x4)
  *(.uninitialized_data*)
 
-.data           0x20000110      0x850 load address 0x100026c0
+.data           0x20000110      0x850 load address 0x10002a68
                 0x20000110                        __data_start__ = .
  *(vtable)
  *(.time_critical*)
@@ -3091,23 +3096,23 @@ LOAD C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/1
                 0x20000960                        . = ALIGN (0x4)
 
 .tm_clone_table
-                0x20000960        0x0 load address 0x10002f10
+                0x20000960        0x0 load address 0x100032b8
  .tm_clone_table
                 0x20000960        0x0 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtbegin.o
  .tm_clone_table
                 0x20000960        0x0 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtend.o
 
-.igot.plt       0x20000960        0x0 load address 0x10002f10
+.igot.plt       0x20000960        0x0 load address 0x100032b8
  .igot.plt      0x20000960        0x0 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtbegin.o
 
-.tdata          0x20000960        0x0 load address 0x10002f10
+.tdata          0x20000960        0x0 load address 0x100032b8
                 0x20000960                        . = ALIGN (0x4)
  *(.tdata .tdata.* .gnu.linkonce.td.*)
                 0x20000960                        __tdata_end = .
                 0x20000960                        PROVIDE (__data_end__ = .)
-                0x100026c0                        __etext = LOADADDR (.data)
+                0x10002a68                        __etext = LOADADDR (.data)
 
-.tbss           0x20000960        0x0 load address 0x10002f10
+.tbss           0x20000960        0x0 load address 0x100032b8
                 0x20000960                        . = ALIGN (0x4)
                 0x20000960                        __bss_start__ = .
                 0x20000960                        __tls_base = .
@@ -3115,7 +3120,7 @@ LOAD C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/1
  *(.tcommon)
                 0x20000960                        __tls_end = .
 
-.bss            0x20000960      0xbac load address 0x10002f10
+.bss            0x20000960      0xbac load address 0x100032b8
                 0x20000960                        . = ALIGN (0x4)
                 0x20000960                        __tbss_end = .
  *(SORT_BY_ALIGNMENT(SORT_BY_NAME(.bss*)))
@@ -3186,28 +3191,28 @@ LOAD C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/1
                 0x2000150c                        . = ALIGN (0x4)
                 0x2000150c                        __bss_end__ = .
 
-.heap           0x2000150c      0x800 load address 0x10002f10
+.heap           0x2000150c      0x800 load address 0x100032b8
                 0x2000150c                        __end__ = .
                 0x2000150c                        end = __end__
  *(.heap*)
  .heap          0x2000150c      0x800 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
                 0x20080000                        __HeapLimit = (ORIGIN (RAM) + LENGTH (RAM))
 
-.scratch_x      0x20080000       0xd8 load address 0x10002f10
+.scratch_x      0x20080000       0xd8 load address 0x100032b8
                 0x20080000                        __scratch_x_start__ = .
  *(.scratch_x.*)
  .scratch_x.    0x20080000       0xd8 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
                 0x20080000                dma_irq_handler
                 0x200800d8                        . = ALIGN (0x4)
                 0x200800d8                        __scratch_x_end__ = .
-                0x10002f10                        __scratch_x_source__ = LOADADDR (.scratch_x)
+                0x100032b8                        __scratch_x_source__ = LOADADDR (.scratch_x)
 
-.scratch_y      0x20081000        0x0 load address 0x10002fe8
+.scratch_y      0x20081000        0x0 load address 0x10003390
                 0x20081000                        __scratch_y_start__ = .
  *(.scratch_y.*)
                 0x20081000                        . = ALIGN (0x4)
                 0x20081000                        __scratch_y_end__ = .
-                0x10002fe8                        __scratch_y_source__ = LOADADDR (.scratch_y)
+                0x10003390                        __scratch_y_source__ = LOADADDR (.scratch_y)
 
 .stack1_dummy   0x200800d8      0x800
  *(.stack1*)
@@ -3217,11 +3222,11 @@ LOAD C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/1
  *(.stack*)
  .stack         0x20081000      0x800 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
 
-.flash_end      0x10002fe8       0x14
+.flash_end      0x10003390       0x14
  *(.embedded_end_block*)
  .embedded_end_block
-                0x10002fe8       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
-                0x10002ffc                        PROVIDE (__flash_binary_end = .)
+                0x10003390       0x14 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
+                0x100033a4                        PROVIDE (__flash_binary_end = .)
                 0x20080000                        __StackLimit = (ORIGIN (RAM) + LENGTH (RAM))
                 0x20081000                        __StackOneTop = (ORIGIN (SCRATCH_X) + LENGTH (SCRATCH_X))
                 0x20082000                        __StackTop = (ORIGIN (SCRATCH_Y) + LENGTH (SCRATCH_Y))
@@ -3314,8 +3319,8 @@ LOAD C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/1
 OUTPUT(Framethrower_Denise.elf elf32-littlearm)
 LOAD linker stubs
 
-.rel.dyn        0x10002ffc        0x0
- .rel.iplt      0x10002ffc        0x0 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtbegin.o
+.rel.dyn        0x100033a4        0x0
+ .rel.iplt      0x100033a4        0x0 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp/crtbegin.o
 
 .ARM.attributes
                 0x00000000       0x34
@@ -3444,72 +3449,72 @@ LOAD linker stubs
  .comment       0x00000045       0x46 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
  .comment       0x00000045       0x46 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
 
-.debug_info     0x00000000    0x26a56
- .debug_info    0x00000000     0x3601 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
- .debug_info    0x00003601     0x2446 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
- .debug_info    0x00005a47      0x1be CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
- .debug_info    0x00005c05      0xb78 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
- .debug_info    0x0000677d      0x46f CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
- .debug_info    0x00006bec     0x145e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
- .debug_info    0x0000804a     0x260d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
- .debug_info    0x0000a657      0x187 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
- .debug_info    0x0000a7de     0x1e7c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
- .debug_info    0x0000c65a     0x5487 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
- .debug_info    0x00011ae1     0x30c6 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
- .debug_info    0x00014ba7     0x28a2 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
- .debug_info    0x00017449      0x507 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
- .debug_info    0x00017950      0x5a9 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
- .debug_info    0x00017ef9      0x26c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
- .debug_info    0x00018165      0x914 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
- .debug_info    0x00018a79      0x1c4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
- .debug_info    0x00018c3d      0x316 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
- .debug_info    0x00018f53      0x1b1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
- .debug_info    0x00019104      0x21a CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
- .debug_info    0x0001931e     0x1bcd CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
- .debug_info    0x0001aeeb      0x7c6 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
- .debug_info    0x0001b6b1      0x6c1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
- .debug_info    0x0001bd72      0x2e2 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
- .debug_info    0x0001c054     0x22ff CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
- .debug_info    0x0001e353       0x23 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
- .debug_info    0x0001e376      0xbdf CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
- .debug_info    0x0001ef55     0x1c24 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
- .debug_info    0x00020b79     0x3636 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
- .debug_info    0x000241af     0x28a7 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
+.debug_info     0x00000000    0x26cd3
+ .debug_info    0x00000000     0x387b CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
+ .debug_info    0x0000387b     0x2446 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
+ .debug_info    0x00005cc1      0x1be CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
+ .debug_info    0x00005e7f      0xb78 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
+ .debug_info    0x000069f7      0x46f CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
+ .debug_info    0x00006e66     0x145e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
+ .debug_info    0x000082c4     0x260d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
+ .debug_info    0x0000a8d1      0x187 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
+ .debug_info    0x0000aa58     0x1e7c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
+ .debug_info    0x0000c8d4     0x5487 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+ .debug_info    0x00011d5b     0x30c6 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
+ .debug_info    0x00014e21     0x28a2 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
+ .debug_info    0x000176c3      0x507 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
+ .debug_info    0x00017bca      0x5a9 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
+ .debug_info    0x00018173      0x26c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
+ .debug_info    0x000183df      0x914 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
+ .debug_info    0x00018cf3      0x1c4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
+ .debug_info    0x00018eb7      0x316 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
+ .debug_info    0x000191cd      0x1b1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
+ .debug_info    0x0001937e      0x21a CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+ .debug_info    0x00019598     0x1bcd CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+ .debug_info    0x0001b165      0x7c9 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
+ .debug_info    0x0001b92e      0x6c1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
+ .debug_info    0x0001bfef      0x2e2 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+ .debug_info    0x0001c2d1     0x22ff CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
+ .debug_info    0x0001e5d0       0x23 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
+ .debug_info    0x0001e5f3      0xbdf CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
+ .debug_info    0x0001f1d2     0x1c24 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+ .debug_info    0x00020df6     0x3636 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+ .debug_info    0x0002442c     0x28a7 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
 
-.debug_abbrev   0x00000000     0x6166
- .debug_abbrev  0x00000000      0x5e6 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
- .debug_abbrev  0x000005e6      0x56d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
- .debug_abbrev  0x00000b53      0x12b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
- .debug_abbrev  0x00000c7e      0x35e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
- .debug_abbrev  0x00000fdc      0x22f CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
- .debug_abbrev  0x0000120b      0x26e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
- .debug_abbrev  0x00001479      0x644 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
- .debug_abbrev  0x00001abd      0x11e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
- .debug_abbrev  0x00001bdb      0x49b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
- .debug_abbrev  0x00002076      0x644 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
- .debug_abbrev  0x000026ba      0x4f9 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
- .debug_abbrev  0x00002bb3      0x4f0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
- .debug_abbrev  0x000030a3      0x1a8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
- .debug_abbrev  0x0000324b      0x1a5 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
- .debug_abbrev  0x000033f0      0x146 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
- .debug_abbrev  0x00003536      0x36d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
- .debug_abbrev  0x000038a3       0xfb CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
- .debug_abbrev  0x0000399e      0x1de CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
- .debug_abbrev  0x00003b7c      0x109 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
- .debug_abbrev  0x00003c85      0x182 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
- .debug_abbrev  0x00003e07      0x2dd CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
- .debug_abbrev  0x000040e4      0x2b8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
- .debug_abbrev  0x0000439c      0x21d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
- .debug_abbrev  0x000045b9       0xb8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
- .debug_abbrev  0x00004671      0x505 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
- .debug_abbrev  0x00004b76       0x12 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
- .debug_abbrev  0x00004b88      0x375 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
- .debug_abbrev  0x00004efd      0x5fd CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
- .debug_abbrev  0x000054fa      0x58a CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
- .debug_abbrev  0x00005a84      0x6e2 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
+.debug_abbrev   0x00000000     0x6165
+ .debug_abbrev  0x00000000      0x5e5 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
+ .debug_abbrev  0x000005e5      0x56d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
+ .debug_abbrev  0x00000b52      0x12b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
+ .debug_abbrev  0x00000c7d      0x35e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
+ .debug_abbrev  0x00000fdb      0x22f CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
+ .debug_abbrev  0x0000120a      0x26e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
+ .debug_abbrev  0x00001478      0x644 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
+ .debug_abbrev  0x00001abc      0x11e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
+ .debug_abbrev  0x00001bda      0x49b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
+ .debug_abbrev  0x00002075      0x644 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+ .debug_abbrev  0x000026b9      0x4f9 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
+ .debug_abbrev  0x00002bb2      0x4f0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
+ .debug_abbrev  0x000030a2      0x1a8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
+ .debug_abbrev  0x0000324a      0x1a5 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
+ .debug_abbrev  0x000033ef      0x146 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
+ .debug_abbrev  0x00003535      0x36d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
+ .debug_abbrev  0x000038a2       0xfb CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
+ .debug_abbrev  0x0000399d      0x1de CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
+ .debug_abbrev  0x00003b7b      0x109 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
+ .debug_abbrev  0x00003c84      0x182 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+ .debug_abbrev  0x00003e06      0x2dd CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+ .debug_abbrev  0x000040e3      0x2b8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
+ .debug_abbrev  0x0000439b      0x21d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
+ .debug_abbrev  0x000045b8       0xb8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+ .debug_abbrev  0x00004670      0x505 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
+ .debug_abbrev  0x00004b75       0x12 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
+ .debug_abbrev  0x00004b87      0x375 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
+ .debug_abbrev  0x00004efc      0x5fd CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+ .debug_abbrev  0x000054f9      0x58a CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+ .debug_abbrev  0x00005a83      0x6e2 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
 
 .debug_loclists
-                0x00000000    0x12a7b
+                0x00000000    0x12a92
  .debug_loclists
                 0x00000000      0xc94 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
  .debug_loclists
@@ -3531,39 +3536,39 @@ LOAD linker stubs
  .debug_loclists
                 0x0000722d     0x1a3f CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
  .debug_loclists
-                0x00008c6c     0x2036 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
+                0x00008c6c     0x204d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
  .debug_loclists
-                0x0000aca2      0x1b7 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
+                0x0000acb9      0x1b7 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
  .debug_loclists
-                0x0000ae59       0xd9 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
+                0x0000ae70       0xd9 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
  .debug_loclists
-                0x0000af32       0x8b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
+                0x0000af49       0x8b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
  .debug_loclists
-                0x0000afbd      0x49b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
+                0x0000afd4      0x49b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
  .debug_loclists
-                0x0000b458       0x28 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
+                0x0000b46f       0x28 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
  .debug_loclists
-                0x0000b480       0x78 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
+                0x0000b497       0x78 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
  .debug_loclists
-                0x0000b4f8       0x48 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
+                0x0000b50f       0x48 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
  .debug_loclists
-                0x0000b540       0x7e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+                0x0000b557       0x7e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
  .debug_loclists
-                0x0000b5be      0x10a CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x0000b5d5      0x10a CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
  .debug_loclists
-                0x0000b6c8       0x74 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
+                0x0000b6df       0x74 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
  .debug_loclists
-                0x0000b73c      0x1d0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
+                0x0000b753      0x1d0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
  .debug_loclists
-                0x0000b90c     0x2e21 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
+                0x0000b923     0x2e21 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
  .debug_loclists
-                0x0000e72d      0x408 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
+                0x0000e744      0x408 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
  .debug_loclists
-                0x0000eb35      0xb26 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+                0x0000eb4c      0xb26 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
  .debug_loclists
-                0x0000f65b     0x200c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+                0x0000f672     0x200c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
  .debug_loclists
-                0x00011667     0x1414 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
+                0x0001167e     0x1414 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
 
 .debug_aranges  0x00000000      0xc48
  .debug_aranges
@@ -3628,132 +3633,132 @@ LOAD linker stubs
                 0x00000b80       0xc8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
 
 .debug_rnglists
-                0x00000000     0x3967
+                0x00000000     0x3986
  .debug_rnglists
-                0x00000000      0x36e CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
+                0x00000000      0x38f CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
  .debug_rnglists
-                0x0000036e      0x62c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
+                0x0000038f      0x62c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
  .debug_rnglists
-                0x0000099a       0x19 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
+                0x000009bb       0x19 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
  .debug_rnglists
-                0x000009b3       0xf2 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
+                0x000009d4       0xf2 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
  .debug_rnglists
-                0x00000aa5       0x5b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
+                0x00000ac6       0x5b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
  .debug_rnglists
-                0x00000b00       0x43 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
+                0x00000b21       0x43 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
  .debug_rnglists
-                0x00000b43      0x3e4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
+                0x00000b64      0x3e4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
  .debug_rnglists
-                0x00000f27       0x13 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
+                0x00000f48       0x13 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
  .debug_rnglists
-                0x00000f3a      0x2ac CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
+                0x00000f5b      0x2ac CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
  .debug_rnglists
-                0x000011e6      0x843 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+                0x00001207      0x843 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
  .debug_rnglists
-                0x00001a29      0x481 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
+                0x00001a4a      0x481 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
  .debug_rnglists
-                0x00001eaa      0x612 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
+                0x00001ecb      0x610 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
  .debug_rnglists
-                0x000024bc       0x59 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
+                0x000024db       0x59 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
  .debug_rnglists
-                0x00002515       0x4c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
+                0x00002534       0x4c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
  .debug_rnglists
-                0x00002561       0x2b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
+                0x00002580       0x2b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
  .debug_rnglists
-                0x0000258c       0x9d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
+                0x000025ab       0x9d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
  .debug_rnglists
-                0x00002629       0x13 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
+                0x00002648       0x13 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
  .debug_rnglists
-                0x0000263c       0x4f CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
+                0x0000265b       0x4f CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
  .debug_rnglists
-                0x0000268b       0x2b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
+                0x000026aa       0x2b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
  .debug_rnglists
-                0x000026b6       0x3d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+                0x000026d5       0x3d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
  .debug_rnglists
-                0x000026f3       0x70 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+                0x00002712       0x70 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
  .debug_rnglists
-                0x00002763       0x2c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
+                0x00002782       0x2c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
  .debug_rnglists
-                0x0000278f       0x49 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
+                0x000027ae       0x49 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
  .debug_rnglists
-                0x000027d8      0x2fd CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
+                0x000027f7      0x2fd CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
  .debug_rnglists
-                0x00002ad5       0x1b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
+                0x00002af4       0x1b CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
  .debug_rnglists
-                0x00002af0       0xaf CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
+                0x00002b0f       0xaf CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
  .debug_rnglists
-                0x00002b9f      0x302 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+                0x00002bbe      0x302 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
  .debug_rnglists
-                0x00002ea1      0x636 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+                0x00002ec0      0x636 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
  .debug_rnglists
-                0x000034d7      0x490 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
+                0x000034f6      0x490 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
 
-.debug_line     0x00000000    0x182fe
- .debug_line    0x00000000     0x16c7 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
- .debug_line    0x000016c7     0x1bb1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
- .debug_line    0x00003278      0x285 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
- .debug_line    0x000034fd      0x810 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
- .debug_line    0x00003d0d      0x424 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
- .debug_line    0x00004131      0x3a4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
- .debug_line    0x000044d5     0x1708 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
- .debug_line    0x00005bdd      0x270 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
- .debug_line    0x00005e4d     0x1280 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
- .debug_line    0x000070cd     0x315e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
- .debug_line    0x0000a22b     0x1d68 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
- .debug_line    0x0000bf93     0x1e64 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
- .debug_line    0x0000ddf7      0x4d9 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
- .debug_line    0x0000e2d0      0x3ec CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
- .debug_line    0x0000e6bc      0x33a CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
- .debug_line    0x0000e9f6      0x690 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
- .debug_line    0x0000f086      0x3ad CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
- .debug_line    0x0000f433      0x427 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
- .debug_line    0x0000f85a      0x35c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
- .debug_line    0x0000fbb6      0x319 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
- .debug_line    0x0000fecf      0x5dc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
- .debug_line    0x000104ab      0x580 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
- .debug_line    0x00010a2b      0x492 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
- .debug_line    0x00010ebd      0x1f5 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
- .debug_line    0x000110b2     0x1bb6 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
- .debug_line    0x00012c68       0xa1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
- .debug_line    0x00012d09      0x830 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
- .debug_line    0x00013539     0x14c8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
- .debug_line    0x00014a01     0x1df1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
- .debug_line    0x000167f2     0x1b0c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
+.debug_line     0x00000000    0x18476
+ .debug_line    0x00000000     0x183a CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
+ .debug_line    0x0000183a     0x1bb1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
+ .debug_line    0x000033eb      0x285 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
+ .debug_line    0x00003670      0x810 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
+ .debug_line    0x00003e80      0x424 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
+ .debug_line    0x000042a4      0x3a4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
+ .debug_line    0x00004648     0x1708 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
+ .debug_line    0x00005d50      0x270 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
+ .debug_line    0x00005fc0     0x1280 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
+ .debug_line    0x00007240     0x315e CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+ .debug_line    0x0000a39e     0x1d68 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
+ .debug_line    0x0000c106     0x1e69 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
+ .debug_line    0x0000df6f      0x4d9 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
+ .debug_line    0x0000e448      0x3ec CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
+ .debug_line    0x0000e834      0x33a CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
+ .debug_line    0x0000eb6e      0x690 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
+ .debug_line    0x0000f1fe      0x3ad CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
+ .debug_line    0x0000f5ab      0x427 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
+ .debug_line    0x0000f9d2      0x35c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
+ .debug_line    0x0000fd2e      0x319 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+ .debug_line    0x00010047      0x5dc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+ .debug_line    0x00010623      0x580 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
+ .debug_line    0x00010ba3      0x492 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
+ .debug_line    0x00011035      0x1f5 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+ .debug_line    0x0001122a     0x1bb6 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
+ .debug_line    0x00012de0       0xa1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
+ .debug_line    0x00012e81      0x830 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
+ .debug_line    0x000136b1     0x14c8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+ .debug_line    0x00014b79     0x1df1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+ .debug_line    0x0001696a     0x1b0c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
 
-.debug_str      0x00000000     0x6d25
- .debug_str     0x00000000     0x6d25 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
-                               0x1d11 (size before relaxing)
- .debug_str     0x00006d25      0xd42 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
- .debug_str     0x00006d25      0x226 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
- .debug_str     0x00006d25      0x398 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
- .debug_str     0x00006d25      0x343 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
- .debug_str     0x00006d25      0xbf0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
- .debug_str     0x00006d25      0xc5d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
- .debug_str     0x00006d25      0x235 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
- .debug_str     0x00006d25      0x909 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
- .debug_str     0x00006d25     0x1325 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
- .debug_str     0x00006d25      0xbc3 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
- .debug_str     0x00006d25      0xb84 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
- .debug_str     0x00006d25      0x4bc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
- .debug_str     0x00006d25      0x733 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
- .debug_str     0x00006d25      0x2e9 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
- .debug_str     0x00006d25      0x6da CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
- .debug_str     0x00006d25      0x2d1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
- .debug_str     0x00006d25      0x2af CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
- .debug_str     0x00006d25      0x262 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
- .debug_str     0x00006d25      0x2b8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
- .debug_str     0x00006d25     0x11fd CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
- .debug_str     0x00006d25      0x504 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
- .debug_str     0x00006d25      0x58d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
- .debug_str     0x00006d25      0x461 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
- .debug_str     0x00006d25      0x4ce CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
- .debug_str     0x00006d25       0x93 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
- .debug_str     0x00006d25      0x8a4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
- .debug_str     0x00006d25      0xc56 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
- .debug_str     0x00006d25     0x11e0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
- .debug_str     0x00006d25     0x130d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
+.debug_str      0x00000000     0x6d8e
+ .debug_str     0x00000000     0x6d8e CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
+                               0x1dca (size before relaxing)
+ .debug_str     0x00006d8e      0xd42 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
+ .debug_str     0x00006d8e      0x226 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
+ .debug_str     0x00006d8e      0x398 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/hardware_claim/claim.c.obj
+ .debug_str     0x00006d8e      0x343 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync/sync.c.obj
+ .debug_str     0x00006d8e      0xbf0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_sync_spin_lock/sync_spin_lock.c.obj
+ .debug_str     0x00006d8e      0xc5d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_irq/irq.c.obj
+ .debug_str     0x00006d8e      0x235 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/lock_core.c.obj
+ .debug_str     0x00006d8e      0x909 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj
+ .debug_str     0x00006d8e     0x1325 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_time/time.c.obj
+ .debug_str     0x00006d8e      0xbc3 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_timer/timer.c.obj
+ .debug_str     0x00006d8e      0xb84 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_clocks/clocks.c.obj
+ .debug_str     0x00006d8e      0x4bc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pll/pll.c.obj
+ .debug_str     0x00006d8e      0x733 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_vreg/vreg.c.obj
+ .debug_str     0x00006d8e      0x2e9 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_ticks/ticks.c.obj
+ .debug_str     0x00006d8e      0x6da CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom.c.obj
+ .debug_str     0x00006d8e      0x2d1 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_bootrom/bootrom_lock.c.obj
+ .debug_str     0x00006d8e      0x2af CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj
+ .debug_str     0x00006d8e      0x262 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
+ .debug_str     0x00006d8e      0x2b8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
+ .debug_str     0x00006d8e     0x11fd CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
+ .debug_str     0x00006d8e      0x504 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
+ .debug_str     0x00006d8e      0x58d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
+ .debug_str     0x00006d8e      0x461 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_standard_binary_info/standard_binary_info.c.obj
+ .debug_str     0x00006d8e      0x4ce CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
+ .debug_str     0x00006d8e       0x93 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_crt0/crt0.S.obj
+ .debug_str     0x00006d8e      0x8a4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
+ .debug_str     0x00006d8e      0xc56 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+ .debug_str     0x00006d8e     0x11e0 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+ .debug_str     0x00006d8e     0x130d CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
 
-.debug_frame    0x00000000     0x26f8
+.debug_frame    0x00000000     0x26fc
  .debug_frame   0x00000000       0xc4 CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj
  .debug_frame   0x000000c4      0x384 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_gpio/gpio.c.obj
  .debug_frame   0x00000448       0x4c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_platform_panic/panic.c.obj
@@ -3775,25 +3780,25 @@ LOAD linker stubs
  .debug_frame   0x0000141c       0x4c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_xosc/xosc.c.obj
  .debug_frame   0x00001468       0x70 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime/runtime.c.obj
  .debug_frame   0x000014d8       0xbc CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init.c.obj
- .debug_frame   0x00001594       0x30 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
- .debug_frame   0x000015c4       0x80 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
- .debug_frame   0x00001644      0x2a4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
- .debug_frame   0x000018e8      0x180 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
- .debug_frame   0x00001a68      0x2d8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
- .debug_frame   0x00001d40      0x308 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
- .debug_frame   0x00002048      0x29c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
- .debug_frame   0x000022e4       0x30 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-malloc.o)
- .debug_frame   0x00002314       0x4c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-mallocr.o)
- .debug_frame   0x00002360       0x30 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-mlock.o)
- .debug_frame   0x00002390       0x2c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-sbrkr.o)
- .debug_frame   0x000023bc       0x20 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-errno.o)
- .debug_frame   0x000023dc       0xb0 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-lock.o)
- .debug_frame   0x0000248c       0x28 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-sysconf.o)
- .debug_frame   0x000024b4       0x28 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-memcpy.o)
- .debug_frame   0x000024dc       0x20 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-strlen-stub.o)
- .debug_frame   0x000024fc       0x84 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-freer.o)
- .debug_frame   0x00002580      0x13c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-findfp.o)
- .debug_frame   0x000026bc       0x3c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-reent.o)
+ .debug_frame   0x00001594       0x34 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj
+ .debug_frame   0x000015c8       0x80 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_malloc/malloc.c.obj
+ .debug_frame   0x00001648      0x2a4 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj
+ .debug_frame   0x000018ec      0x180 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_clib_interface/newlib_interface.c.obj
+ .debug_frame   0x00001a6c      0x2d8 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_stdio/stdio.c.obj
+ .debug_frame   0x00001d44      0x308 CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_pio/pio.c.obj
+ .debug_frame   0x0000204c      0x29c CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_multicore/multicore.c.obj
+ .debug_frame   0x000022e8       0x30 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-malloc.o)
+ .debug_frame   0x00002318       0x4c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-mallocr.o)
+ .debug_frame   0x00002364       0x30 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-mlock.o)
+ .debug_frame   0x00002394       0x2c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-sbrkr.o)
+ .debug_frame   0x000023c0       0x20 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-errno.o)
+ .debug_frame   0x000023e0       0xb0 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-lock.o)
+ .debug_frame   0x00002490       0x28 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-sysconf.o)
+ .debug_frame   0x000024b8       0x28 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-memcpy.o)
+ .debug_frame   0x000024e0       0x20 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-strlen-stub.o)
+ .debug_frame   0x00002500       0x84 C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-freer.o)
+ .debug_frame   0x00002584      0x13c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-findfp.o)
+ .debug_frame   0x000026c0       0x3c C:/Users/claud/.pico-sdk/toolchain/14_2_Rel1/bin/../lib/gcc/arm-none-eabi/14.2.1/thumb/v8-m.main+fp/softfp\libg.a(libc_a-reent.o)
 
 .debug_line_str
                 0x00000000      0x16e

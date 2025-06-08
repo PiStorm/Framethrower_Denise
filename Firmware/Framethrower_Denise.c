@@ -51,6 +51,22 @@ uint sm;
 #define SYNC_V1_H0 (TMDS_CTRL_10 | (TMDS_CTRL_00 << 10) | (TMDS_CTRL_00 << 20))
 #define SYNC_V1_H1 (TMDS_CTRL_11 | (TMDS_CTRL_00 << 10) | (TMDS_CTRL_00 << 20))
 
+
+/*
+#define MODE_H_SYNC_POLARITY 0
+#define MODE_H_FRONT_PORCH 12
+#define MODE_H_SYNC_WIDTH 64
+#define MODE_H_BACK_PORCH 68
+#define MODE_H_ACTIVE_PIXELS 720
+
+#define MODE_V_SYNC_POLARITY 0
+#define MODE_V_FRONT_PORCH 5
+#define MODE_V_SYNC_WIDTH 5
+#define MODE_V_BACK_PORCH 72
+#define MODE_V_ACTIVE_LINES 576
+*/
+
+/*
 #define MODE_H_SYNC_POLARITY 0
 #define MODE_H_FRONT_PORCH 12
 #define MODE_H_SYNC_WIDTH 64
@@ -62,6 +78,35 @@ uint sm;
 #define MODE_V_SYNC_WIDTH 5
 #define MODE_V_BACK_PORCH 40
 #define MODE_V_ACTIVE_LINES 576
+*/
+/*
+#define MODE_H_SYNC_POLARITY 0
+#define MODE_H_FRONT_PORCH 12
+#define MODE_H_SYNC_WIDTH 109
+#define MODE_H_BACK_PORCH 68
+#define MODE_H_ACTIVE_PIXELS 720
+
+#define MODE_V_SYNC_POLARITY 0
+#define MODE_V_FRONT_PORCH 5
+#define MODE_V_SYNC_WIDTH 5
+#define MODE_V_BACK_PORCH 39
+#define MODE_V_ACTIVE_LINES 576
+*/
+
+
+#define MODE_H_SYNC_POLARITY 0
+#define MODE_H_FRONT_PORCH 12
+#define MODE_H_SYNC_WIDTH 64
+#define MODE_H_BACK_PORCH 68
+#define MODE_H_ACTIVE_PIXELS 720
+
+#define MODE_V_SYNC_POLARITY 0
+#define MODE_V_FRONT_PORCH 5
+#define MODE_V_SYNC_WIDTH 5
+#define MODE_V_BACK_PORCH 39
+#define MODE_V_ACTIVE_LINES 576
+
+
 
 __attribute__((aligned(4))) uint16_t *framebuffer;
 __attribute__((aligned(4))) uint16_t line_buffer_rgb444[1024];
@@ -251,7 +296,7 @@ void __not_in_flash_func(get_pio_line)(void)
     uint32_t pixel12;
     pio_sm_clear_fifos(pio, sm);
     pio_sm_restart(pio, sm);
-    pio_sm_put_blocking(pio, sm, SAMPLES_PER_LINE - 1);
+    pio_sm_put_blocking(pio, sm, SAMPLES_PER_LINE/2 - 1);
     pio_sm_set_enabled(pio, sm, true);
 
     for (int i = 0; i < SAMPLES_PER_LINE; ++i)
@@ -307,20 +352,26 @@ void core1_entry()
     uint16_t x = 0, y = 0, z = 0;
     while (1)
     {
+
         while (gpioc_lo_in_get() & (1 << vsync))
         {
         }
         while (!(gpioc_lo_in_get() & (1 << vsync)))
         {
         }
-        for (y = 0; y < 22; y++)
+        
+        for (y = 0; y < 21; y++)
         {
             get_pio_line();
         }
+
         for (y = 0; y < 288; y++)
         {
             get_pio_line();
-            dma_memcpy(framebuffer + (MODE_H_ACTIVE_PIXELS * y), line_buffer_rgb444 + 96, MODE_H_ACTIVE_PIXELS * 2);
+            dma_memcpy(framebuffer + (MODE_H_ACTIVE_PIXELS * y), line_buffer_rgb444 + 69, MODE_H_ACTIVE_PIXELS * 2);
+        }
+               while (!(gpioc_lo_in_get() & (1 << vsync)))
+        {
         }
     }
 }
@@ -328,16 +379,19 @@ void core1_entry()
 int main(void)
 {
 
+
+    //External LDO
+
+    //vreg_set_voltage(VREG_VOLTAGE_0_85);
+
     sleep_ms(50);
     vreg_disable_voltage_limit();
     vreg_set_voltage(VREG_VOLTAGE_1_80);
     sleep_ms(50);
-
-    // sleep_ms(50);
-    // qmi_hw->m[0].timing = 0x40000204;
-    // sleep_ms(50);
-    // set_sys_clock_khz(224000, true);
-    // sleep_ms(50);
+    qmi_hw->m[0].timing = 0x40000204;
+    sleep_ms(50);
+    set_sys_clock_khz(270000, true);
+    sleep_ms(50);
 
     size_t num_pixels = (size_t)FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT;
     size_t buffer_size_bytes = num_pixels * sizeof(uint16_t);
@@ -352,7 +406,6 @@ int main(void)
 
     gpio_init(28);
     gpio_set_dir(28, GPIO_OUT);
-
 
     gpio_init(hsync);
     gpio_set_dir(hsync, GPIO_IN);
@@ -371,12 +424,12 @@ int main(void)
 
     hw_write_masked(
         &clocks_hw->clk[clk_hstx].ctrl,
-        CLOCKS_CLK_HSTX_CTRL_AUXSRC_VALUE_CLKSRC_PLL_USB << CLOCKS_CLK_HSTX_CTRL_AUXSRC_LSB,
+        CLOCKS_CLK_HSTX_CTRL_AUXSRC_VALUE_CLKSRC_PLL_SYS << CLOCKS_CLK_HSTX_CTRL_AUXSRC_LSB,
         CLOCKS_CLK_HSTX_CTRL_AUXSRC_BITS);
 
     hw_write_masked(
         &clocks_hw->clk[clk_hstx].div,
-        1 << CLOCKS_CLK_HSTX_DIV_INT_LSB,
+        2 << CLOCKS_CLK_HSTX_DIV_INT_LSB,
         CLOCKS_CLK_HSTX_DIV_INT_BITS);
 
     unreset_block_wait(RESETS_RESET_HSTX_BITS);
