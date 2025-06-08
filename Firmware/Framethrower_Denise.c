@@ -20,6 +20,8 @@
 #include <string.h>
 #include "pico/multicore.h"
 #include "video_capture.pio.h"
+#include "data_packet.h"
+#include <time.h>
 
 #define PIO_SM_INDEX 0 // Using State Machine 0
 
@@ -50,6 +52,9 @@ uint sm;
 #define SYNC_V0_H1 (TMDS_CTRL_01 | (TMDS_CTRL_00 << 10) | (TMDS_CTRL_00 << 20))
 #define SYNC_V1_H0 (TMDS_CTRL_10 | (TMDS_CTRL_00 << 10) | (TMDS_CTRL_00 << 20))
 #define SYNC_V1_H1 (TMDS_CTRL_11 | (TMDS_CTRL_00 << 10) | (TMDS_CTRL_00 << 20))
+#define SYNC_V1_H1_WITH_PREAMBLE (TMDS_CTRL_11 | (TMDS_CTRL_01 << 10) | (TMDS_CTRL_00 << 20))
+#define SYNC_V0_H0_WITH_DATA_ISLAND_PREAMBLE (TMDS_CTRL_00 | (TMDS_CTRL_01 << 10) | (TMDS_CTRL_01 << 20))
+#define VIDEO_LEADING_GUARD_BAND (0x2ccu | (0x133u << 10) | (0x2ccu << 20))
 
 
 /*
@@ -111,6 +116,18 @@ uint sm;
 __attribute__((aligned(4))) uint16_t *framebuffer;
 __attribute__((aligned(4))) uint16_t line_buffer_rgb444[1024];
 
+uint32_t info_avi_p[64];
+uint32_t info_aif_p[64];
+uint32_t acr_p[64];
+uint32_t asp_p[255];
+uint32_t info_avi_len;
+uint32_t info_aif_len;
+uint32_t acr_len;
+uint32_t asp_len;
+
+audio_sample_t audio;
+volatile int framecnt;
+
 #define FRAMEBUFFER_WIDTH MODE_H_ACTIVE_PIXELS
 #define FRAMEBUFFER_HEIGHT MODE_V_ACTIVE_LINES / 2
 
@@ -152,15 +169,186 @@ static uint32_t vblank_line_vsync_on[] = {
     HSTX_CMD_NOP};
 
 static uint32_t vactive_line[] = {
-    HSTX_CMD_RAW_REPEAT | MODE_H_FRONT_PORCH,
-    SYNC_V1_H1,
-    HSTX_CMD_NOP,
-    HSTX_CMD_RAW_REPEAT | MODE_H_SYNC_WIDTH,
-    SYNC_V1_H0,
-    HSTX_CMD_NOP,
-    HSTX_CMD_RAW_REPEAT | MODE_H_BACK_PORCH,
-    SYNC_V1_H1,
-    HSTX_CMD_TMDS | MODE_H_ACTIVE_PIXELS};
+	HSTX_CMD_RAW_REPEAT | (MODE_H_FRONT_PORCH),
+	SYNC_V1_H1,
+	HSTX_CMD_RAW_REPEAT | (MODE_H_SYNC_WIDTH),
+	SYNC_V1_H0,
+	HSTX_CMD_RAW_REPEAT | (MODE_H_BACK_PORCH-W_PREAMBLE-W_GUARDBAND),
+	SYNC_V1_H1,
+	HSTX_CMD_RAW_REPEAT | W_PREAMBLE,
+	SYNC_V1_H1_WITH_PREAMBLE,
+	HSTX_CMD_RAW_REPEAT | W_GUARDBAND,
+	VIDEO_LEADING_GUARD_BAND,
+	HSTX_CMD_TMDS | MODE_H_ACTIVE_PIXELS
+};
+
+/* Pre-compute the HDMI info packet that is required to switch the MS2130 to YCbCr422 mode */
+void init_avi_info_packet(void)
+{
+	int len = 0;
+
+	data_packet_t avi_info_frame;
+	data_island_stream_t di_str;
+
+	set_AVI_info_frame(&avi_info_frame, SCAN_INFO_NO_DATA, RGB,
+			   ITU601, PIC_ASPECT_RATIO_4_3, SAME_AS_PAR, FULL, _720x576P50);
+	encode(&di_str, &avi_info_frame, 0, 0);
+
+	info_avi_p[len++] = HSTX_CMD_RAW_REPEAT | MODE_H_FRONT_PORCH;
+	info_avi_p[len++] = SYNC_V0_H1;
+	info_avi_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_SYNC_WIDTH - W_DATA_ISLAND - W_PREAMBLE);
+	info_avi_p[len++] = SYNC_V0_H0;
+	info_avi_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
+	info_avi_p[len++] = SYNC_V0_H0_WITH_DATA_ISLAND_PREAMBLE;
+	info_avi_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
+
+	/* convert from the two symbols per word for each channel to one
+	 * symbol per word containing all three channels format */
+	for (int i = 0; i < N_DATA_ISLAND_WORDS; i++) {
+		info_avi_p[len++] = (di_str.data[0][i] & 0x3ff) |
+			       ((di_str.data[1][i] & 0x3ff) << 10) |
+			       ((di_str.data[2][i] & 0x3ff) << 20);
+
+		info_avi_p[len++] = (di_str.data[0][i] >> 10) |
+			       ((di_str.data[1][i] >> 10) << 10) |
+			       ((di_str.data[2][i] >> 10) << 20);
+	}
+
+	info_avi_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_BACK_PORCH + MODE_H_ACTIVE_PIXELS);
+	info_avi_p[len++] = SYNC_V0_H1;
+
+	info_avi_len = len;
+}
+
+void init_aif_info_packet(void)
+{
+	int len = 0;
+
+	data_packet_t aif_info_frame;
+	data_island_stream_t di_str;
+
+	set_audio_info_frame(&aif_info_frame, 48000);
+	encode(&di_str, &aif_info_frame, 0, 0);
+
+	info_aif_p[len++] = HSTX_CMD_RAW_REPEAT | MODE_H_FRONT_PORCH;
+	info_aif_p[len++] = SYNC_V0_H1;
+	info_aif_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_SYNC_WIDTH - W_DATA_ISLAND - W_PREAMBLE);
+	info_aif_p[len++] = SYNC_V0_H0;
+	info_aif_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
+	info_aif_p[len++] = SYNC_V0_H0_WITH_DATA_ISLAND_PREAMBLE;
+	info_aif_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
+
+	/* convert from the two symbols per word for each channel to one
+	 * symbol per word containing all three channels format */
+	for (int i = 0; i < N_DATA_ISLAND_WORDS; i++) {
+		info_aif_p[len++] = (di_str.data[0][i] & 0x3ff) |
+			       ((di_str.data[1][i] & 0x3ff) << 10) |
+			       ((di_str.data[2][i] & 0x3ff) << 20);
+
+		info_aif_p[len++] = (di_str.data[0][i] >> 10) |
+			       ((di_str.data[1][i] >> 10) << 10) |
+			       ((di_str.data[2][i] >> 10) << 20);
+	}
+
+	info_aif_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_BACK_PORCH + MODE_H_ACTIVE_PIXELS);
+	info_aif_p[len++] = SYNC_V0_H1;
+
+	info_aif_len = len;
+}
+
+void init_acr_packet(void)
+{
+	int len = 0;
+
+	data_packet_t acr;
+	data_island_stream_t di_str;
+
+	set_audio_clock_regeneration(&acr, 27000, 6144);
+	encode(&di_str, &acr, 0, 0);
+
+	acr_p[len++] = HSTX_CMD_RAW_REPEAT | MODE_H_FRONT_PORCH;
+	acr_p[len++] = SYNC_V0_H1;
+	acr_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_SYNC_WIDTH - W_DATA_ISLAND - W_PREAMBLE);
+	acr_p[len++] = SYNC_V0_H0;
+	acr_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
+	acr_p[len++] = SYNC_V0_H0_WITH_DATA_ISLAND_PREAMBLE;
+	acr_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
+
+	/* convert from the two symbols per word for each channel to one
+	 * symbol per word containing all three channels format */
+	for (int i = 0; i < N_DATA_ISLAND_WORDS; i++) {
+		acr_p[len++] = (di_str.data[0][i] & 0x3ff) |
+			       ((di_str.data[1][i] & 0x3ff) << 10) |
+			       ((di_str.data[2][i] & 0x3ff) << 20);
+
+		acr_p[len++] = (di_str.data[0][i] >> 10) |
+			       ((di_str.data[1][i] >> 10) << 10) |
+			       ((di_str.data[2][i] >> 10) << 20);
+	}
+
+	acr_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_BACK_PORCH + MODE_H_ACTIVE_PIXELS);
+	acr_p[len++] = SYNC_V0_H1;
+
+	acr_len = len;
+}
+
+
+
+void init_asp_packet(void)
+{
+	int len = 0;
+
+	data_packet_t asp;
+	data_island_stream_t di_str;
+
+    audio_sample_t *audio_sample_ptr = &audio;
+	framecnt = set_audio_sample(&asp, audio_sample_ptr, 2,framecnt);
+	encode(&di_str, &asp, 0, 0);
+
+    asp_p[len++] = HSTX_CMD_RAW_REPEAT | MODE_H_FRONT_PORCH;
+	asp_p[len++] = SYNC_V0_H1;
+	asp_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_SYNC_WIDTH - W_DATA_ISLAND - W_PREAMBLE);
+	asp_p[len++] = SYNC_V0_H0;
+	asp_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
+	asp_p[len++] = SYNC_V0_H0_WITH_DATA_ISLAND_PREAMBLE;
+	asp_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
+
+	/* convert from the two symbols per word for each channel to one
+	 * symbol per word containing all three channels format */
+	for (int i = 0; i < N_DATA_ISLAND_WORDS; i++) {
+		asp_p[len++] = (di_str.data[0][i] & 0x3ff) |
+			       ((di_str.data[1][i] & 0x3ff) << 10) |
+			       ((di_str.data[2][i] & 0x3ff) << 20);
+
+		asp_p[len++] = (di_str.data[0][i] >> 10) |
+			       ((di_str.data[1][i] >> 10) << 10) |
+			       ((di_str.data[2][i] >> 10) << 20);
+	}
+
+
+
+        encode(&di_str, &asp, 0, 1);
+        asp_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
+        asp_p[len++] = SYNC_V0_H0_WITH_DATA_ISLAND_PREAMBLE;
+        asp_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
+        for (int i = 0; i < N_DATA_ISLAND_WORDS; i++) {
+            asp_p[len++] = (di_str.data[0][i] & 0x3ff) |
+                    ((di_str.data[1][i] & 0x3ff) << 10) |
+                    ((di_str.data[2][i] & 0x3ff) << 20);
+
+            asp_p[len++] = (di_str.data[0][i] >> 10) |
+                    ((di_str.data[1][i] >> 10) << 10) |
+                    ((di_str.data[2][i] >> 10) << 20);
+        }
+
+
+
+
+	asp_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_BACK_PORCH + MODE_H_ACTIVE_PIXELS- (W_DATA_ISLAND+W_PREAMBLE));
+	asp_p[len++] = SYNC_V0_H1;
+
+	asp_len = len;
+}
 
 // ----------------------------------------------------------------------------
 // DMA logic
@@ -194,7 +382,7 @@ void __scratch_x("") dma_irq_handler()
     dma_pong = !dma_pong;
 
     dma_channel_config c = dma_get_channel_config(ch_num);
-
+/*
     if (v_scanline >= MODE_V_FRONT_PORCH && v_scanline < (MODE_V_FRONT_PORCH + MODE_V_SYNC_WIDTH))
     {
         channel_config_set_transfer_data_size(&c, DMA_SIZE_32);
@@ -202,6 +390,42 @@ void __scratch_x("") dma_irq_handler()
         ch->transfer_count = count_of(vblank_line_vsync_on);
         first_line_output_done = false;
     }
+*/
+    if (v_scanline >= MODE_V_FRONT_PORCH && v_scanline < (MODE_V_FRONT_PORCH + MODE_V_SYNC_WIDTH)+48)
+    {
+        channel_config_set_transfer_data_size(&c, DMA_SIZE_32);
+        if (v_scanline == MODE_V_FRONT_PORCH) {
+            ch->read_addr = (uintptr_t)info_avi_p;
+			ch->transfer_count = info_avi_len;
+        } else if (v_scanline == MODE_V_FRONT_PORCH +1 ){
+            ch->read_addr = (uintptr_t)info_aif_p;
+			ch->transfer_count = info_aif_len;
+        } else if (v_scanline == MODE_V_FRONT_PORCH +2 ){
+            ch->read_addr = (uintptr_t)acr_p;
+			ch->transfer_count = acr_len;
+        } else if (v_scanline >= MODE_V_FRONT_PORCH +3 && v_scanline <= 48){
+            ch->read_addr = (uintptr_t)asp_p;
+			ch->transfer_count = asp_len;
+        /*
+        } else if (v_scanline == MODE_V_FRONT_PORCH +4 ){
+            ch->read_addr = (uintptr_t)asp_p;
+			ch->transfer_count = asp_len;
+        } else if (v_scanline == MODE_V_FRONT_PORCH +5 ){
+            ch->read_addr = (uintptr_t)asp_p;
+			ch->transfer_count = asp_len;
+        } else if (v_scanline == MODE_V_FRONT_PORCH +6 ){
+            ch->read_addr = (uintptr_t)asp_p;
+			ch->transfer_count = asp_len;
+        */                               
+        } else {
+			ch->read_addr = (uintptr_t)vblank_line_vsync_on;
+			ch->transfer_count = count_of(vblank_line_vsync_on);
+		}
+        first_line_output_done = false;
+        framecnt++;
+    }
+
+
     else if (v_scanline < MODE_V_FRONT_PORCH + MODE_V_SYNC_WIDTH + MODE_V_BACK_PORCH)
     {
         ch->read_addr = (uintptr_t)vblank_line_vsync_off;
@@ -397,6 +621,16 @@ int main(void)
     size_t buffer_size_bytes = num_pixels * sizeof(uint16_t);
     framebuffer = (uint16_t *)malloc(buffer_size_bytes);
 
+
+    init_avi_info_packet();
+    init_aif_info_packet();
+    init_acr_packet();
+
+    srand(time(NULL)); 
+    //audio.channels[0] = audio.channels[1] = rand();
+
+    init_asp_packet();
+
     for (uint8_t i = 0; i < 12; i++)
     {
         gpio_init(i);
@@ -541,6 +775,9 @@ int main(void)
 
     while (1)
     {
-        __wfi();
+       //sleep_ms(1);
+       init_asp_packet();
+       audio.channels[0] = audio.channels[1] = rand();
+       //framecnt++;
     }
 }

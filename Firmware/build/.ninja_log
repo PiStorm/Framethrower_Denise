@@ -40,7 +40,7 @@
 96	326	7709961323986084	CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_boot_lock/boot_lock.c.obj	fac4814f94800a1a
 49	378	7709961323503710	CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_sync/mutex.c.obj	1852cd5c0bcbff
 72	393	7709961323744009	CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/hardware_uart/uart.c.obj	f56dd905aa06eda5
-20	197	7710263723184150	CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj	ce4b32308a990c27
+21	249	7710959715274243	CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj	ce4b32308a990c27
 177	364	7709961324781264	CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_runtime_init/runtime_init_clocks.c.obj	3fbcc77e92749313
 98	357	7709961324011118	CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_flash/flash.c.obj	aa3aafba827f5422
 68	445	7709961323718869	CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/common/pico_util/queue.c.obj	4743049ace6b6dd9
@@ -66,5 +66,9 @@
 323	731	7709961326245571	CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_float/float_math.c.obj	b4c1eeaa97e19618
 298	762	7709961326004654	CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_double/double_math.c.obj	3ed7cfa68e065ae0
 357	784	7709961326601435	CMakeFiles/Framethrower_Denise.dir/C_/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2_common/pico_printf/printf.c.obj	9ca9025b34bd3824
-197	319	7710263724946954	Framethrower_Denise.elf	57c442976199f1ca
-30	1771	7710676188099379	build.ninja	5a4d61d5a79beaa
+249	389	7710959717562964	Framethrower_Denise.elf	42061f480583062b
+41	430	7710683093434442	build.ninja	5a4d61d5a79beaa
+23	219	7710683093920570	CMakeFiles/Framethrower_Denise.dir/audio_ring.c.obj	f99d504569bb209c
+13	195	7710688564946763	CMakeFiles/Framethrower_Denise.dir/data_packet.c.obj	3cd65c6e38da0198
+26	252	7710960225375378	CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj	ce4b32308a990c27
+252	390	7710960227631538	Framethrower_Denise.elf	42061f480583062b

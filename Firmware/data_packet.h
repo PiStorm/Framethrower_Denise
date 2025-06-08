@@ -63,6 +63,7 @@ typedef enum {
 typedef enum {
     _640x480P60 = 1,
     _720x480P60 = 2,
+    _720x576P50 = 17,
     _1280x720P60 = 4,
     _1920x1080I60 = 5,
 } video_code;
