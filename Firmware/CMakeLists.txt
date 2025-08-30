@@ -64,7 +64,7 @@ target_link_libraries(Framethrower_Denise
         hardware_clocks
         )
 
-#target_compile_definitions(Framethrower_Denise PRIVATE
+target_compile_definitions(Framethrower_Denise PRIVATE
         #XOSC_MHZ=14
         # System clock = fin * 32 
         #PLL_SYS_REFDIV=1
@@ -72,6 +72,19 @@ target_link_libraries(Framethrower_Denise
         #PLL_SYS_POSTDIV1=7
         #PLL_SYS_POSTDIV2=1
         #SYS_CLK_HZ=224000000
+
+        PLL_SYS_REFDIV=2
+        PLL_SYS_VCO_FREQ_HZ=1350000000
+        PLL_SYS_POSTDIV1=5
+        PLL_SYS_POSTDIV2=1
+        SYS_CLK_HZ=270000000
+
+
+        #PLL_USB_REFDIV=2
+        #PLL_USB_VCO_FREQ_HZ=1350000000
+        #PLL_USB_POSTDIV1=5
+        #PLL_USB_POSTDIV2=1
+        #USB_CLK_HZ=270000000
 
         # System clock = fin * 20 
  #       PLL_SYS_REFDIV=1
@@ -86,7 +99,7 @@ target_link_libraries(Framethrower_Denise
  #       PLL_USB_POSTDIV1=5
  #       PLL_USB_POSTDIV2=2
  #       USB_CLK_HZ=140000000
-#)
+)
 
 set_property(TARGET Framethrower_Denise APPEND_STRING PROPERTY LINK_FLAGS "-Wl,--print-memory-usage")
 

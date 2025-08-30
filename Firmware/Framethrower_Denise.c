@@ -7,6 +7,7 @@
 #include "hardware/vreg.h"
 #include "hardware/resets.h"
 #include "hardware/xosc.h"
+#include "hardware/pll.h"
 #include "hardware/structs/clocks.h"
 #include "hardware/structs/bus_ctrl.h"
 #include "hardware/structs/hstx_ctrl.h"
@@ -22,6 +23,7 @@
 #include "video_capture.pio.h"
 #include "data_packet.h"
 #include <time.h>
+#include "pico/time.h"
 
 #define PIO_SM_INDEX 0 // Using State Machine 0
 
@@ -40,7 +42,7 @@ uint sm;
 // DVI constants
 
 #define hsync 20
-#define vsync 21
+#define vsync 23
 #define pixelclock 22
 
 #define TMDS_CTRL_00 0x354u
@@ -54,6 +56,10 @@ uint sm;
 #define SYNC_V1_H1 (TMDS_CTRL_11 | (TMDS_CTRL_00 << 10) | (TMDS_CTRL_00 << 20))
 #define SYNC_V1_H1_WITH_PREAMBLE (TMDS_CTRL_11 | (TMDS_CTRL_01 << 10) | (TMDS_CTRL_00 << 20))
 #define SYNC_V0_H0_WITH_DATA_ISLAND_PREAMBLE (TMDS_CTRL_00 | (TMDS_CTRL_01 << 10) | (TMDS_CTRL_01 << 20))
+#define SYNC_V0_H1_WITH_DATA_ISLAND_PREAMBLE (TMDS_CTRL_01 | (TMDS_CTRL_01 << 10) | (TMDS_CTRL_01 << 20))
+#define SYNC_V1_H0_WITH_DATA_ISLAND_PREAMBLE (TMDS_CTRL_10 | (TMDS_CTRL_01 << 10) | (TMDS_CTRL_01 << 20))
+#define SYNC_V1_H1_WITH_DATA_ISLAND_PREAMBLE (TMDS_CTRL_11 | (TMDS_CTRL_01 << 10) | (TMDS_CTRL_01 << 20))
+#define SYNC_V1_H1_WITH_DATA_ISLAND_PREAMBLE (TMDS_CTRL_11 | (TMDS_CTRL_01 << 10) | (TMDS_CTRL_01 << 20))
 #define VIDEO_LEADING_GUARD_BAND (0x2ccu | (0x133u << 10) | (0x2ccu << 20))
 
 
@@ -102,7 +108,7 @@ uint sm;
 #define MODE_H_SYNC_POLARITY 0
 #define MODE_H_FRONT_PORCH 12
 #define MODE_H_SYNC_WIDTH 64
-#define MODE_H_BACK_PORCH 68
+#define MODE_H_BACK_PORCH 68 //68
 #define MODE_H_ACTIVE_PIXELS 720
 
 #define MODE_V_SYNC_POLARITY 0
@@ -127,6 +133,20 @@ uint32_t asp_len;
 
 audio_sample_t audio;
 volatile int framecnt;
+
+
+//Audio Related
+#define AUDIO_BUFFER_SIZE   256
+audio_sample_t      audio_buffer[AUDIO_BUFFER_SIZE];
+const int16_t sine[32] = {
+    0x8000,0x98f8,0xb0fb,0xc71c,0xda82,0xea6d,0xf641,0xfd89,
+    0xffff,0xfd89,0xf641,0xea6d,0xda82,0xc71c,0xb0fb,0x98f8,
+    0x8000,0x6707,0x4f04,0x38e3,0x257d,0x1592,0x9be,0x276,
+    0x0,0x276,0x9be,0x1592,0x257d,0x38e3,0x4f04,0x6707
+};
+audio_ring_t  audio_ring;
+struct repeating_timer audio_timer;
+volatile int audiolock;
 
 #define FRAMEBUFFER_WIDTH MODE_H_ACTIVE_PIXELS
 #define FRAMEBUFFER_HEIGHT MODE_V_ACTIVE_LINES / 2
@@ -182,7 +202,7 @@ static uint32_t vactive_line[] = {
 	HSTX_CMD_TMDS | MODE_H_ACTIVE_PIXELS
 };
 
-/* Pre-compute the HDMI info packet that is required to switch the MS2130 to YCbCr422 mode */
+
 void init_avi_info_packet(void)
 {
 	int len = 0;
@@ -266,6 +286,7 @@ void init_acr_packet(void)
 	set_audio_clock_regeneration(&acr, 27000, 6144);
 	encode(&di_str, &acr, 0, 0);
 
+
 	acr_p[len++] = HSTX_CMD_RAW_REPEAT | MODE_H_FRONT_PORCH;
 	acr_p[len++] = SYNC_V0_H1;
 	acr_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_SYNC_WIDTH - W_DATA_ISLAND - W_PREAMBLE);
@@ -301,19 +322,21 @@ void init_asp_packet(void)
 	data_packet_t asp;
 	data_island_stream_t di_str;
 
-    audio_sample_t *audio_sample_ptr = &audio;
-	framecnt = set_audio_sample(&asp, audio_sample_ptr, 2,framecnt);
-	encode(&di_str, &asp, 0, 0);
+    audio_sample_t *audio_sample_ptr = get_read_pointer(&audio_ring);
+    framecnt = set_audio_sample(&asp, audio_sample_ptr, 4, framecnt);
+    increase_read_pointer(&audio_ring, 4);
+    encode(&di_str, &asp, 1, 1);
 
     asp_p[len++] = HSTX_CMD_RAW_REPEAT | MODE_H_FRONT_PORCH;
-	asp_p[len++] = SYNC_V0_H1;
+	asp_p[len++] = SYNC_V1_H1;
 	asp_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_SYNC_WIDTH - W_DATA_ISLAND - W_PREAMBLE);
-	asp_p[len++] = SYNC_V0_H0;
+	asp_p[len++] = SYNC_V1_H0;
 	asp_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
-	asp_p[len++] = SYNC_V0_H0_WITH_DATA_ISLAND_PREAMBLE;
+	asp_p[len++] = SYNC_V1_H1_WITH_DATA_ISLAND_PREAMBLE;
 	asp_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
 
-	/* convert from the two symbols per word for each channel to one
+
+    /* convert from the two symbols per word for each channel to one
 	 * symbol per word containing all three channels format */
 	for (int i = 0; i < N_DATA_ISLAND_WORDS; i++) {
 		asp_p[len++] = (di_str.data[0][i] & 0x3ff) |
@@ -325,29 +348,124 @@ void init_asp_packet(void)
 			       ((di_str.data[2][i] >> 10) << 20);
 	}
 
+    audio_sample_ptr = get_read_pointer(&audio_ring);
+    framecnt = set_audio_sample(&asp, audio_sample_ptr, 4, framecnt);
+    increase_read_pointer(&audio_ring, 4);
+    encode(&di_str, &asp, 1, 1);
+    asp_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
+	asp_p[len++] = SYNC_V1_H1;//SYNC_V1_H1_WITH_DATA_ISLAND_PREAMBLE;
+	asp_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
 
+    	for (int i = 0; i < N_DATA_ISLAND_WORDS-0; i++) {
+		asp_p[len++] = (di_str.data[0][i] & 0x3ff) |
+			       ((di_str.data[1][i] & 0x3ff) << 10) |
+			       ((di_str.data[2][i] & 0x3ff) << 20);
 
-        encode(&di_str, &asp, 0, 1);
-        asp_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
-        asp_p[len++] = SYNC_V0_H0_WITH_DATA_ISLAND_PREAMBLE;
-        asp_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
-        for (int i = 0; i < N_DATA_ISLAND_WORDS; i++) {
-            asp_p[len++] = (di_str.data[0][i] & 0x3ff) |
-                    ((di_str.data[1][i] & 0x3ff) << 10) |
-                    ((di_str.data[2][i] & 0x3ff) << 20);
+		asp_p[len++] = (di_str.data[0][i] >> 10) |
+			       ((di_str.data[1][i] >> 10) << 10) |
+			       ((di_str.data[2][i] >> 10) << 20);
+	}
 
-            asp_p[len++] = (di_str.data[0][i] >> 10) |
-                    ((di_str.data[1][i] >> 10) << 10) |
-                    ((di_str.data[2][i] >> 10) << 20);
-        }
+    audio_sample_ptr = get_read_pointer(&audio_ring);
+    framecnt = set_audio_sample(&asp, audio_sample_ptr, 4, framecnt);
+    increase_read_pointer(&audio_ring, 4);
+    encode(&di_str, &asp, 1, 1);
+    asp_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
+	asp_p[len++] = SYNC_V1_H1;//SYNC_V1_H1_WITH_DATA_ISLAND_PREAMBLE;
+	asp_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
 
+    	for (int i = 0; i < N_DATA_ISLAND_WORDS-0; i++) {
+		asp_p[len++] = (di_str.data[0][i] & 0x3ff) |
+			       ((di_str.data[1][i] & 0x3ff) << 10) |
+			       ((di_str.data[2][i] & 0x3ff) << 20);
 
+		asp_p[len++] = (di_str.data[0][i] >> 10) |
+			       ((di_str.data[1][i] >> 10) << 10) |
+			       ((di_str.data[2][i] >> 10) << 20);
+	}
 
+    audio_sample_ptr = get_read_pointer(&audio_ring);
+    framecnt = set_audio_sample(&asp, audio_sample_ptr, 4, framecnt);
+    increase_read_pointer(&audio_ring, 4);
+    encode(&di_str, &asp, 1, 1);
+    asp_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
+	asp_p[len++] = SYNC_V1_H1;//SYNC_V1_H1_WITH_DATA_ISLAND_PREAMBLE;
+	asp_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
 
-	asp_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_BACK_PORCH + MODE_H_ACTIVE_PIXELS- (W_DATA_ISLAND+W_PREAMBLE));
-	asp_p[len++] = SYNC_V0_H1;
+    	for (int i = 0; i < N_DATA_ISLAND_WORDS-0; i++) {
+		asp_p[len++] = (di_str.data[0][i] & 0x3ff) |
+			       ((di_str.data[1][i] & 0x3ff) << 10) |
+			       ((di_str.data[2][i] & 0x3ff) << 20);
+
+		asp_p[len++] = (di_str.data[0][i] >> 10) |
+			       ((di_str.data[1][i] >> 10) << 10) |
+			       ((di_str.data[2][i] >> 10) << 20);
+	}
+
+    audio_sample_ptr = get_read_pointer(&audio_ring);
+    framecnt = set_audio_sample(&asp, audio_sample_ptr, 4, framecnt);
+    increase_read_pointer(&audio_ring, 4);
+    encode(&di_str, &asp, 1, 1);
+    asp_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
+	asp_p[len++] = SYNC_V1_H1;//SYNC_V1_H1_WITH_DATA_ISLAND_PREAMBLE;
+	asp_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
+
+    	for (int i = 0; i < N_DATA_ISLAND_WORDS-0; i++) {
+		asp_p[len++] = (di_str.data[0][i] & 0x3ff) |
+			       ((di_str.data[1][i] & 0x3ff) << 10) |
+			       ((di_str.data[2][i] & 0x3ff) << 20);
+
+		asp_p[len++] = (di_str.data[0][i] >> 10) |
+			       ((di_str.data[1][i] >> 10) << 10) |
+			       ((di_str.data[2][i] >> 10) << 20);
+	}
+    
+
+	asp_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_BACK_PORCH + MODE_H_ACTIVE_PIXELS - ((W_DATA_ISLAND+W_PREAMBLE) * 4));
+	asp_p[len++] = SYNC_V1_H1;
+    asp_p[len++] = HSTX_CMD_NOP;
 
 	asp_len = len;
+}
+
+
+void init_hsync_asp_packet(void)
+{
+	int len = 0;
+
+	data_packet_t asp;
+	data_island_stream_t di_str;
+
+    audio_sample_t *audio_sample_ptr = get_read_pointer(&audio_ring);
+    framecnt = set_audio_sample(&asp, audio_sample_ptr, 4, framecnt);
+    increase_read_pointer(&audio_ring, 4);
+    encode(&di_str, &asp, 1, 1);
+
+    asp_p[len++] = HSTX_CMD_RAW_REPEAT | MODE_H_FRONT_PORCH;
+	asp_p[len++] = SYNC_V1_H1;
+	asp_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_SYNC_WIDTH - W_DATA_ISLAND - W_PREAMBLE);
+	asp_p[len++] = SYNC_V1_H0;
+	asp_p[len++] = HSTX_CMD_RAW_REPEAT | W_PREAMBLE;
+	asp_p[len++] = SYNC_V1_H1_WITH_DATA_ISLAND_PREAMBLE;
+	asp_p[len++] = HSTX_CMD_RAW | W_DATA_ISLAND;
+
+
+    /* convert from the two symbols per word for each channel to one
+	 * symbol per word containing all three channels format */
+	for (int i = 0; i < N_DATA_ISLAND_WORDS; i++) {
+		asp_p[len++] = (di_str.data[0][i] & 0x3ff) |
+			       ((di_str.data[1][i] & 0x3ff) << 10) |
+			       ((di_str.data[2][i] & 0x3ff) << 20);
+
+		asp_p[len++] = (di_str.data[0][i] >> 10) |
+			       ((di_str.data[1][i] >> 10) << 10) |
+			       ((di_str.data[2][i] >> 10) << 20);
+	}
+    
+
+	asp_p[len++] = HSTX_CMD_RAW_REPEAT | (MODE_H_BACK_PORCH + MODE_H_ACTIVE_PIXELS - ((W_DATA_ISLAND+W_PREAMBLE) * 4));
+	asp_p[len++] = SYNC_V1_H1;
+    asp_p[len++] = HSTX_CMD_NOP;
 }
 
 // ----------------------------------------------------------------------------
@@ -364,8 +482,10 @@ static bool dma_pong = false;
 // A ping and a pong are cued up initially, so the first time we enter this
 // handler it is to cue up the second ping after the first ping has completed.
 // This is the third scanline overall (-> =2 because zero-based).
-static uint v_scanline = 2;
-static uint v_scanline_half = 2;
+volatile uint v_scanline = 2;
+volatile uint scanout;
+volatile uint scanout_end;
+//static uint v_scanline_half = 2;
 
 // During the vertical active period, we take two IRQs per scanline: one to
 // post the command list, and another to post the pixels.
@@ -393,8 +513,11 @@ void __scratch_x("") dma_irq_handler()
 */
     if (v_scanline >= MODE_V_FRONT_PORCH && v_scanline < (MODE_V_FRONT_PORCH + MODE_V_SYNC_WIDTH)+48)
     {
+//        gpio_put(28,1);
+        //audiolock = 1;    
         channel_config_set_transfer_data_size(&c, DMA_SIZE_32);
         if (v_scanline == MODE_V_FRONT_PORCH) {
+                    audiolock = 0;
             ch->read_addr = (uintptr_t)info_avi_p;
 			ch->transfer_count = info_avi_len;
         } else if (v_scanline == MODE_V_FRONT_PORCH +1 ){
@@ -403,10 +526,11 @@ void __scratch_x("") dma_irq_handler()
         } else if (v_scanline == MODE_V_FRONT_PORCH +2 ){
             ch->read_addr = (uintptr_t)acr_p;
 			ch->transfer_count = acr_len;
+
+        /*    
         } else if (v_scanline >= MODE_V_FRONT_PORCH +3 && v_scanline <= 48){
             ch->read_addr = (uintptr_t)asp_p;
 			ch->transfer_count = asp_len;
-        /*
         } else if (v_scanline == MODE_V_FRONT_PORCH +4 ){
             ch->read_addr = (uintptr_t)asp_p;
 			ch->transfer_count = asp_len;
@@ -428,8 +552,15 @@ void __scratch_x("") dma_irq_handler()
 
     else if (v_scanline < MODE_V_FRONT_PORCH + MODE_V_SYNC_WIDTH + MODE_V_BACK_PORCH)
     {
-        ch->read_addr = (uintptr_t)vblank_line_vsync_off;
-        ch->transfer_count = count_of(vblank_line_vsync_off);
+//        gpio_put(28,0);
+        if(v_scanline == MODE_V_FRONT_PORCH + MODE_V_SYNC_WIDTH + MODE_V_BACK_PORCH){
+            ch->read_addr = (uintptr_t)vblank_line_vsync_off;
+            ch->transfer_count = count_of(vblank_line_vsync_off);
+        } else {
+            ch->read_addr = (uintptr_t)asp_p;
+			ch->transfer_count = asp_len;
+        }
+
     }
     else if (!vactive_cmdlist_posted)
     {
@@ -439,6 +570,7 @@ void __scratch_x("") dma_irq_handler()
     }
     else
     {
+        //if (v_scanline == 100) audiolock = 0;
         // This is for posting the pixel data for the active line
         // Calculate the actual framebuffer line to read based on the current scanline and the doubling logic
         uint framebuf_line_index;
@@ -454,10 +586,12 @@ void __scratch_x("") dma_irq_handler()
             framebuf_line_index = (v_scanline - (MODE_V_TOTAL_LINES - MODE_V_ACTIVE_LINES) - 1) / 2;
             first_line_output_done = false; // Reset for the next unique framebuffer line
         }
+//        if (first_line_output_done)gpio_put(27,1);
         channel_config_set_transfer_data_size(&c, DMA_SIZE_16);
         ch->read_addr = (uintptr_t)&framebuffer[framebuf_line_index * MODE_H_ACTIVE_PIXELS];
         ch->transfer_count = MODE_H_ACTIVE_PIXELS / sizeof(uint16_t); // / sizeof(uint32_t);
         vactive_cmdlist_posted = false;
+//        gpio_put(27,0);
     }
 
     if (!vactive_cmdlist_posted)
@@ -508,9 +642,9 @@ void __not_in_flash_func(get_line)(void)
         while ((pixel12 = gpioc_lo_in_get()) & (1 << pixelclock))
         {
         }
-        uint8_t r4 = (pixel12 >> 8) & 0x0F; // Bits 8-11 für Rot
+        uint8_t b4 = (pixel12 >> 7) & 0x0F; // Bits 8-11 für Rot
         uint8_t g4 = (pixel12 >> 4) & 0x0F; // Bits 4-7 für Grün
-        uint8_t b4 = pixel12 & 0x0F;        // Bits 0-3 für Blau
+        uint8_t r4 = pixel12 & 0x0F;        // Bits 0-3 für Blau
         line_buffer_rgb444[i] = colour_rgb444(r4 << 4, g4 << 4, b4 << 4);
     }
 }
@@ -531,9 +665,10 @@ void __not_in_flash_func(get_pio_line)(void)
         {
         }
         pixel12 = pio->rxf[sm];
-        uint8_t r4 = (pixel12 >> 8) & 0x0F; // Bits 8-11 für Rot
+        uint8_t b4 = (pixel12 >> 8) & 0x07; // Bits 8-11 für Rot
+                b4 = (b4 << 1);
         uint8_t g4 = (pixel12 >> 4) & 0x0F; // Bits 4-7 für Grün
-        uint8_t b4 = pixel12 & 0x0F;        // Bits 0-3 für Blau
+        uint8_t r4 = pixel12 & 0x0F;        // Bits 0-3 für Blau
         line_buffer_rgb444[i] = colour_rgb444(r4 << 4, g4 << 4, b4 << 4);
     }
     pio_sm_set_enabled(pio, sm, false);
@@ -562,10 +697,36 @@ volatile bool pio_interrupt_triggered = false;
 
 void __not_in_flash_func(pio_interrupt_handler)() {
     if (pio_interrupt_get(pio, 0)) {
-        gpio_put(28,1); 
+        //gpio_put(28,1); 
         pio_interrupt_clear(pio, 0);
         pio_interrupt_triggered = true;
-        gpio_put(28,0); 
+        //gpio_put(28,0); 
+    }
+}
+
+
+bool waitForValidPulse(uint pin, uint32_t min_duration_us) {
+    // 1. Warten, bis der Pin auf LOW geht
+    while (gpio_get(pin)) {
+        tight_loop_contents();
+    }
+
+    // Pin ist LOW, starte die Zeitmessung
+    uint32_t start_time_us = time_us_32();
+
+    // 2. Warten, bis der Pin wieder auf HIGH geht
+    while (!gpio_get(pin)) {
+        tight_loop_contents();
+    }
+    
+    // Pin ist wieder HIGH, berechne die Dauer
+    uint32_t pulse_duration_us = time_us_32() - start_time_us;
+
+    // 3. Dauer prüfen und entsprechenden booleschen Wert zurückgeben
+    if (pulse_duration_us >= min_duration_us) {
+        return true; // Gültiger Impuls
+    } else {
+        return false; // Zu kurz, wird als Störung ignoriert
     }
 }
 
@@ -577,28 +738,92 @@ void core1_entry()
     while (1)
     {
 
+/*        
+        while (gpio_get(vsync)) {
+            tight_loop_contents(); 
+        }
+        uint32_t start_time_us = time_us_32();
+        while (!gpio_get(vsync)) {
+            tight_loop_contents();
+        }
+        uint32_t end_time_us = time_us_32();
+        uint32_t pulse_duration_us = end_time_us - start_time_us;
+        if (pulse_duration_us >= 20) {
+*/
+        if (waitForValidPulse(vsync,20)){
+
+            for (y = 0; y < 21; y++)
+            {
+                get_pio_line();
+            }
+            scanout = v_scanline;
+            for (y = 0; y < 288; y++)
+            {
+                get_pio_line();
+                dma_memcpy(framebuffer + (MODE_H_ACTIVE_PIXELS * y), line_buffer_rgb444 + 69, MODE_H_ACTIVE_PIXELS * 2);
+            }
+            scanout_end = v_scanline;
+            /*
+                while (!(gpioc_lo_in_get() & (1 << vsync)))
+            {
+            }
+            */
+            while(waitForValidPulse(vsync,20)){}
+        }
+
+
+
+/*
         while (gpioc_lo_in_get() & (1 << vsync))
         {
         }
         while (!(gpioc_lo_in_get() & (1 << vsync)))
         {
         }
-        
+        //v_scanline = MODE_V_FRONT_PORCH + MODE_V_SYNC_WIDTH + MODE_V_BACK_PORCH;
+
+        //v_scanline = MODE_V_TOTAL_LINES-( MODE_V_BACK_PORCH +2);
+
         for (y = 0; y < 21; y++)
         {
             get_pio_line();
         }
-
+        scanout = v_scanline;
         for (y = 0; y < 288; y++)
         {
             get_pio_line();
             dma_memcpy(framebuffer + (MODE_H_ACTIVE_PIXELS * y), line_buffer_rgb444 + 69, MODE_H_ACTIVE_PIXELS * 2);
         }
+        scanout_end = v_scanline;
                while (!(gpioc_lo_in_get() & (1 << vsync)))
         {
         }
+*/
     }
 }
+
+
+void gpio_callback(uint gpio, uint32_t events) {
+    if(gpio==vsync)  v_scanline = MODE_V_TOTAL_LINES-( MODE_V_BACK_PORCH);
+}
+
+//bool audio_timer_callback(void) {
+bool audio_timer_callback(struct repeating_timer *t) {
+    int size = get_write_size(&audio_ring, false);
+    audio_sample_t *audio_ptr = get_write_pointer(&audio_ring);
+    audio_sample_t sample;
+    static uint sample_count = 0;
+    for (int cnt = 0; cnt < size; cnt++) {
+        sample.channels[0] = sine[sample_count % 32];
+        sample.channels[1] = sine[sample_count % 32];
+        *audio_ptr++ = sample;
+        sample_count++;
+    }
+    increase_write_pointer(&audio_ring, size);
+ 
+    return true;
+}
+
 
 int main(void)
 {
@@ -608,13 +833,22 @@ int main(void)
 
     //vreg_set_voltage(VREG_VOLTAGE_0_85);
 
+
+    for (uint i = 0; i <= 47; i++) {
+    gpio_init(i);
+    gpio_set_dir(i, 0);
+    gpio_disable_pulls(i);
+    //gpio_pull_up(i);
+    }
+
+
     sleep_ms(50);
     vreg_disable_voltage_limit();
     vreg_set_voltage(VREG_VOLTAGE_1_80);
     sleep_ms(50);
     qmi_hw->m[0].timing = 0x40000204;
     sleep_ms(50);
-    set_sys_clock_khz(270000, true);
+//    set_sys_clock_khz(270000, true);
     sleep_ms(50);
 
     size_t num_pixels = (size_t)FRAMEBUFFER_WIDTH * FRAMEBUFFER_HEIGHT;
@@ -625,11 +859,11 @@ int main(void)
     init_avi_info_packet();
     init_aif_info_packet();
     init_acr_packet();
-
-    srand(time(NULL)); 
-    //audio.channels[0] = audio.channels[1] = rand();
-
+    audio_ring_set(&audio_ring, audio_buffer, AUDIO_BUFFER_SIZE);
+    add_repeating_timer_ms(2, audio_timer_callback, NULL, &audio_timer);
+    sleep_ms(100);
     init_asp_packet();
+    audiolock=1;
 
     for (uint8_t i = 0; i < 12; i++)
     {
@@ -638,14 +872,18 @@ int main(void)
         gpio_set_input_hysteresis_enabled(i, true);
     }
 
-    gpio_init(28);
-    gpio_set_dir(28, GPIO_OUT);
+    //gpio_init(28);
+    //gpio_set_dir(28, GPIO_OUT);
+
+    //gpio_init(27);
+    //gpio_set_dir(27, GPIO_OUT);
 
     gpio_init(hsync);
     gpio_set_dir(hsync, GPIO_IN);
 
     gpio_init(vsync);
     gpio_set_dir(vsync, GPIO_IN);
+    //gpio_set_irq_enabled_with_callback(vsync,GPIO_IRQ_EDGE_FALL, true, &gpio_callback);
 
     gpio_init(pixelclock);
     gpio_set_dir(pixelclock, GPIO_IN);
@@ -654,7 +892,24 @@ int main(void)
     gpio_set_input_hysteresis_enabled(vsync, true);
     gpio_set_input_hysteresis_enabled(pixelclock, true);
 
+/*
+    hw_write_masked(
+    &pll_sys_hw->fbdiv_int,
+    224 << PLL_FBDIV_INT_LSB,
+    PLL_FBDIV_INT_BITS);
+*/
+
+
+/*
+    hw_write_masked(
+        &clocks_hw->clk[clk_sys].div,
+        8 << CLOCKS_CLK_SYS_DIV_FRAC_LSB,
+        CLOCKS_CLK_SYS_DIV_FRAC_BITS);
+*/
+
+
     reset_block(RESETS_RESET_HSTX_BITS);
+
 
     hw_write_masked(
         &clocks_hw->clk[clk_hstx].ctrl,
@@ -773,11 +1028,54 @@ int main(void)
 
     multicore_launch_core1(core1_entry);
 
+    
+
     while (1)
     {
-       //sleep_ms(1);
-       init_asp_packet();
-       audio.channels[0] = audio.channels[1] = rand();
-       //framecnt++;
+
+     //pll_usb_hw->fbdiv_int = 225;
+     //pll_usb_hw->fbdiv_int = 224;
+
+/*     
+    pll_sys_hw->fbdiv_int = 224;
+    asm ("nop");asm ("nop");asm ("nop");
+    asm ("nop");asm ("nop");asm ("nop");
+    asm ("nop");asm ("nop");asm ("nop");
+    asm ("nop");asm ("nop");asm ("nop");
+    asm ("nop");asm ("nop");asm ("nop");
+    asm ("nop");asm ("nop");asm ("nop");
+    pll_sys_hw->fbdiv_int = 225;
+    asm ("nop");asm ("nop");asm ("nop");
+    asm ("nop");asm ("nop");asm ("nop");
+    asm ("nop");asm ("nop");asm ("nop");
+    asm ("nop");asm ("nop");asm ("nop");
+    asm ("nop");asm ("nop");asm ("nop");
+    asm ("nop");asm ("nop");asm ("nop");
+*/
+
+/*
+    hw_write_masked(
+    &pll_sys_hw->fbdiv_int,
+    224 << PLL_FBDIV_INT_LSB,
+    PLL_FBDIV_INT_BITS);
+
+    sleep_us(1);
+    hw_write_masked(
+    &pll_sys_hw->fbdiv_int,
+    225 << PLL_FBDIV_INT_LSB,
+    PLL_FBDIV_INT_BITS);
+    sleep_us(1);
+    hw_write_masked(
+    &pll_sys_hw->fbdiv_int,
+    225 << PLL_FBDIV_INT_LSB,
+    PLL_FBDIV_INT_BITS);
+    sleep_us(1);
+*/
+
+
+    //   while(!audiolock){
+    //    audiolock = 1;
+    //    //init_asp_packet();
+    //   }
     }
 }

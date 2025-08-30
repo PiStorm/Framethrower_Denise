@@ -23,8 +23,12 @@
                 "monitor reset init",
                 "load \"${command:raspberry-pi-pico.launchTargetPath}\""
             ],
+                "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 20
+            },
             "openOCDLaunchCommands": [
-                "adapter speed 5000"
+                "adapter speed 10000"
             ]
         },
         {
