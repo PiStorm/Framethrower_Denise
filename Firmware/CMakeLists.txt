@@ -42,7 +42,6 @@ pico_set_program_version(Framethrower_Denise "0.1")
 
 # Generate PIO header
 pico_generate_pio_header(Framethrower_Denise ${CMAKE_CURRENT_LIST_DIR}/video_capture.pio)
-pico_generate_pio_header(Framethrower_Denise ${CMAKE_CURRENT_LIST_DIR}/sync_irq.pio)
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(Framethrower_Denise 0)

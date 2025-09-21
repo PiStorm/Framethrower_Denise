@@ -18,10 +18,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "data_packet.h"
 #include "fifo.h"
 #include "mipi.h"
-#include "sync_irq.pio.h"
 #include "video_capture.pio.h"
 
 // =============================================================================
