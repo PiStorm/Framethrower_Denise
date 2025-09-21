@@ -1,0 +1,29 @@
+; PIO-Programm, das nur VSYNC-Ereignisse meldet.
+; Es zählt die Zeilen zwischen zwei VSYNCs und pusht nur
+; die Gesamtzahl in die FIFO und löst dann einen IRQ aus.
+
+.program sync_irq
+.wrap_target
+    ; Warte auf fallende Flanke
+    wait 1 pin 0
+    wait 0 pin 0
+
+    ; Zähler initialisieren. Kann Pulse bis zu 102.4µs messen.
+    set y, 31
+
+measure_loop:
+    ; Wenn Pin HIGH wird, ist der Puls zu Ende.
+    jmp pin, pulse_end
+
+    ; Verzögerung + Schleife. Ein Durchlauf dauert 32 Zyklen.
+    nop [30]
+    jmp y--, measure_loop
+
+pulse_end:
+    ; Sende den *Restwert* des Zählers an die CPU.
+    ; Ein hoher Restwert = kurzer Puls.
+    ; Ein niedriger Restwert = langer Puls.
+    mov isr, y
+    push
+    irq set 0
+.wrap

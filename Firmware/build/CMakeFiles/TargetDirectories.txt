@@ -1,5 +1,6 @@
 Y:/Projects/FramethrowerDenise/Framethrower_Denise/Firmware/build/CMakeFiles/Framethrower_Denise.dir
 Y:/Projects/FramethrowerDenise/Framethrower_Denise/Firmware/build/CMakeFiles/Framethrower_Denise_video_capture_pio_h.dir
+Y:/Projects/FramethrowerDenise/Framethrower_Denise/Firmware/build/CMakeFiles/Framethrower_Denise_sync_irq_pio_h.dir
 Y:/Projects/FramethrowerDenise/Framethrower_Denise/Firmware/build/CMakeFiles/edit_cache.dir
 Y:/Projects/FramethrowerDenise/Framethrower_Denise/Firmware/build/CMakeFiles/rebuild_cache.dir
 Y:/Projects/FramethrowerDenise/Framethrower_Denise/Firmware/build/pico-sdk/CMakeFiles/edit_cache.dir

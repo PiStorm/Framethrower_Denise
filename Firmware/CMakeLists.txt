@@ -35,13 +35,14 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(Framethrower_Denise Framethrower_Denise.c data_packet.c audio_ring.c)
+add_executable(Framethrower_Denise Framethrower_Denise.c mipi.c fifo.c)
 
 pico_set_program_name(Framethrower_Denise "Framethrower_Denise")
 pico_set_program_version(Framethrower_Denise "0.1")
 
 # Generate PIO header
 pico_generate_pio_header(Framethrower_Denise ${CMAKE_CURRENT_LIST_DIR}/video_capture.pio)
+pico_generate_pio_header(Framethrower_Denise ${CMAKE_CURRENT_LIST_DIR}/sync_irq.pio)
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(Framethrower_Denise 0)
@@ -73,11 +74,11 @@ target_compile_definitions(Framethrower_Denise PRIVATE
         #PLL_SYS_POSTDIV2=1
         #SYS_CLK_HZ=224000000
 
-        PLL_SYS_REFDIV=2
-        PLL_SYS_VCO_FREQ_HZ=1350000000
-        PLL_SYS_POSTDIV1=5
-        PLL_SYS_POSTDIV2=1
-        SYS_CLK_HZ=270000000
+        #PLL_SYS_REFDIV=2
+        #PLL_SYS_VCO_FREQ_HZ=1350000000
+        #PLL_SYS_POSTDIV1=5
+        #PLL_SYS_POSTDIV2=1
+        #SYS_CLK_HZ=300000000
 
 
         #PLL_USB_REFDIV=2

@@ -13,7 +13,7 @@
 // ------------- //
 
 #define video_capture_wrap_target 0
-#define video_capture_wrap 10
+#define video_capture_wrap 9
 #define video_capture_pio_version 1
 
 static const uint16_t video_capture_program_instructions[] = {
@@ -22,20 +22,19 @@ static const uint16_t video_capture_program_instructions[] = {
     0xa027, //  1: mov    x, osr
     0x2517, //  2: wait   0 gpio, 23             [5]
     0x2597, //  3: wait   1 gpio, 23             [5]
-    0xc000, //  4: irq    nowait 0
-    0x2014, //  5: wait   0 gpio, 20
-    0x2494, //  6: wait   1 gpio, 20             [4]
-    0x4000, //  7: in     pins, 32
-    0x2414, //  8: wait   0 gpio, 20             [4]
-    0x4000, //  9: in     pins, 32
-    0x0046, // 10: jmp    x--, 6
+    0x2014, //  4: wait   0 gpio, 20
+    0x2694, //  5: wait   1 gpio, 20             [6]
+    0x4000, //  6: in     pins, 32
+    0x2614, //  7: wait   0 gpio, 20             [6]
+    0x4000, //  8: in     pins, 32
+    0x0045, //  9: jmp    x--, 5
             //     .wrap
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program video_capture_program = {
     .instructions = video_capture_program_instructions,
-    .length = 11,
+    .length = 10,
     .origin = -1,
     .pio_version = video_capture_pio_version,
 #if PICO_PIO_VERSION > 0
@@ -54,6 +53,68 @@ static inline void video_capture_program_init(PIO pio, uint sm, uint offset, uin
     sm_config_set_in_pins(&c, pin);
     pio_sm_set_consecutive_pindirs(pio, sm, 0, 32, false);
     sm_config_set_wrap(&c, offset + video_capture_wrap_target, offset + video_capture_wrap);
+    sm_config_set_in_shift(&c, true, true, 1);
+    //sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_RX);
+    // Clear IRQ flag before starting, and make sure flag doesn't actually
+    // assert a system-level interrupt (we're using it as a status flag)
+    //pio_set_irq0_source_enabled(pio, (enum pio_interrupt_source) ((uint) pis_interrupt0 + sm), true);
+    //pio_interrupt_clear(pio, sm);
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, false);
+}
+
+#endif
+
+// ------------ //
+// vsync_detect //
+// ------------ //
+
+#define vsync_detect_wrap_target 0
+#define vsync_detect_wrap 14
+#define vsync_detect_pio_version 1
+
+static const uint16_t vsync_detect_program_instructions[] = {
+            //     .wrap_target
+    0x3fa0, //  0: wait   1 pin, 0               [31]
+    0x3f20, //  1: wait   0 pin, 0               [31]
+    0xe03f, //  2: set    x, 31
+    0x00c0, //  3: jmp    pin, 0
+    0xa242, //  4: nop                           [2]
+    0x0043, //  5: jmp    x--, 3
+    0xc000, //  6: irq    nowait 0
+    0x3f40, //  7: wait   0 irq, 0               [31]
+    0x3fa0, //  8: wait   1 pin, 0               [31]
+    0xe053, //  9: set    y, 19
+    0xe03f, // 10: set    x, 31
+    0xa342, // 11: nop                           [3]
+    0x004b, // 12: jmp    x--, 11
+    0x008a, // 13: jmp    y--, 10
+    0x0000, // 14: jmp    0
+            //     .wrap
+};
+
+#if !PICO_NO_HARDWARE
+static const struct pio_program vsync_detect_program = {
+    .instructions = vsync_detect_program_instructions,
+    .length = 15,
+    .origin = -1,
+    .pio_version = vsync_detect_pio_version,
+#if PICO_PIO_VERSION > 0
+    .used_gpio_ranges = 0x0
+#endif
+};
+
+static inline pio_sm_config vsync_detect_program_get_default_config(uint offset) {
+    pio_sm_config c = pio_get_default_sm_config();
+    sm_config_set_wrap(&c, offset + vsync_detect_wrap_target, offset + vsync_detect_wrap);
+    return c;
+}
+
+static inline void vsync_detect_program_init(PIO pio, uint sm, uint offset, uint pin) {
+    pio_sm_config c = vsync_detect_program_get_default_config(offset);
+    sm_config_set_in_pins(&c, pin);
+    pio_sm_set_consecutive_pindirs(pio, sm, 0, 32, false);
+    sm_config_set_wrap(&c, offset + vsync_detect_wrap_target, offset + vsync_detect_wrap);
     sm_config_set_in_shift(&c, true, true, 1);
     //sm_config_set_fifo_join(&c, PIO_FIFO_JOIN_RX);
     // Clear IRQ flag before starting, and make sure flag doesn't actually
