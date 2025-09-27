@@ -47,8 +47,8 @@ static inline void video_capture_program_init(PIO pio, uint sm, uint offset, uin
 ; In diesem Zustand sucht das Programm aktiv nach einem langen LOW-Impuls.
 .wrap_target
 start:
-    wait 1 pin 0 ;[31]
-    wait 0 pin 0 ;[31]
+    wait 1 pin 0; [31]
+    wait 0 pin 0; [31]
     irq set 1            ; Interrupt auslösen
     set x, 31
 

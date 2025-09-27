@@ -27,7 +27,12 @@
 // =============================================================================
 #define VIDEO_LINE_LENGTH 1024
 #define LINES_PER_FRAME 288
+#define LINES_PER_FRAME_NTSC 240
 #define SAMPLES_PER_LINE 800
+#define VBLANK_LINES 21
+
+//const uint32_t LINES_PER_FRAME = 288;
+//const uint32_t LINES_PER_FRAME_NTSC = 240;
 
 // GPIO Pin-Definitionen
 #define csync 23
@@ -46,6 +51,9 @@ uint sm_video, sm_vsync;
 volatile bool vsync_detected = false;
 volatile uint32_t lines;
 volatile uint32_t last_total_lines;
+volatile bool laced = false;
+volatile bool isPAL = false;
+volatile uint16_t lines_to_capture = 0;
 
 // =============================================================================
 // --- Interrupt Service Routine ---
@@ -56,7 +64,10 @@ void __not_in_flash_func(pio_irq_handler)() {
  
     if (pio_interrupt_get(pio, 0)) {
         vsync_detected = true;
+        laced = last_total_lines == lines  ? false : true;
+        isPAL = last_total_lines <= 300 ? false : true;
         last_total_lines = lines;
+        lines_to_capture = last_total_lines - 23;
         lines = 0;     
         pio_interrupt_clear(pio, 0); 
     }
@@ -66,10 +77,6 @@ void __not_in_flash_func(pio_irq_handler)() {
         pio_interrupt_clear(pio, 1); 
     }
 
-}
-
-void __not_in_flash_func(gpio_callback)(uint gpio, uint32_t events) {
-    lines++;
 }
 
 
@@ -208,20 +215,20 @@ void core1_entry() {
     irq_set_enabled(PIO0_IRQ_1, true);
 
 
-    //gpio_set_irq_enabled_with_callback(vsync, GPIO_IRQ_EDGE_FALL, true, &gpio_callback);
-
     uint16_t y = 0;
+    //uint16_t lines_to_capture = 0;
+
     while (1) {
         if (vsync_detected) {
             vsync_detected = false; // Flag zurücksetzen
 
             // Vertical Blanking abwarten
-            for (y = 0; y < 21; y++) {
+            for (y = 0; y < VBLANK_LINES; y++) {
                 get_pio_line();
             }
 
             // Aktive Videozeilen einlesen und in die FIFO schreiben
-            for (y = 0; y < 288; y++) {
+            for (y = 0; y < (isPAL? LINES_PER_FRAME-1 : LINES_PER_FRAME_NTSC-1); y++) {
                 get_pio_line();
                 // H-Blanking überspringen (Offset 69) und Daten in die FIFO schreiben
                 while (!fifo_write_buffer_dma(&my_fifo, line_buffer_rgb444 + 69, VIDEO_LINE_LENGTH)) {}
@@ -259,10 +266,6 @@ int main(void) {
         gpio_set_dir(i, GPIO_IN);
         gpio_set_input_hysteresis_enabled(i, true);
     }
-
-    //gpio_init(hsync);
-    //gpio_set_dir(hsync, GPIO_IN);
-    //gpio_set_input_hysteresis_enabled(hsync, true);
 
     gpio_init(csync);
     gpio_set_dir(csync, GPIO_IN);
@@ -306,9 +309,18 @@ int main(void) {
                 mipiCsiSendLong(0x22, (uint8_t*)videoline_in, 1440);
                 if(scanline){reduce_brightness_50(videoline_in,720);}
                 mipiCsiSendLong(0x22, (uint8_t*)videoline_in, 1440);
+/*
+                if(!isPAL) {
+                    for (uint8_t i = 0; i < LINES_PER_FRAME - LINES_PER_FRAME_NTSC; i++) {
+                        mipiCsiSendLong(0x22, (uint8_t*)videoline_in, 1440);
+                    }
+                }
+
+*/
 
                 // Prüfen, ob der Frame vollständig übertragen wurde
-                if (lines_read_count >= LINES_PER_FRAME) {
+                //if (lines_read_count >= (isPAL ? LINES_PER_FRAME : LINES_PER_FRAME_NTSC)) {
+                if (lines_read_count >= (isPAL ? LINES_PER_FRAME-1 : LINES_PER_FRAME_NTSC-1)) {
                     mipiCsiFrameEnd();
                     frame_active = false;
                 }
