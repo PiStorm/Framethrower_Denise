@@ -46,6 +46,8 @@
 __attribute__((aligned(4))) uint16_t *framebuffer;
 __attribute__((aligned(4))) uint16_t line1[VIDEO_LINE_LENGTH];
 __attribute__((aligned(4))) uint16_t line2[VIDEO_LINE_LENGTH];
+__attribute__((aligned(4))) uint16_t blackline [VIDEO_LINE_LENGTH];
+
 
 // PIO Globals
 PIO pio = pio0;
@@ -56,10 +58,12 @@ volatile bool vsync_detected = false;
 volatile uint32_t lines;
 volatile uint32_t last_total_lines;
 volatile bool laced = false;
-volatile bool isPAL = false;
+volatile bool isPAL = true;
 volatile bool video_go = false;
-volatile bool vsync_go = false;
+volatile bool vsync_go = true;
 volatile bool is_odd_field = true;
+volatile bool isPAL_prev = true;
+volatile bool clear_screen = false;
 
 // =============================================================================
 // --- Interrupt Service Routine ---
@@ -73,6 +77,8 @@ void __not_in_flash_func(pio_irq_handler)() {
         vsync_detected = true;
         laced = last_total_lines == lines  ? false : true;
         isPAL = last_total_lines <= 300 ? false : true;
+        if(isPAL_prev &  !isPAL)clear_screen=true; else clear_screen=false;
+        isPAL_prev = isPAL;
         is_odd_field = (lines % 2 != 0);
         last_total_lines = lines;
         lines = 0;
@@ -224,9 +230,8 @@ void core1_entry() {
             vsync_go = true;
 
             //Vblank abwarten
-            while (lines <= (laced && !(last_total_lines % 2)? VBLANK_LINES : VBLANK_LINES-1)){};
-            //while (lines <= (laced && is_odd_field ? VBLANK_LINES : VBLANK_LINES-1)){};
-
+            while (lines <= (laced && isPAL ? !(last_total_lines % 2) : is_odd_field? VBLANK_LINES : VBLANK_LINES-1)){};
+    
             // Aktive Videozeilen einlesen und in die FIFO schreiben
             for (y = 0; y < (isPAL? LINES_PER_FRAME-1 : LINES_PER_FRAME_NTSC-1); y++) {
                 get_pio_line(line1);
@@ -296,15 +301,34 @@ int __not_in_flash_func(main)(void) {
 
     uint32_t lines_read_count = 0;
     bool frame_active = false;
-    bool scanline = false;
-
 
     while (1) {
+
+/*
+            if(clear_screen){
+            mipiCsiFrameStart();
+            for (uint i = 0; i <= LINES_PER_FRAME*2 - 1; i++) {
+                mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
+            }
+            mipiCsiFrameEnd();
+            //clear_screen = false;
+            vsync_go = false;
+            video_go = true;     
+            }            
+*/
         if (!frame_active) {
             // Warten auf den Beginn eines neuen Frames
             if(vsync_go){
                 vsync_go = false;    
                 mipiCsiFrameStart();
+                //move frame a bit down if NTSC, to account for less video lines
+  /*
+                if(!isPAL) {
+                    for (uint i = 0; i <= 60; i++) {
+                        mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
+                    }
+                }
+  */
                 frame_active = true;
                 lines_read_count = 0;
             }
@@ -323,16 +347,16 @@ int __not_in_flash_func(main)(void) {
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                             mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
-                        dma_memcpy3(framebuffer + (ACTIVE_VIDEO * lines_read_count),line2, ACTIVE_VIDEO*2);
-                    }else{ //TODO NTSC Deinterlace
-                        if (is_odd_field) {
+                    }else{
+                        if (!is_odd_field) {
                             mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
-                            mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
+                            mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                         } else {                            
-                            mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
+                            mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                             mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
                     }
+                    dma_memcpy3(framebuffer + (ACTIVE_VIDEO * lines_read_count),line2, ACTIVE_VIDEO*2);
                 } else {
                     mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2); 
                     mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
