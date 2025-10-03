@@ -355,7 +355,7 @@ int __not_in_flash_func(main)(void) {
     for (uint i = 0; i <= 47; i++) {
         gpio_init(i);
         gpio_set_dir(i, 0);
-        gpio_disable_pulls(i);
+        gpio_pull_up(i);
     }
 
     // Daten- und Sync-Pins initialisieren
@@ -394,7 +394,7 @@ int __not_in_flash_func(main)(void) {
     uint32_t lines_read_count = 0;
     bool frame_active = false;
     __attribute__((aligned(4))) uint16_t temp_scanline[VIDEO_LINE_LENGTH];
-    bool scanlines = true;
+    bool scanlines = false;
 
 
     while (1) {
