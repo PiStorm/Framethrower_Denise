@@ -25,9 +25,9 @@ static const uint16_t video_capture_program_instructions[] = {
     0x2597, //  4: wait   1 gpio, 23             [5]
     0x2014, //  5: wait   0 gpio, 20
     0x2594, //  6: wait   1 gpio, 20             [5]
-    0x4b00, //  7: in     pins, 32               [11]
+    0x4100, //  7: in     pins, 32               [1]
     0x2514, //  8: wait   0 gpio, 20             [5]
-    0x4b00, //  9: in     pins, 32               [11]
+    0x4100, //  9: in     pins, 32               [1]
     0x0046, // 10: jmp    x--, 6
             //     .wrap
 };

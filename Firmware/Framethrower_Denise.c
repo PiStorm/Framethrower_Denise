@@ -39,10 +39,6 @@
 #define pixelclock 22
 
 // Globale Puffer und FIFO
-//__attribute__((aligned(4))) fifo_t my_fifo;
-//__attribute__((aligned(4))) uint16_t videoline_in[VIDEO_LINE_LENGTH];
-//__attribute__((aligned(4))) uint16_t videoline_out[VIDEO_LINE_LENGTH];
-//__attribute__((aligned(4))) uint16_t line_buffer_rgb444[VIDEO_LINE_LENGTH];
 __attribute__((aligned(4))) uint16_t *framebuffer;
 __attribute__((aligned(4))) uint16_t line1[VIDEO_LINE_LENGTH];
 __attribute__((aligned(4))) uint16_t line2[VIDEO_LINE_LENGTH];
@@ -96,59 +92,139 @@ void __not_in_flash_func(pio_irq_handler)() {
 // =============================================================================
 
 //TODO -> RGB444 zu RGB565 kann eventuell der HSTX Expander-Block machen
-static inline uint16_t __not_in_flash_func(convert_12_to_565_fast)(uint32_t pixel_in) {
+static inline uint16_t __not_in_flash_func(convert_12_to_565_reordered_fast)(uint16_t pixel_in) {
     uint32_t result;
+    uint32_t r, g, b, temp; // Temporäre Register
+
     __asm volatile (
-        // --- B-Komponente (Ziel: Bits 4-0) ---
-        "ubfx   r2, %[in], #8, #4        \n\t" // r2 = bbbb
-        "lsr    r3, r2, #3              \n\t" // r3 = b3 (MSB)
-        "orr    %[out], r3, r2, lsl #1  \n\t" // result = bbbbb
+        // --- Schritt 1: Parallele Extraktion aller Komponenten ---
+        // Diese 3 Befehle sind voneinander unabhängig und können von der
+        // CPU-Pipeline überlappend ausgeführt werden.
+        "ubfx   %[r], %[in], #0, #4        \n\t" // r = R (rrrr)
+        "ubfx   %[g], %[in], #4, #4        \n\t" // g = G (gggg)
+        "ubfx   %[b], %[in], #8, #4        \n\t" // b = B (bbbb)
 
-        // --- G-Komponente (Ziel: Bits 10-5) ---
-        "ubfx   r2, %[in], #4, #4        \n\t" // r2 = gggg
-        "lsr    r3, r2, #2              \n\t" // r3 = g3g2 (MSBs)
-        "orr    r2, r3, r2, lsl #2      \n\t" // r2 = gggggg
-        "bfi    %[out], r2, #5, #6      \n\t" // result |= (gggggg << 5)
+        // --- Schritt 2: Skalierung & initiales Packen ---
+        // Skaliere B auf 5 Bit und schreibe es als erstes ins Ergebnis.
+        "lsr    %[tmp], %[b], #3           \n\t" // tmp = MSB von B
+        "orr    %[out], %[tmp], %[b], lsl #1 \n\t" // result = bbbbb
 
-        // --- R-Komponente (Ziel: Bits 15-11) ---
-        "ubfx   r2, %[in], #0, #4        \n\t" // r2 = rrrr
-        "lsr    r3, r2, #3              \n\t" // r3 = r3 (MSB)
-        "orr    r2, r3, r2, lsl #1      \n\t" // r2 = rrrrr
-        "bfi    %[out], r2, #11, #5     \n\t" // result |= (rrrrr << 11)
+        // Skaliere G auf 6 Bit.
+        "lsr    %[tmp], %[g], #2           \n\t" // tmp = 2 MSBs von G
+        "orr    %[g], %[tmp], %[g], lsl #2 \n\t" // g = gggggg
 
-        : [out] "=&r" (result)
+        // Skaliere R auf 5 Bit.
+        "lsr    %[tmp], %[r], #3           \n\t" // tmp = MSB von R
+        "orr    %[r], %[tmp], %[r], lsl #1 \n\t" // r = rrrrr
+
+        // --- Schritt 3: Finales Zusammensetzen ---
+        // Die skalierten Werte sind nun fertig und können nacheinander
+        // in das Ergebnisregister eingefügt werden.
+        "bfi    %[out], %[g], #5, #6       \n\t" // Füge 6-Bit G an Position 5 ein
+        "bfi    %[out], %[r], #11, #5      \n\t" // Füge 5-Bit R an Position 11 ein
+
+        : [out] "=&r" (result), [r] "=&r" (r), [g] "=&r" (g), [b] "=&r" (b), [tmp] "=&r" (temp)
         : [in] "r" (pixel_in)
-        : "r2", "r3"
     );
+
     return (uint16_t)result;
 }
 
-void __not_in_flash_func(reduce_brightness_50)(uint16_t* line, int count) {
-    // Die magische Maske, dupliziert für 32-Bit-Verarbeitung.
-    // 0xF7DE = 0b1111011111011110
-    const uint32_t mask = 0xF7DEF7DE;
-
+void __not_in_flash_func(set_brightness_fast_levels)(uint16_t* line, int count, int level) {
     uint32_t* p32 = (uint32_t*)line;
-    const int loop_count = count / 4; // Wir verarbeiten 4 Pixel pro Durchlauf
-    int i;
+    int loop_count = count >> 1;
 
-    for (i = 0; i < loop_count; ++i) {
-        // Lade 4 Pixel (zwei 32-Bit-Werte)
-        uint32_t pixels1 = p32[i * 2];
-        uint32_t pixels2 = p32[i * 2 + 1];
-
-        // Führe die Operation auf beiden Wertepaaren aus
-        pixels1 = (pixels1 & mask) >> 1;
-        pixels2 = (pixels2 & mask) >> 1;
-
-        // Schreibe die 4 modifizierten Pixel zurück
-        p32[i * 2] = pixels1;
-        p32[i * 2 + 1] = pixels2;
+    if (level >= 4) {
+        return;
     }
 
-    // Ggf. die restlichen Pixel behandeln (für 1024 nicht nötig)
-    int remaining_start = loop_count * 4;
-    for(i = remaining_start; i < count; ++i) {
+    switch (level) {
+        case 3: { // ~75% Helligkeit
+            const uint32_t mask25 = 0xE79CE79C;
+            __asm volatile (
+                ".p2align 2\n"
+                "1:\n"
+                // Lade 2 Original-Pixel (100%)
+                "ldr r0, [%[ptr]]\n"
+                // Berechne die 25%-Version
+                "and r1, r0, %[mask]\n"
+                "lsr r1, r1, #2\n"
+                // Subtrahiere 25% von 100% für 2 Pixel gleichzeitig!
+                "usub16 r0, r0, r1\n"
+                // Schreibe Ergebnis zurück und erhöhe Zeiger
+                "str r0, [%[ptr]], #4\n"
+                // Schleifenkontrolle
+                "subs %[n], #1\n"
+                "bne 1b\n"
+                : [ptr] "+&r"(p32), [n] "+&r"(loop_count)
+                : [mask] "r"(mask25)
+                : "r0", "r1", "cc", "memory"
+            );
+            break;
+        }
+        case 2: { // 50% Helligkeit
+            const uint32_t mask50 = 0xF7DEF7DE;
+            for (int i = 0; i < loop_count; ++i) {
+                p32[i] = (p32[i] & mask50) >> 1;
+            }
+            break;
+        }
+        case 1: { // 25% Helligkeit
+            const uint32_t mask25 = 0xE79CE79C;
+            for (int i = 0; i < loop_count; ++i) {
+                p32[i] = (p32[i] & mask25) >> 2;
+            }
+            break;
+        }
+        case 0: { // 0% Helligkeit
+            for (int i = 0; i < loop_count; ++i) {
+                p32[i] = 0;
+            }
+            break;
+        }
+    }
+
+    // Ggf. das letzte ungerade Pixel behandeln
+    if (count & 1) {
+        uint16_t p = line[count - 1];
+        switch (level) {
+            case 3: line[count-1] = p - ((p & 0xE79C) >> 2); break;
+            case 2: line[count-1] = (p & 0xF7DE) >> 1; break;
+            case 1: line[count-1] = (p & 0xE79C) >> 2; break;
+            case 0: line[count-1] = 0; break;
+        }
+    }
+}
+
+void __not_in_flash_func(reduce_brightness_50_asm_fast)(uint16_t* line, int count) {
+    const uint32_t mask = 0xF7DEF7DE;
+    int n = count >> 3;
+    if (n == 0) goto handle_remainder;
+    __asm volatile (
+        ".p2align 2\n"
+        "1:\n"
+        "ldmia %[ptr]!, {r4-r7}\n"
+        "and r4, %[mask]\n"
+        "and r5, %[mask]\n"
+        "and r6, %[mask]\n"
+        "and r7, %[mask]\n"
+        "lsr r4, #1\n"
+        "lsr r5, #1\n"
+        "lsr r6, #1\n"
+        "lsr r7, #1\n"
+        "sub %[ptr], #16\n"
+        "stmia %[ptr]!, {r4-r7}\n"
+        "subs %[n], #1\n"
+        "bne 1b\n"
+        : [ptr] "+&r" (line),
+          [n]   "+&r" (n)
+        : [mask] "r" (mask)
+        : "r4", "r5", "r6", "r7", "memory", "cc"
+    );
+
+handle_remainder:
+    int remaining_start = count & ~7;
+    for (int i = remaining_start; i < count; ++i) {
         line[i] = (line[i] & 0xF7DE) >> 1;
     }
 }
@@ -160,15 +236,14 @@ void __not_in_flash_func(get_pio_line)(uint16_t* line_buffer) {
         (void)pio_sm_get_blocking(pio, sm_video);
     }
 
-    uint32_t shres_pixel;
+    uint16_t shres_pixel;
+    uint16_t shres_pixel2;
     for (uint i = 0; i < SAMPLES_PER_LINE; ++i) {
-        //shres_pixel = ((pio_sm_get_blocking(pio, sm_video) + pio_sm_get_blocking(pio, sm_video)) /2);
-        //line_buffer[i] = convert_12_to_565_fast((uint16_t) shres_pixel);
-        line_buffer[i] = convert_12_to_565_fast(pio_sm_get_blocking(pio, sm_video));
+        line_buffer[i] = convert_12_to_565_reordered_fast(pio_sm_get_blocking(pio, sm_video));
     }
     pio_sm_set_enabled(pio, sm_video, false);
 }
-   
+
 bool __no_inline_not_in_flash_func(get_bootsel_button)() {
     const uint CS_PIN_INDEX = 1;
     uint32_t flags = save_and_disable_interrupts();
@@ -176,14 +251,26 @@ bool __no_inline_not_in_flash_func(get_bootsel_button)() {
                     GPIO_OVERRIDE_LOW << IO_QSPI_GPIO_QSPI_SS_CTRL_OEOVER_LSB,
                     IO_QSPI_GPIO_QSPI_SS_CTRL_OEOVER_BITS);
     for (volatile int i = 0; i < 1000; ++i);
-    bool button_state = !(sio_hw->gpio_hi_in & (1u << CS_PIN_INDEX));
+    bool button_state = !(sio_hw->gpio_hi_in & SIO_GPIO_HI_IN_QSPI_CSN_BITS);
     hw_write_masked(&ioqspi_hw->io[CS_PIN_INDEX].ctrl,
                     GPIO_OVERRIDE_NORMAL << IO_QSPI_GPIO_QSPI_SS_CTRL_OEOVER_LSB,
                     IO_QSPI_GPIO_QSPI_SS_CTRL_OEOVER_BITS);
+
     restore_interrupts(flags);
+
     return button_state;
 }
 
+int scanline_level = 3;
+bool button_pressed_previously = false;
+void __no_inline_not_in_flash_func(check_button)() {
+    bool button_is_pressed_now = get_bootsel_button();
+    if (button_pressed_previously && !button_is_pressed_now) {
+        scanline_level = (scanline_level + 1) % 5;
+        //delay(50); 
+    }
+    button_pressed_previously = button_is_pressed_now;
+}
 
 // =============================================================================
 // --- PIO Setup ---
@@ -204,6 +291,7 @@ void setup_video_capture_sm(uint offset) {
     sm_video = pio_claim_unused_sm(pio, true);
     pio_sm_config c = video_capture_program_get_default_config(offset);
     sm_config_set_in_pins(&c, 0);
+    sm_config_set_in_shift(&c, true,true,32);
     pio_sm_set_consecutive_pindirs(pio, sm_video, 0, 32, false);
     sm_config_set_wrap(&c, offset + video_capture_wrap_target, offset + video_capture_wrap);
     sm_config_set_in_shift(&c, true, true, 1);
@@ -292,7 +380,6 @@ int __not_in_flash_func(main)(void) {
     setup_video_capture_sm(offset_video);
     pio_sm_put_blocking(pio, sm_video, ((SAMPLES_PER_LINE+HBLANK) / 2) - 1);
 
-    //fifo_init(&my_fifo);
     size_t num_pixels = (size_t)ACTIVE_VIDEO * LINES_PER_FRAME;
     size_t buffer_size_bytes = num_pixels * sizeof(uint16_t);
     framebuffer = (uint16_t *)malloc(buffer_size_bytes);
@@ -306,34 +393,19 @@ int __not_in_flash_func(main)(void) {
 
     uint32_t lines_read_count = 0;
     bool frame_active = false;
+    __attribute__((aligned(4))) uint16_t temp_scanline[VIDEO_LINE_LENGTH];
+    bool scanlines = true;
+
 
     while (1) {
 
-/*
-            if(clear_screen){
-            mipiCsiFrameStart();
-            for (uint i = 0; i <= LINES_PER_FRAME*2 - 1; i++) {
-                mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
-            }
-            mipiCsiFrameEnd();
-            //clear_screen = false;
-            vsync_go = false;
-            video_go = true;     
-            }            
-*/
+        //check_button();
+
         if (!frame_active) {
             // Warten auf den Beginn eines neuen Frames
             if(vsync_go){
                 vsync_go = false;    
                 mipiCsiFrameStart();
-                //move frame a bit down if NTSC, to account for less video lines
-  /*
-                if(!isPAL) {
-                    for (uint i = 0; i <= 60; i++) {
-                        mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
-                    }
-                }
-  */
                 frame_active = true;
                 lines_read_count = 0;
             }
@@ -346,24 +418,39 @@ int __not_in_flash_func(main)(void) {
                 if(laced) {
                     if(isPAL){
                         if (is_odd_field) {
-                            mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
+                            if(scanlines){
+                                memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
+                                set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level); 
+                                mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
+                            }else {
+                                mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
+                            }
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                         } else {
+                            if(scanlines)set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,scanline_level); 
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                             mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
                     }else{
                         if (!is_odd_field) {
-                            mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
+                            if(scanlines){
+                                memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
+                                set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level); 
+                                mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
+                            }else {
+                                mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
+                            }
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                         } else {                            
+                            if(scanlines)set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,scanline_level); 
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                             mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
                     }
                     dma_memcpy3(framebuffer + (ACTIVE_VIDEO * lines_read_count),line2, ACTIVE_VIDEO*2);
                 } else {
-                    mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2); 
+                    mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
+                    if(scanlines)set_brightness_fast_levels(line2, ACTIVE_VIDEO,scanline_level); 
                     mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                 }
 
