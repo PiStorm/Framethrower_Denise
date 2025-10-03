@@ -1,22 +1,24 @@
 ; File: video_capture.pio
 .program video_capture
 
-.wrap_target
+;.wrap_target
 pull
 mov X, OSR
 
+wait 1 gpio 23 [5]
 wait 0 gpio 23 [5]
 wait 1 gpio 23 [5]
-;irq set 0
 wait 0 gpio 20
 
 pixelloop:
     wait 1 gpio 20[5]
-    in pins, 32
+    in pins, 32[11]
+    ;in pins, 32
     wait 0 gpio 20[5]
-    in pins, 32
+    in pins, 32[11]
+    ;in pins, 32
     jmp x-- pixelloop
-.wrap 
+;.wrap 
 
 
 % c-sdk {

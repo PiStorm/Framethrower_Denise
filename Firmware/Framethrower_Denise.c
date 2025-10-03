@@ -26,13 +26,13 @@
 // =============================================================================
 // --- Definitionen & Globale Variablen ---
 // =============================================================================
-#define VIDEO_LINE_LENGTH 1024
+#define VIDEO_LINE_LENGTH 720
 #define LINES_PER_FRAME 288
 #define LINES_PER_FRAME_NTSC 240
 #define ACTIVE_VIDEO 720
-#define HBLANK 68
-#define SAMPLES_PER_LINE 800
-#define VBLANK_LINES 21
+#define HBLANK 72
+#define SAMPLES_PER_LINE 720
+#define VBLANK_LINES 14
 
 // GPIO Pin-Definitionen
 #define csync 23
@@ -154,12 +154,16 @@ void __not_in_flash_func(reduce_brightness_50)(uint16_t* line, int count) {
 }
 
 void __not_in_flash_func(get_pio_line)(uint16_t* line_buffer) {
-    pio_sm_put_blocking(pio, sm_video, SAMPLES_PER_LINE / 2 - 1);
+    pio_sm_put_blocking(pio, sm_video, ((SAMPLES_PER_LINE+HBLANK) / 2 )- 1);
     pio_sm_set_enabled(pio, sm_video, true);
-    for (int i = 0; i < HBLANK; ++i) {
+    for (uint i = 0; i < HBLANK; ++i) {
         (void)pio_sm_get_blocking(pio, sm_video);
     }
-    for (int i = 0; i < SAMPLES_PER_LINE-HBLANK; ++i) {
+
+    uint32_t shres_pixel;
+    for (uint i = 0; i < SAMPLES_PER_LINE; ++i) {
+        //shres_pixel = ((pio_sm_get_blocking(pio, sm_video) + pio_sm_get_blocking(pio, sm_video)) /2);
+        //line_buffer[i] = convert_12_to_565_fast((uint16_t) shres_pixel);
         line_buffer[i] = convert_12_to_565_fast(pio_sm_get_blocking(pio, sm_video));
     }
     pio_sm_set_enabled(pio, sm_video, false);
@@ -226,11 +230,12 @@ void core1_entry() {
 
     while (1) {
         if (vsync_detected) {
-            vsync_detected = false; // Flag zurücksetzen
+            vsync_detected = false; 
             vsync_go = true;
 
             //Vblank abwarten
-            while (lines <= (laced && isPAL ? !(last_total_lines % 2) : is_odd_field? VBLANK_LINES : VBLANK_LINES-1)){};
+            if(!isPAL) {while (lines <= (is_odd_field? VBLANK_LINES : VBLANK_LINES-1)){}} else       //NTSC
+                       {while (lines <= (!(last_total_lines % 2)? VBLANK_LINES : VBLANK_LINES-1)){}} //PAL 
     
             // Aktive Videozeilen einlesen und in die FIFO schreiben
             for (y = 0; y < (isPAL? LINES_PER_FRAME-1 : LINES_PER_FRAME_NTSC-1); y++) {
@@ -285,7 +290,7 @@ int __not_in_flash_func(main)(void) {
     uint offset_video = pio_add_program(pio, &video_capture_program);
     setup_vsync_detect_sm(offset_vsync);
     setup_video_capture_sm(offset_video);
-    pio_sm_put_blocking(pio, sm_video, SAMPLES_PER_LINE / 2 - 1);
+    pio_sm_put_blocking(pio, sm_video, ((SAMPLES_PER_LINE+HBLANK) / 2) - 1);
 
     //fifo_init(&my_fifo);
     size_t num_pixels = (size_t)ACTIVE_VIDEO * LINES_PER_FRAME;
@@ -366,6 +371,8 @@ int __not_in_flash_func(main)(void) {
 
                 // Prüfen, ob der Frame vollständig übertragen wurde
                 if (lines_read_count >= (isPAL ? LINES_PER_FRAME-1 : LINES_PER_FRAME_NTSC-1)) {
+                    mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
+                    mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
                     mipiCsiFrameEnd();
                     frame_active = false;
                 }

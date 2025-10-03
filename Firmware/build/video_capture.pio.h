@@ -13,28 +13,29 @@
 // ------------- //
 
 #define video_capture_wrap_target 0
-#define video_capture_wrap 9
+#define video_capture_wrap 10
 #define video_capture_pio_version 1
 
 static const uint16_t video_capture_program_instructions[] = {
             //     .wrap_target
     0x80a0, //  0: pull   block
     0xa027, //  1: mov    x, osr
-    0x2517, //  2: wait   0 gpio, 23             [5]
-    0x2597, //  3: wait   1 gpio, 23             [5]
-    0x2014, //  4: wait   0 gpio, 20
-    0x2594, //  5: wait   1 gpio, 20             [5]
-    0x4000, //  6: in     pins, 32
-    0x2514, //  7: wait   0 gpio, 20             [5]
-    0x4000, //  8: in     pins, 32
-    0x0045, //  9: jmp    x--, 5
+    0x2597, //  2: wait   1 gpio, 23             [5]
+    0x2517, //  3: wait   0 gpio, 23             [5]
+    0x2597, //  4: wait   1 gpio, 23             [5]
+    0x2014, //  5: wait   0 gpio, 20
+    0x2594, //  6: wait   1 gpio, 20             [5]
+    0x4b00, //  7: in     pins, 32               [11]
+    0x2514, //  8: wait   0 gpio, 20             [5]
+    0x4b00, //  9: in     pins, 32               [11]
+    0x0046, // 10: jmp    x--, 6
             //     .wrap
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program video_capture_program = {
     .instructions = video_capture_program_instructions,
-    .length = 10,
+    .length = 11,
     .origin = -1,
     .pio_version = video_capture_pio_version,
 #if PICO_PIO_VERSION > 0
