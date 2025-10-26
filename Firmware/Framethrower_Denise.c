@@ -40,7 +40,7 @@
 #define cck 21
 
 // Globale Puffer und FIFO
-__attribute__((aligned(4))) uint16_t *framebuffer;
+__attribute__((aligned(4))) uint16_t framebuffer[ACTIVE_VIDEO * LINES_PER_FRAME];
 __attribute__((aligned(4))) uint16_t line1[VIDEO_LINE_LENGTH];
 __attribute__((aligned(4))) uint16_t line2[VIDEO_LINE_LENGTH];
 __attribute__((aligned(4))) uint16_t blackline [VIDEO_LINE_LENGTH];
@@ -102,115 +102,7 @@ void __not_in_flash_func(pio_irq_handler)() {
 // --- Hilfsfunktionen ---
 // =============================================================================
 
-static inline uint16_t __attribute__((always_inline)) __not_in_flash_func(average_and_convert_to_rgb565_11_cycles)(uint16_t pixel1, uint16_t pixel2) {
-    
-    uint32_t result, sum, avg_b, avg_g, avg_r;
-
-    __asm volatile (
-        /* --- Schritt 1: Parallele Summe & Mittelwertbildung (2 Instruktionen) --- */
-        // Addiere beide Pixel. Die Überträge zwischen den Kanälen sind hier erwünscht.
-        "add    %[sum], %[p1], %[p2]     \n\t"
-        // Halbiere die Gesamtsumme. Das Ergebnis ist ein BGR444-Pixel mit
-        // korrekt gemittelten Kanälen, dessen Bits aber noch verschoben sind.
-        "lsr    %[sum], %[sum], #1       \n\t"
-        
-        /* --- Schritt 2: Extraktion der 4-Bit Durchschnittswerte (3 Instruktionen) --- */
-        // Extrahiere die nun korrekten 4-Bit-Durchschnittswerte jedes Kanals.
-        "ubfx   %[b], %[sum], #8, #4     \n\t" // Blau-Anteil
-        "ubfx   %[g], %[sum], #4, #4     \n\t" // Grün-Anteil
-        "and    %[r], %[sum], #0xF       \n\t" // Rot-Anteil
-        
-        /* --- Schritt 3: Skalierung & Kombination in einem Schritt (6 Instruktionen) --- */
-        // Baue das finale RGB565-Pixel direkt durch gezieltes Shiften und Odern auf.
-        // Die Formel `(c << X) | (c << Y)` ersetzt `((c << A) | (c >> B)) << Z`
-        
-        // Skaliere B (4->5 bit) und platziere es an Position 0.
-        // (avg_b << 1) | (avg_b >> 3)
-        "lsr    %[res], %[b], #3         \n\t"
-        "orr    %[res], %[res], %[b], lsl #1 \n\t"
-        
-        // Skaliere G (4->6 bit) und platziere es an Position 5.
-        // ((avg_g << 2) | (avg_g >> 2)) << 5  ==>  (avg_g << 7) | (avg_g << 3)
-        "orr    %[res], %[res], %[g], lsl #7 \n\t"
-        "orr    %[res], %[res], %[g], lsl #3 \n\t"
-        
-        // Skaliere R (4->5 bit) und platziere es an Position 11.
-        // ((avg_r << 1) | (avg_r >> 3)) << 11 ==>  (avg_r << 12) | (avg_r << 8)
-        "orr    %[res], %[res], %[r], lsl #12 \n\t"
-        "orr    %[res], %[res], %[r], lsl #8 \n\t"
-
-        // Definition der Operanden für den Compiler
-        : [res] "=&r" (result), [sum] "=&r" (sum),
-          [b] "=&r" (avg_b), [g] "=&r" (avg_g), [r] "=&r" (avg_r)
-        : [p1] "r" (pixel1), [p2] "r" (pixel2)
-        : "cc"
-    );
-
-    return (uint16_t)result;
-}
-
-
-static inline uint16_t __not_in_flash_func(average_rgb444_pixels_6_cycles_asm)(uint16_t pixel1, uint16_t pixel2) {
-    uint32_t result;
-    uint32_t temp;
-    
-    __asm volatile (
-        "eor    %[tmp], %[p1], %[p2]     \n\t" // 1. XOR der Pixel (findet die unterschiedlichen Bits)
-        "and    %[res], %[p1], %[p2]     \n\t" // 2. AND der Pixel (findet die gemeinsamen Bits)
-        "bic    %[tmp], %[tmp], #0x0110  \n\t" // 3. Lösche die "Problem-Bits" (Bit 4 & 8) aus dem XOR-Ergebnis
-        "lsr    %[tmp], %[tmp], #1       \n\t" // 4. Halbiere die Differenz
-        "add    %[res], %[res], %[tmp]   \n\t" // 5. Addiere die gemeinsamen Bits hinzu
-        // Die 6. Instruktion ist implizit der Rücksprung (BX LR), der die Funktion beendet.
-        // Der reine Rechenkern benötigt nur 5 Instruktionen.
-        
-        : [res] "=&r" (result), [tmp] "=&r" (temp)
-        : [p1] "r" (pixel1), [p2] "r" (pixel2)
-        : "cc"
-    );
-
-    return (uint16_t)result;
-}
-
 //TODO -> RGB444 zu RGB565 kann eventuell der HSTX Expander-Block machen
-// ~11 cycles -> 29Mpix/sec @ 320Mhz
-static inline uint16_t __not_in_flash_func(convert_12_to_565_reordered_fast)(uint16_t pixel_in) {
-    uint32_t result;
-    uint32_t r, g, b, temp; // Temporäre Register
-
-    __asm volatile (
-        // --- Schritt 1: Parallele Extraktion aller Komponenten ---
-        // Diese 3 Befehle sind voneinander unabhängig und können von der
-        // CPU-Pipeline überlappend ausgeführt werden.
-        "ubfx   %[r], %[in], #0, #4        \n\t" // r = R (rrrr)
-        "ubfx   %[g], %[in], #4, #4        \n\t" // g = G (gggg)
-        "ubfx   %[b], %[in], #8, #4        \n\t" // b = B (bbbb)
-
-        // --- Schritt 2: Skalierung & initiales Packen ---
-        // Skaliere B auf 5 Bit und schreibe es als erstes ins Ergebnis.
-        "lsr    %[tmp], %[b], #3           \n\t" // tmp = MSB von B
-        "orr    %[out], %[tmp], %[b], lsl #1 \n\t" // result = bbbbb
-
-        // Skaliere G auf 6 Bit.
-        "lsr    %[tmp], %[g], #2           \n\t" // tmp = 2 MSBs von G
-        "orr    %[g], %[tmp], %[g], lsl #2 \n\t" // g = gggggg
-
-        // Skaliere R auf 5 Bit.
-        "lsr    %[tmp], %[r], #3           \n\t" // tmp = MSB von R
-        "orr    %[r], %[tmp], %[r], lsl #1 \n\t" // r = rrrrr
-
-        // --- Schritt 3: Finales Zusammensetzen ---
-        // Die skalierten Werte sind nun fertig und können nacheinander
-        // in das Ergebnisregister eingefügt werden.
-        "bfi    %[out], %[g], #5, #6       \n\t" // Füge 6-Bit G an Position 5 ein
-        "bfi    %[out], %[r], #11, #5      \n\t" // Füge 5-Bit R an Position 11 ein
-
-        : [out] "=&r" (result), [r] "=&r" (r), [g] "=&r" (g), [b] "=&r" (b), [tmp] "=&r" (temp)
-        : [in] "r" (pixel_in)
-    );
-
-    return (uint16_t)result;
-}
-
 //Optimized to 9 cycles -> ~35Mpix/sec @ 320Mhz
 static inline uint16_t __attribute__((always_inline)) __not_in_flash_func(convert_12_to_565_reordered_optimized)(uint16_t pixel_in) {
     
@@ -321,40 +213,6 @@ void __not_in_flash_func(set_brightness_fast_levels)(uint16_t* line, int count, 
             case 1: line[count-1] = (p & 0xE79C) >> 2; break;
             case 0: line[count-1] = 0; break;
         }
-    }
-}
-
-void __not_in_flash_func(reduce_brightness_50_asm_fast)(uint16_t* line, int count) {
-    const uint32_t mask = 0xF7DEF7DE;
-    int n = count >> 3;
-    if (n == 0) goto handle_remainder;
-    __asm volatile (
-        ".p2align 2\n"
-        "1:\n"
-        "ldmia %[ptr]!, {r4-r7}\n"
-        "and r4, %[mask]\n"
-        "and r5, %[mask]\n"
-        "and r6, %[mask]\n"
-        "and r7, %[mask]\n"
-        "lsr r4, #1\n"
-        "lsr r5, #1\n"
-        "lsr r6, #1\n"
-        "lsr r7, #1\n"
-        "sub %[ptr], #16\n"
-        "stmia %[ptr]!, {r4-r7}\n"
-        "subs %[n], #1\n"
-        "bne 1b\n"
-        : [ptr] "+&r" (line),
-          [n]   "+&r" (n)
-        : [mask] "r" (mask)
-        : "r4", "r5", "r6", "r7", "memory", "cc"
-        
-    );
-
-handle_remainder:
-    int remaining_start = count & ~7;
-    for (int i = remaining_start; i < count; ++i) {
-        line[i] = (line[i] & 0xF7DE) >> 1;
     }
 }
 
@@ -519,10 +377,6 @@ int __not_in_flash_func(main)(void) {
     setup_vsync_detect_sm(offset_vsync);
     setup_video_capture_sm(offset_video);
     pio_sm_put_blocking(pio_video, sm_video, ((SAMPLES_PER_LINE+HBLANK) / 2) - 1);
-
-    size_t num_pixels = (size_t)ACTIVE_VIDEO * LINES_PER_FRAME;
-    size_t buffer_size_bytes = num_pixels * sizeof(uint16_t);
-    framebuffer = (uint16_t *)malloc(buffer_size_bytes);
 
     bus_ctrl_hw->priority = BUSCTRL_BUS_PRIORITY_DMA_W_BITS | BUSCTRL_BUS_PRIORITY_DMA_R_BITS;
 
