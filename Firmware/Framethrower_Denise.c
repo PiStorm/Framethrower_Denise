@@ -26,7 +26,6 @@
 // =============================================================================
 // --- Definitionen & Globale Variablen ---
 // =============================================================================
-#define VIDEO_LINE_LENGTH 720
 #define LINES_PER_FRAME 288
 #define LINES_PER_FRAME_NTSC 240
 #define ACTIVE_VIDEO 720
@@ -41,9 +40,10 @@
 
 // Globale Puffer und FIFO
 __attribute__((aligned(4))) uint16_t framebuffer[ACTIVE_VIDEO * LINES_PER_FRAME];
-__attribute__((aligned(4))) uint16_t line1[VIDEO_LINE_LENGTH];
-__attribute__((aligned(4))) uint16_t line2[VIDEO_LINE_LENGTH];
-__attribute__((aligned(4))) uint16_t blackline [VIDEO_LINE_LENGTH];
+__attribute__((aligned(4))) uint16_t line1[ACTIVE_VIDEO];
+__attribute__((aligned(4))) uint16_t line2[ACTIVE_VIDEO];
+__attribute__((aligned(4))) uint16_t temp_scanline[ACTIVE_VIDEO];
+__attribute__((aligned(4))) uint16_t blackline [ACTIVE_VIDEO];
 
 
 // PIO Globals
@@ -67,10 +67,8 @@ volatile bool is_odd_field = true;
 volatile bool isPAL_prev = true;
 volatile bool clear_screen = false;
 
-
-volatile bool scanlines = true;
-volatile int scanline_level = 2;
-
+volatile int scanline_level = 3;
+volatile int scanline_level_laced = 4;
 
 // =============================================================================
 // --- Interrupt Service Routine ---
@@ -360,7 +358,6 @@ int __not_in_flash_func(main)(void) {
 
     uint32_t lines_read_count = 0;
     bool frame_active = false;
-    __attribute__((aligned(4))) uint16_t temp_scanline[VIDEO_LINE_LENGTH];
 
     while (1) {
 
@@ -381,31 +378,23 @@ int __not_in_flash_func(main)(void) {
                 if(laced) {
                     if(isPAL){
                         if (is_odd_field) {
-                            if(scanlines){
-                                memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
-                                set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level); 
-                                mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
-                            }else {
-                                mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
-                            }
+                            memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
+                            set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level_laced); 
+                            mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                         } else {
-                            if(scanlines)set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,scanline_level); 
+                            set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,scanline_level_laced); 
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                             mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
                     }else{
-                        if (!is_odd_field) {
-                            if(scanlines){
-                                memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
-                                set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level); 
-                                mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
-                            }else {
-                                mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
-                            }
+                        if (!is_odd_field) {                            
+                            memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
+                            set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level_laced); 
+                            mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                         } else {                            
-                            if(scanlines)set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,scanline_level); 
+                            set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,scanline_level_laced); 
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                             mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
@@ -413,7 +402,7 @@ int __not_in_flash_func(main)(void) {
                     dma_memcpy3(framebuffer + (ACTIVE_VIDEO * lines_read_count),line2, ACTIVE_VIDEO*2);
                 } else {
                     mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
-                    if(scanlines)set_brightness_fast_levels(line2, ACTIVE_VIDEO,scanline_level); 
+                    set_brightness_fast_levels(line2, ACTIVE_VIDEO,scanline_level); 
                     mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                 }
 
