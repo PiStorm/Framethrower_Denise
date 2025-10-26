@@ -37,6 +37,7 @@
 // GPIO Pin-Definitionen
 #define csync 23
 #define pixelclock 22
+#define cck 21
 
 // Globale Puffer und FIFO
 __attribute__((aligned(4))) uint16_t *framebuffer;
@@ -46,8 +47,13 @@ __attribute__((aligned(4))) uint16_t blackline [VIDEO_LINE_LENGTH];
 
 
 // PIO Globals
-PIO pio = pio0;
+PIO pio_video = pio0;
+PIO pio_rga = pio1;
+
 uint sm_video, sm_vsync;
+uint sm_rga_read, sm_rga_write;
+volatile uint16_t rga_1F4 = 0;
+volatile uint16_t rga_1F6 = 0;
 
 // Interrupt Global
 volatile bool vsync_detected = false;
@@ -61,6 +67,11 @@ volatile bool is_odd_field = true;
 volatile bool isPAL_prev = true;
 volatile bool clear_screen = false;
 
+
+volatile bool scanlines = true;
+volatile int scanline_level = 2;
+
+
 // =============================================================================
 // --- Interrupt Service Routine ---
 // =============================================================================
@@ -68,8 +79,8 @@ volatile bool clear_screen = false;
 // Wird bei VSYNC vom PIO aufgerufen
 void __not_in_flash_func(pio_irq_handler)() {
  
-    if (pio_interrupt_get(pio, 0)) {
-        pio_interrupt_clear(pio, 0); 
+    if (pio_interrupt_get(pio_video, 0)) {
+        pio_interrupt_clear(pio_video, 0); 
         vsync_detected = true;
         laced = last_total_lines == lines  ? false : true;
         isPAL = last_total_lines <= 300 ? false : true;
@@ -80,8 +91,8 @@ void __not_in_flash_func(pio_irq_handler)() {
         lines = 0;
     }
 
-    if (pio_interrupt_get(pio, 1)) {
-        pio_interrupt_clear(pio, 1); 
+    if (pio_interrupt_get(pio_video, 1)) {
+        pio_interrupt_clear(pio_video, 1); 
         lines++;   
     }
 }
@@ -91,7 +102,77 @@ void __not_in_flash_func(pio_irq_handler)() {
 // --- Hilfsfunktionen ---
 // =============================================================================
 
+static inline uint16_t __attribute__((always_inline)) __not_in_flash_func(average_and_convert_to_rgb565_11_cycles)(uint16_t pixel1, uint16_t pixel2) {
+    
+    uint32_t result, sum, avg_b, avg_g, avg_r;
+
+    __asm volatile (
+        /* --- Schritt 1: Parallele Summe & Mittelwertbildung (2 Instruktionen) --- */
+        // Addiere beide Pixel. Die Überträge zwischen den Kanälen sind hier erwünscht.
+        "add    %[sum], %[p1], %[p2]     \n\t"
+        // Halbiere die Gesamtsumme. Das Ergebnis ist ein BGR444-Pixel mit
+        // korrekt gemittelten Kanälen, dessen Bits aber noch verschoben sind.
+        "lsr    %[sum], %[sum], #1       \n\t"
+        
+        /* --- Schritt 2: Extraktion der 4-Bit Durchschnittswerte (3 Instruktionen) --- */
+        // Extrahiere die nun korrekten 4-Bit-Durchschnittswerte jedes Kanals.
+        "ubfx   %[b], %[sum], #8, #4     \n\t" // Blau-Anteil
+        "ubfx   %[g], %[sum], #4, #4     \n\t" // Grün-Anteil
+        "and    %[r], %[sum], #0xF       \n\t" // Rot-Anteil
+        
+        /* --- Schritt 3: Skalierung & Kombination in einem Schritt (6 Instruktionen) --- */
+        // Baue das finale RGB565-Pixel direkt durch gezieltes Shiften und Odern auf.
+        // Die Formel `(c << X) | (c << Y)` ersetzt `((c << A) | (c >> B)) << Z`
+        
+        // Skaliere B (4->5 bit) und platziere es an Position 0.
+        // (avg_b << 1) | (avg_b >> 3)
+        "lsr    %[res], %[b], #3         \n\t"
+        "orr    %[res], %[res], %[b], lsl #1 \n\t"
+        
+        // Skaliere G (4->6 bit) und platziere es an Position 5.
+        // ((avg_g << 2) | (avg_g >> 2)) << 5  ==>  (avg_g << 7) | (avg_g << 3)
+        "orr    %[res], %[res], %[g], lsl #7 \n\t"
+        "orr    %[res], %[res], %[g], lsl #3 \n\t"
+        
+        // Skaliere R (4->5 bit) und platziere es an Position 11.
+        // ((avg_r << 1) | (avg_r >> 3)) << 11 ==>  (avg_r << 12) | (avg_r << 8)
+        "orr    %[res], %[res], %[r], lsl #12 \n\t"
+        "orr    %[res], %[res], %[r], lsl #8 \n\t"
+
+        // Definition der Operanden für den Compiler
+        : [res] "=&r" (result), [sum] "=&r" (sum),
+          [b] "=&r" (avg_b), [g] "=&r" (avg_g), [r] "=&r" (avg_r)
+        : [p1] "r" (pixel1), [p2] "r" (pixel2)
+        : "cc"
+    );
+
+    return (uint16_t)result;
+}
+
+
+static inline uint16_t __not_in_flash_func(average_rgb444_pixels_6_cycles_asm)(uint16_t pixel1, uint16_t pixel2) {
+    uint32_t result;
+    uint32_t temp;
+    
+    __asm volatile (
+        "eor    %[tmp], %[p1], %[p2]     \n\t" // 1. XOR der Pixel (findet die unterschiedlichen Bits)
+        "and    %[res], %[p1], %[p2]     \n\t" // 2. AND der Pixel (findet die gemeinsamen Bits)
+        "bic    %[tmp], %[tmp], #0x0110  \n\t" // 3. Lösche die "Problem-Bits" (Bit 4 & 8) aus dem XOR-Ergebnis
+        "lsr    %[tmp], %[tmp], #1       \n\t" // 4. Halbiere die Differenz
+        "add    %[res], %[res], %[tmp]   \n\t" // 5. Addiere die gemeinsamen Bits hinzu
+        // Die 6. Instruktion ist implizit der Rücksprung (BX LR), der die Funktion beendet.
+        // Der reine Rechenkern benötigt nur 5 Instruktionen.
+        
+        : [res] "=&r" (result), [tmp] "=&r" (temp)
+        : [p1] "r" (pixel1), [p2] "r" (pixel2)
+        : "cc"
+    );
+
+    return (uint16_t)result;
+}
+
 //TODO -> RGB444 zu RGB565 kann eventuell der HSTX Expander-Block machen
+// ~11 cycles -> 29Mpix/sec @ 320Mhz
 static inline uint16_t __not_in_flash_func(convert_12_to_565_reordered_fast)(uint16_t pixel_in) {
     uint32_t result;
     uint32_t r, g, b, temp; // Temporäre Register
@@ -125,6 +206,53 @@ static inline uint16_t __not_in_flash_func(convert_12_to_565_reordered_fast)(uin
 
         : [out] "=&r" (result), [r] "=&r" (r), [g] "=&r" (g), [b] "=&r" (b), [tmp] "=&r" (temp)
         : [in] "r" (pixel_in)
+    );
+
+    return (uint16_t)result;
+}
+
+//Optimized to 9 cycles -> ~35Mpix/sec @ 320Mhz
+static inline uint16_t __attribute__((always_inline)) __not_in_flash_func(convert_12_to_565_reordered_optimized)(uint16_t pixel_in) {
+    
+    uint32_t result, temp1, temp2;
+
+    __asm volatile (
+        /* --- Schritt 1: Blau-Komponente bearbeiten (3 Instruktionen) --- */
+        // Extrahiere 4-Bit Blau (Bits 8-11) in das Ergebnisregister.
+        "ubfx   %[res], %[in], #8, #4        \n\t"
+        // Skaliere Blau auf 5 Bit durch Replikation des höchstwertigen Bits (MSB).
+        // bbbbb = (bbbb << 1) | (bbbb >> 3)
+        "lsr    %[t1], %[res], #3            \n\t"
+        "orr    %[res], %[t1], %[res], lsl #1 \n\t"
+        
+        /* --- Schritt 2: Grün-Komponente bearbeiten (3 Instruktionen) --- */
+        // Extrahiere 4-Bit Grün (Bits 4-7).
+        "ubfx   %[t1], %[in], #4, #4        \n\t"
+        // Skaliere Grün auf 6 Bit durch Replikation der zwei MSBs.
+        // gggggg = (gggg << 2) | (gggg >> 2)
+        "lsr    %[t2], %[t1], #2            \n\t"
+        "orr    %[t1], %[t2], %[t1], lsl #2 \n\t"
+        
+        /* --- Schritt 3: Rot-Komponente vorbereiten (1 Instruktion) --- */
+        // Extrahiere 4-Bit Rot (Bits 0-3). Dies geschieht jetzt schon,
+        // damit die CPU-Pipeline die Zeit nutzen kann, während sie auf
+        // das Ergebnis der Grün-Skalierung wartet.
+        "ubfx   %[t2], %[in], #0, #4        \n\t"
+
+        /* --- Schritt 4: Finale Kombination (4 Instruktionen) --- */
+        // Füge das skalierte Grün (gggggg) an Bit-Position 5 in das Ergebnis ein.
+        "bfi    %[res], %[t1], #5, #6        \n\t"
+        // Skaliere Rot auf 5 Bit.
+        "lsr    %[t1], %[t2], #3            \n\t"
+        "orr    %[t2], %[t1], %[t2], lsl #1 \n\t"
+        // Füge das skalierte Rot (rrrrr) an Bit-Position 11 in das Ergebnis ein.
+        "bfi    %[res], %[t2], #11, #5       \n\t"
+
+        // Definition der Operanden für den Compiler
+        : [res] "=&r" (result), [t1] "=&r" (temp1), [t2] "=&r" (temp2)
+        : [in] "r" (pixel_in)
+        // Es werden keine weiteren Register clobbered, da alle temporären
+        // Register als Outputs deklariert sind.
     );
 
     return (uint16_t)result;
@@ -231,23 +359,26 @@ handle_remainder:
 }
 
 void __not_in_flash_func(get_pio_line)(uint16_t* line_buffer) {
-    pio_sm_put_blocking(pio, sm_video, ((SAMPLES_PER_LINE+HBLANK) / 2 )- 1);
-    pio_sm_set_enabled(pio, sm_video, true);
-    pio_sm_exec(pio, sm_video, pio_encode_pull(false,false));
-    hw_set_bits(&pio->sm[sm_video].shiftctrl, PIO_SM0_SHIFTCTRL_FJOIN_RX_BITS);
-    pio_sm_exec(pio, sm_video, pio_encode_mov( pio_x , pio_osr));
-    //pio_sm_set_enabled(pio, sm_video, true);
+    pio_sm_put_blocking(pio_video, sm_video, ((SAMPLES_PER_LINE+HBLANK) / 2 )- 1);
+    pio_sm_set_enabled(pio_video, sm_video, true);
+
+    //Small hack to join RX and TX fifo on the fly, increases RX fifo to 8 entries
+    pio_sm_exec(pio_video, sm_video, pio_encode_pull(false,false));
+    hw_set_bits(&pio_video->sm[sm_video].shiftctrl, PIO_SM0_SHIFTCTRL_FJOIN_RX_BITS);
+    pio_sm_exec(pio_video, sm_video, pio_encode_mov( pio_x , pio_osr));
+
     for (uint i = 0; i < HBLANK; ++i) {
-        (void)pio_sm_get_blocking(pio, sm_video);
+        (void)pio_sm_get_blocking(pio_video, sm_video);
     }
 
-    uint16_t shres_pixel;
-    uint16_t shres_pixel2;
+
     for (uint i = 0; i < SAMPLES_PER_LINE; ++i) {
-        line_buffer[i] = convert_12_to_565_reordered_fast(pio_sm_get_blocking(pio, sm_video));
+        line_buffer[i] = convert_12_to_565_reordered_optimized(pio_sm_get_blocking(pio_video, sm_video));
     }
-    hw_clear_bits(&pio->sm[sm_video].shiftctrl, PIO_SM0_SHIFTCTRL_FJOIN_RX_BITS);
-    pio_sm_set_enabled(pio, sm_video, false);
+    //Small hack to join RX and TX fifo on the fly, flips the join bit back to preload OSR for the next run
+    hw_clear_bits(&pio_video->sm[sm_video].shiftctrl, PIO_SM0_SHIFTCTRL_FJOIN_RX_BITS);
+
+    pio_sm_set_enabled(pio_video, sm_video, false);
 }
 
 bool __no_inline_not_in_flash_func(get_bootsel_button)() {
@@ -267,7 +398,6 @@ bool __no_inline_not_in_flash_func(get_bootsel_button)() {
     return button_state;
 }
 
-int scanline_level = 3;
 bool button_pressed_previously = false;
 void __no_inline_not_in_flash_func(check_button)() {
     bool button_is_pressed_now = get_bootsel_button();
@@ -282,27 +412,27 @@ void __no_inline_not_in_flash_func(check_button)() {
 // --- PIO Setup ---
 // =============================================================================
 void setup_vsync_detect_sm(uint offset) {
-    sm_vsync = pio_claim_unused_sm(pio, true);
+    sm_vsync = pio_claim_unused_sm(pio_video, true);
     pio_sm_config c = vsync_detect_program_get_default_config(offset);
-    sm_config_set_clkdiv(&c, 32.0f); //PIO SM für Vsync läuft mit ~10MHz
-    pio_gpio_init(pio, csync);
+    sm_config_set_clkdiv(&c, 32.4f); //PIO SM für Vsync läuft mit ~10MHz
+    pio_gpio_init(pio_video, csync);
     gpio_set_dir(csync, GPIO_IN);
     sm_config_set_jmp_pin(&c, csync);
     sm_config_set_in_pins(&c, csync);
-    pio_sm_init(pio, sm_vsync, offset, &c);
-    pio_sm_set_enabled(pio, sm_vsync, true);
+    pio_sm_init(pio_video, sm_vsync, offset, &c);
+    pio_sm_set_enabled(pio_video, sm_vsync, true);
 }
 
 void setup_video_capture_sm(uint offset) {
-    sm_video = pio_claim_unused_sm(pio, true);
+    sm_video = pio_claim_unused_sm(pio_video, true);
     pio_sm_config c = video_capture_program_get_default_config(offset);
     sm_config_set_in_pins(&c, 0);
     sm_config_set_in_shift(&c, true,true,32);
-    pio_sm_set_consecutive_pindirs(pio, sm_video, 0, 32, false);
+    pio_sm_set_consecutive_pindirs(pio_video, sm_video, 0, 32, false);
     sm_config_set_wrap(&c, offset + video_capture_wrap_target, offset + video_capture_wrap);
     sm_config_set_in_shift(&c, true, true, 1);
-    pio_sm_init(pio, sm_video, offset, &c);
-    pio_sm_set_enabled(pio, sm_video, false);
+    pio_sm_init(pio_video, sm_video, offset, &c);
+    pio_sm_set_enabled(pio_video, sm_video, false);
 }
 
 
@@ -311,11 +441,11 @@ void setup_video_capture_sm(uint offset) {
 // =============================================================================
 void core1_entry() {
     // Konfiguriere den PIO-Interrupt für VSYNC
-    pio_set_irq0_source_enabled(pio, pis_interrupt0, true);
+    pio_set_irq0_source_enabled(pio_video, pis_interrupt0, true);
     irq_set_exclusive_handler(PIO0_IRQ_0, pio_irq_handler);
     irq_set_enabled(PIO0_IRQ_0, true);
 
-    pio_set_irq1_source_enabled(pio, pis_interrupt1, true);
+    pio_set_irq1_source_enabled(pio_video, pis_interrupt1, true);
     irq_set_exclusive_handler(PIO0_IRQ_1, pio_irq_handler);
     irq_set_enabled(PIO0_IRQ_1, true);
 
@@ -346,6 +476,9 @@ void core1_entry() {
 // --- Main Funktion (Core 0) ---
 // =============================================================================
 int __not_in_flash_func(main)(void) {
+
+
+    //Flash divider und OC
     uint clkdiv = 3;
     uint rxdelay = 3;
     hw_write_masked(
@@ -354,37 +487,38 @@ int __not_in_flash_func(main)(void) {
         ((rxdelay << QMI_M0_TIMING_RXDELAY_LSB) & QMI_M0_TIMING_RXDELAY_BITS),
         QMI_M0_TIMING_CLKDIV_BITS | QMI_M0_TIMING_RXDELAY_BITS
     );
-    busy_wait_us(1000);
-    set_sys_clock_khz(320000, true);
+    __asm__ __volatile__("dmb sy");
+    set_sys_clock_khz(324000, true);
 
-    // Initialisiere alle nicht-MIPI-GPIOs
+    // Initialisiere alle GPIOs
     for (uint i = 0; i <= 47; i++) {
-        gpio_init(i);
-        gpio_set_dir(i, 0);
-        gpio_pull_up(i);
-    }
-
-    // Daten- und Sync-Pins initialisieren
-    for (uint8_t i = 0; i < 12; i++) {
         gpio_init(i);
         gpio_set_dir(i, GPIO_IN);
         gpio_set_input_hysteresis_enabled(i, true);
+        gpio_pull_up(i);
     }
 
     gpio_init(csync);
     gpio_set_dir(csync, GPIO_IN);
+    gpio_pull_up(pixelclock);
     gpio_set_input_hysteresis_enabled(csync, true);
 
     gpio_init(pixelclock);
     gpio_set_dir(pixelclock, GPIO_IN);
+    gpio_pull_up(pixelclock);
     gpio_set_input_hysteresis_enabled(pixelclock, true);
 
+    gpio_init(cck);
+    gpio_set_dir(cck, GPIO_IN);
+    gpio_pull_up(cck);
+    gpio_set_input_hysteresis_enabled(cck, true);
+
     // PIO-Programme laden und State Machines einrichten
-    uint offset_vsync = pio_add_program(pio, &vsync_detect_program);
-    uint offset_video = pio_add_program(pio, &video_capture_program);
+    uint offset_vsync = pio_add_program(pio_video, &vsync_detect_program);
+    uint offset_video = pio_add_program(pio_video, &video_capture_program);
     setup_vsync_detect_sm(offset_vsync);
     setup_video_capture_sm(offset_video);
-    pio_sm_put_blocking(pio, sm_video, ((SAMPLES_PER_LINE+HBLANK) / 2) - 1);
+    pio_sm_put_blocking(pio_video, sm_video, ((SAMPLES_PER_LINE+HBLANK) / 2) - 1);
 
     size_t num_pixels = (size_t)ACTIVE_VIDEO * LINES_PER_FRAME;
     size_t buffer_size_bytes = num_pixels * sizeof(uint16_t);
@@ -400,8 +534,6 @@ int __not_in_flash_func(main)(void) {
     uint32_t lines_read_count = 0;
     bool frame_active = false;
     __attribute__((aligned(4))) uint16_t temp_scanline[VIDEO_LINE_LENGTH];
-    bool scanlines = false;
-
 
     while (1) {
 

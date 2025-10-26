@@ -185,6 +185,11 @@ void mipi_init(void) {
     gpio_set_slew_rate(PIN_HS_D0_P,GPIO_SLEW_RATE_FAST);
     gpio_set_slew_rate(PIN_HS_D0_N,GPIO_SLEW_RATE_FAST);
 
+    gpio_set_slew_rate(PIN_LS_CLK_P,GPIO_SLEW_RATE_FAST);
+    gpio_set_slew_rate(PIN_LS_CLK_N,GPIO_SLEW_RATE_FAST);
+    gpio_set_slew_rate(PIN_LS_CLK_P,GPIO_SLEW_RATE_FAST);
+    gpio_set_slew_rate(PIN_LS_CLK_N,GPIO_SLEW_RATE_FAST);
+
 
     gpio_set_drive_strength(PIN_LS_CLK_P,GPIO_DRIVE_STRENGTH_12MA);
     gpio_set_drive_strength(PIN_LS_CLK_N,GPIO_DRIVE_STRENGTH_12MA);
