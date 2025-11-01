@@ -32,3 +32,16 @@ If you like this project and want to support me with a donation
 
 ## The community around the PiStorm Project is best reached on Discord. There is a dedicated Framethrower support channel
 [![](https://dcbadge.limes.pink/api/server/vyHr6nQeGn)](https://discord.gg/vyHr6nQeGn)
+
+## Emu68 Setup
+Simply add these parmaters to your cmdline.txt file on the SD Card (FAT32 Partition).
+Don't forget to put all parameters in just one line, no new line.
+
+```
+unicam.boot unicam.integer
+```
+
+## Demo
+Recorded directly from the Pi HDMI Output. RTG at 720p
+
+![image](https://github.com/PiStorm/Framethrower_Denise/blob/main/ft_demo-1.gif)
