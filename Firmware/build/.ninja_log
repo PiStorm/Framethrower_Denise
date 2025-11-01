@@ -174,3 +174,11 @@
 25	147	7836883375563273	CMakeFiles/Framethrower_Denise.dir/mipi.c.obj	1ac337c38fd74eed
 22	236	7836883375533273	CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj	a6da5d2e67a11331
 236	380	7836883377671828	Framethrower_Denise.elf	3d5afc6b9e06b4f
+16	133	7836996197734451	rga_access.pio.h	b2331bfff5ae66fc
+16	133	7836996197734451	Y:/Projects/FramethrowerDenise/Framethrower_Denise/Firmware/build/rga_access.pio.h	b2331bfff5ae66fc
+11	135	7836996197757450	video_capture.pio.h	e9a5546a378623e1
+11	135	7836996197757450	Y:/Projects/FramethrowerDenise/Framethrower_Denise/Firmware/build/video_capture.pio.h	e9a5546a378623e1
+212	308	7836996198549972	CMakeFiles/Framethrower_Denise.dir/fifo.c.obj	e54d7daeec89e008
+210	352	7836996198529970	CMakeFiles/Framethrower_Denise.dir/mipi.c.obj	1ac337c38fd74eed
+135	434	7836996197786582	CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj	a6da5d2e67a11331
+434	984	7836996200774138	Framethrower_Denise.elf	3d5afc6b9e06b4f

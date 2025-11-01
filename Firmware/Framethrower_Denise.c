@@ -1,3 +1,6 @@
+// © Copyright 2025 Claude Schwarz
+// SPDX-License-Identifier: MIT
+
 #pragma GCC optimize("O3")
 
 // =============================================================================
@@ -292,7 +295,7 @@ void core1_entry() {
             if(!isPAL) {while (lines <= (is_odd_field? VBLANK_LINES : VBLANK_LINES-1)){}} else       //NTSC
                        {while (lines <= (!(last_total_lines % 2)? VBLANK_LINES : VBLANK_LINES-1)){}} //PAL 
     
-            // Aktive Videozeilen einlesen und in die FIFO schreiben
+            // Aktive Videozeilen einlesen
             for (y = 0; y < (isPAL? LINES_PER_FRAME-1 : LINES_PER_FRAME_NTSC-1); y++) {
                 get_pio_line(line1);
                 video_go=true;

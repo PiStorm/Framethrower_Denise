@@ -1,3 +1,6 @@
+// © Copyright 2025 Claude Schwarz
+// SPDX-License-Identifier: MIT
+
 #include "fifo.h"
 #include "hardware/dma.h" 
 

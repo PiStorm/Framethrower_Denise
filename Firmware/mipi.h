@@ -1,3 +1,5 @@
+// © Copyright 2025 Claude Schwarz
+// SPDX-License-Identifier: MIT
 
 #define FIRST_HSTX_PIN 12
 #define SOTEOTWAIT() asm volatile("nop; nop; nop; nop; nop; nop; nop; nop;")
