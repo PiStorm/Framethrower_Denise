@@ -1,2 +1,34 @@
-# Framethrower_Denise
- PiStorm Framethrower for Amigas with Denise Chip
+## Framethrower Denise - PiStorm Amiga native video passtrough
+
+Framethrower samples the Amiga Video from Denise,converts it to a MIPI CSI2 datastream, which the Raspberry Pi on PiStorm can receive and show on HDMI
+
+- [Hardware files, including Gerbers,BOM and Pick&Place](Hardware)
+- [Firmware](Firmware)
+- [Interactive BOM](https://htmlpreview.github.io/?https://github.com/PiStorm/Framethrower_Denise/blob/main/Hardware/Interactive_BOM/InteractiveBOM_Framethrower_Denise_Rev1.html)
+
+  The Firmware is build with VSCode / PicoSDK 2.x
+  
+  Precompiled Firmware can be found here [Firmware](Firmware/build/Framethrower_Denise.uf2)
+  
+
+### Current status
+Its still a work in progress, but I want to release the project now
+
+- :heavy_check_mark: Scandoubling of non laced LORES and HIRES Modes
+- :heavy_check_mark:  Deinterlace of laced LORES and HIRES Modes
+- :heavy_check_mark:  PAL and NTSC
+- :soon: Amiga based config tool (e.g. for scanlines)
+- :x: Amiga audio passtrough
+- :x: Amiga based firmware update tool
+
+
+## Authors
+Claude Schwarz
+- aka [@captain-amygdala](https://github.com/captain-amygdala)
+
+If you like this project and want to support me with a donation
+
+   [![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=JQC4M73U9KKPG)
+
+## The community around the PiStorm Project is best reached on Discord. There is a dedicated Framethrower support channel
+[![](https://dcbadge.limes.pink/api/server/vyHr6nQeGn)](https://discord.gg/vyHr6nQeGn)
