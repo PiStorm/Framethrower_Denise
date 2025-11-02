@@ -19,27 +19,11 @@
 #define END_LEN 2
 #define MAX_TOTAL_LEN (PREAMBLE_LEN + MAX_DATA_LEN + END_LEN) // = 1447 Bytes
 
-void DMASetup(uint8_t *data) { 
-
-    dma_channel_config c = dma_channel_get_default_config(0);
-    channel_config_set_transfer_data_size(&c, DMA_SIZE_8);
-    channel_config_set_dreq(&c, DREQ_HSTX);
-    channel_config_set_high_priority( &c, true);
-
-        dma_channel_configure(
-        0,          // Channel to be configured
-        &c,            // The configuration we just created
-        &hstx_fifo_hw->fifo,           // The initial write address
-        data,           // The initial read address
-        1440, // Number of transfers; in this case each is 1 byte.
-        false           // Start immediately.
-    );
-    bus_ctrl_hw->priority = BUSCTRL_BUS_PRIORITY_DMA_W_BITS | BUSCTRL_BUS_PRIORITY_DMA_R_BITS;
-
-}
+volatile bool mipi_busy = false;
 
 static inline void start_hstx(void) {
 
+    mipi_busy = true;
     uint8_t lead_in_zeros[32]={0};
 
     while (!(hstx_fifo_hw->stat & HSTX_FIFO_STAT_EMPTY_BITS));
@@ -65,9 +49,14 @@ static inline void start_hstx(void) {
     DELAY_NS(150);
     gpio_set_function(PIN_HS_D0_P, GPIO_FUNC_HSTX);
     gpio_set_function(PIN_HS_D0_N, GPIO_FUNC_HSTX);
+    
+    //Clear the interrupt request.
+    dma_hw->ints0 = 1u << 0;
+    dma_channel_set_irq0_enabled(0, true);
 }
 
 static inline void stop_hstx(void) {
+     dma_channel_set_irq0_enabled(0, false);
 //TODO RUNOUT richtig
     gpio_set_function(PIN_HS_D0_P, GPIO_FUNC_SIO);
     gpio_set_function(PIN_HS_D0_N, GPIO_FUNC_SIO);
@@ -85,6 +74,36 @@ static inline void stop_hstx(void) {
     gpio_set_function(PIN_HS_D0_P, GPIO_FUNC_SIO);
     gpio_set_function(PIN_HS_D0_N, GPIO_FUNC_SIO);
     gpio_put_masked(0x000FF000,0x000FF000);
+    mipi_busy = false;
+}
+
+
+void dma_handler() {
+    // Clear the interrupt request.
+    dma_hw->ints0 = 1u << 0;
+    stop_hstx();
+}
+
+
+void DMASetup(uint8_t *data) { 
+
+    dma_channel_config c = dma_channel_get_default_config(0);
+    channel_config_set_transfer_data_size(&c, DMA_SIZE_8);
+    channel_config_set_dreq(&c, DREQ_HSTX);
+    channel_config_set_high_priority( &c, true);
+
+        dma_channel_configure(
+        0,          // Channel to be configured
+        &c,            // The configuration we just created
+        &hstx_fifo_hw->fifo,           // The initial write address
+        data,           // The initial read address
+        1440, // Number of transfers; in this case each is 1 byte.
+        false           // Start immediately.
+    );
+    bus_ctrl_hw->priority = BUSCTRL_BUS_PRIORITY_DMA_W_BITS | BUSCTRL_BUS_PRIORITY_DMA_R_BITS;
+    irq_set_exclusive_handler(DMA_IRQ_0, dma_handler);
+    irq_set_enabled(DMA_IRQ_0, true);
+
 }
 
 
@@ -214,8 +233,9 @@ void __not_in_flash_func(mipiCsiFrameStart)(void) {
     uint8_t buffer[5] ={0xB8,0x00,0x00,0x00,0x00};
     start_hstx();
     dma_channel_transfer_from_buffer_now(0,buffer,5);
-    dma_channel_wait_for_finish_blocking(0);
-    stop_hstx();
+    //dma_channel_wait_for_finish_blocking(0);
+    //while(mipi_busy){}
+    //stop_hstx();
 }
 
 void __not_in_flash_func(mipiCsiFrameEnd)(void) {
@@ -223,8 +243,9 @@ void __not_in_flash_func(mipiCsiFrameEnd)(void) {
     uint8_t buffer[5] ={0xB8,0x01,0x00,0x00,0x07};
     start_hstx();
     dma_channel_transfer_from_buffer_now(0,buffer,5);
-    dma_channel_wait_for_finish_blocking(0);
-    stop_hstx();
+    //dma_channel_wait_for_finish_blocking(0);
+    //while(mipi_busy){}
+    //stop_hstx();
 }
 
 void __not_in_flash_func(mipiCsiSendLong)(int type, uint8_t *data, int len) {
@@ -239,6 +260,7 @@ void __not_in_flash_func(mipiCsiSendLong)(int type, uint8_t *data, int len) {
 
     start_hstx();    
     dma_channel_transfer_from_buffer_now(0, combined_buffer, total_len_this_call);
-    dma_channel_wait_for_finish_blocking(0);
-    stop_hstx();
+    //dma_channel_wait_for_finish_blocking(0);
+    //while(mipi_busy){}
+    //stop_hstx();
 }

@@ -48,6 +48,7 @@ __attribute__((aligned(4))) uint16_t line2[ACTIVE_VIDEO];
 __attribute__((aligned(4))) uint16_t temp_scanline[ACTIVE_VIDEO];
 __attribute__((aligned(4))) uint16_t blackline [ACTIVE_VIDEO];
 
+extern volatile bool mipi_busy;
 
 // PIO Globals
 PIO pio_video = pio0;
@@ -370,7 +371,7 @@ int __not_in_flash_func(main)(void) {
             // Warten auf den Beginn eines neuen Frames
             if(vsync_go){
                 vsync_go = false;    
-                mipiCsiFrameStart();
+                while(mipi_busy){}mipiCsiFrameStart();
                 frame_active = true;
                 lines_read_count = 0;
             }
@@ -384,31 +385,31 @@ int __not_in_flash_func(main)(void) {
                     if(isPAL){
                         if (is_odd_field) {
                             dma_memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
-                            set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level_laced); 
+                            set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level_laced);
                             mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
-                            mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
+                            while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                         } else {
                             set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,scanline_level_laced); 
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
-                            mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
+                            while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
                     }else{
                         if (!is_odd_field) {                            
                             dma_memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
                             set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level_laced); 
                             mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
-                            mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
+                            while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                         } else {                            
                             set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,scanline_level_laced); 
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
-                            mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
+                            while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
                     }
                     dma_memcpy_non_block(framebuffer + (ACTIVE_VIDEO * lines_read_count),line2, ACTIVE_VIDEO*2);
                 } else {
                     mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
-                    set_brightness_fast_levels(line2, ACTIVE_VIDEO,scanline_level); 
-                    mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
+                    set_brightness_fast_levels(line2, ACTIVE_VIDEO,scanline_level);
+                    while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                 }
 
                 lines_read_count++;
@@ -416,8 +417,8 @@ int __not_in_flash_func(main)(void) {
                 // Prüfen, ob der Frame vollständig übertragen wurde
                 if (lines_read_count >= (isPAL ? LINES_PER_FRAME-1 : LINES_PER_FRAME_NTSC-1)) {
                     mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
-                    mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
-                    mipiCsiFrameEnd();
+                    while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
+                    while(mipi_busy){} mipiCsiFrameEnd();
                     frame_active = false;
                 }
             }
