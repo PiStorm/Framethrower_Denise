@@ -19,31 +19,6 @@
     nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
     nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop")
 
-
-
-
-#define WAITDPHYRDY() asm volatile(" nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop;\
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop;\
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop;\
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop;\
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop; \
-    nop; nop; nop; nop; nop; nop; nop; nop ; nop; nop; nop; nop; nop; nop; nop; nop")
-    
-    
-
-
 //clock lane ls pins , can be any pin
 #define PIN_LS_CLK_P   19
 #define PIN_LS_CLK_N   18
@@ -80,7 +55,6 @@
 
 void mipi_init(void);
 void mipiCsiSendLong(int type, uint8_t *data, int len);
-//void mipiCsiSendShort(int type, uint8_t *data, int len);
 void mipiCsiFrameStart(void);
 void mipiCsiFrameEnd(void);
 void DMASetup(uint8_t *data);

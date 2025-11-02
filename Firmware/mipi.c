@@ -233,9 +233,6 @@ void __not_in_flash_func(mipiCsiFrameStart)(void) {
     uint8_t buffer[5] ={0xB8,0x00,0x00,0x00,0x00};
     start_hstx();
     dma_channel_transfer_from_buffer_now(0,buffer,5);
-    //dma_channel_wait_for_finish_blocking(0);
-    //while(mipi_busy){}
-    //stop_hstx();
 }
 
 void __not_in_flash_func(mipiCsiFrameEnd)(void) {
@@ -243,9 +240,6 @@ void __not_in_flash_func(mipiCsiFrameEnd)(void) {
     uint8_t buffer[5] ={0xB8,0x01,0x00,0x00,0x07};
     start_hstx();
     dma_channel_transfer_from_buffer_now(0,buffer,5);
-    //dma_channel_wait_for_finish_blocking(0);
-    //while(mipi_busy){}
-    //stop_hstx();
 }
 
 void __not_in_flash_func(mipiCsiSendLong)(int type, uint8_t *data, int len) {
@@ -260,7 +254,4 @@ void __not_in_flash_func(mipiCsiSendLong)(int type, uint8_t *data, int len) {
 
     start_hstx();    
     dma_channel_transfer_from_buffer_now(0, combined_buffer, total_len_this_call);
-    //dma_channel_wait_for_finish_blocking(0);
-    //while(mipi_busy){}
-    //stop_hstx();
 }

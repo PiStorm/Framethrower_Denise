@@ -378,13 +378,13 @@ int __not_in_flash_func(main)(void) {
         } else {
             // Frame wird aktiv gelesen und gesendet
             if(video_go){
-                dma_memcpy_non_block(line2,line1, ACTIVE_VIDEO*2);
+                memcpy(line2,line1, ACTIVE_VIDEO*2);
                 video_go=false; 
 
                 if(laced) {
                     if(isPAL){
                         if (is_odd_field) {
-                            dma_memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
+                            memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
                             set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level_laced);
                             mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
                             while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
@@ -394,8 +394,8 @@ int __not_in_flash_func(main)(void) {
                             while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
                     }else{
-                        if (!is_odd_field) {                            
-                            dma_memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
+                        if (!is_odd_field) {                       
+                            memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
                             set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level_laced); 
                             mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
                             while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
@@ -405,7 +405,7 @@ int __not_in_flash_func(main)(void) {
                             while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
                     }
-                    dma_memcpy_non_block(framebuffer + (ACTIVE_VIDEO * lines_read_count),line2, ACTIVE_VIDEO*2);
+                    memcpy(framebuffer + (ACTIVE_VIDEO * lines_read_count),line2, ACTIVE_VIDEO*2);
                 } else {
                     mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                     set_brightness_fast_levels(line2, ACTIVE_VIDEO,scanline_level);
