@@ -42,6 +42,8 @@ This enables scaled to 4:3 fullscreen passtrough and automatic RTG/Native switch
 At a later stage there will be a Amiga based Firmware update utility, but until then Firmware updates
 must be done by the build in USB-C interface. No driver or special tools are needed for that
 
+Precompiled Firmware .UF2, ready to flash : [Firmware](https://github.com/PiStorm/Framethrower_Denise/raw/refs/heads/main/Firmware/build/Framethrower_Denise.uf2)
+
 1. Power off the Amiga
 2. Press and hold the button on Framethrower
 3. While the button is still pressed, power on the Amiga
