@@ -10,7 +10,7 @@ Framethrower samples the Amiga Video from Denise,converts it to a MIPI CSI2 data
 
   Basic Setup and Information :arrow_forward: [	**Guide	**](setup.md) :arrow_backward:
   
-  Precompiled Firmware can be found here [Firmware](Firmware/build/Framethrower_Denise.uf2)
+  Precompiled Firmware can be found here [Firmware](https://github.com/PiStorm/Framethrower_Denise/raw/refs/heads/main/Firmware/build/Framethrower_Denise.uf2)
   
 
 ### Current status
