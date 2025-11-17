@@ -333,7 +333,7 @@ PICO_STDIO_UART:BOOL=ON
 PICO_STDIO_USB:BOOL=OFF
 
 //No help, variable specified on the command line.
-Python3_EXECUTABLE:STRING=c:/Python311/python.exe
+Python3_EXECUTABLE:UNINITIALIZED=c:/Python311/python.exe
 
 //Value Computed by CMake
 pico_sdk_BINARY_DIR:STATIC=Y:/Projects/FramethrowerDenise/Framethrower_Denise/Firmware/build/pico-sdk

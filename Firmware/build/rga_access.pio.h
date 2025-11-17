@@ -9,97 +9,43 @@
 #endif
 
 // -------- //
-// read_rga //
+// rga_read //
 // -------- //
 
-#define read_rga_wrap_target 3
-#define read_rga_wrap 16
-#define read_rga_pio_version 1
+#define rga_read_wrap_target 0
+#define rga_read_wrap 10
+#define rga_read_pio_version 1
 
-static const uint16_t read_rga_program_instructions[] = {
-    0xc000, //  0: irq    nowait 0
-    0x80a0, //  1: pull   block
-    0xa027, //  2: mov    x, osr
+static const uint16_t rga_read_program_instructions[] = {
             //     .wrap_target
-    0xe048, //  3: set    y, 8
-    0x2005, //  4: wait   0 gpio, 5
-    0xc000, //  5: irq    nowait 0
-    0xa002, //  6: mov    pins, y
-    0x4008, //  7: in     pins, 8
-    0xa046, //  8: mov    y, isr
-    0x00b0, //  9: jmp    x != y, 16
-    0x2085, // 10: wait   1 gpio, 5
-    0xe050, // 11: set    y, 16
-    0xa002, // 12: mov    pins, y
-    0x4010, // 13: in     pins, 16
-    0x8020, // 14: push   block
-    0xc000, // 15: irq    nowait 0
-    0x2085, // 16: wait   1 gpio, 5
+    0x2015, //  0: wait   0 gpio, 21
+    0x4008, //  1: in     pins, 8
+    0x4078, //  2: in     null, 24
+    0xa046, //  3: mov    y, isr
+    0x00aa, //  4: jmp    x != y, 10
+    0x2095, //  5: wait   1 gpio, 21
+    0x4018, //  6: in     pins, 24
+    0x4070, //  7: in     null, 16
+    0x8020, //  8: push   block
+    0xc000, //  9: irq    nowait 0
+    0x2095, // 10: wait   1 gpio, 21
             //     .wrap
 };
 
 #if !PICO_NO_HARDWARE
-static const struct pio_program read_rga_program = {
-    .instructions = read_rga_program_instructions,
-    .length = 17,
+static const struct pio_program rga_read_program = {
+    .instructions = rga_read_program_instructions,
+    .length = 11,
     .origin = -1,
-    .pio_version = read_rga_pio_version,
+    .pio_version = rga_read_pio_version,
 #if PICO_PIO_VERSION > 0
-    .used_gpio_ranges = 0x1
+    .used_gpio_ranges = 0x2
 #endif
 };
 
-static inline pio_sm_config read_rga_program_get_default_config(uint offset) {
+static inline pio_sm_config rga_read_program_get_default_config(uint offset) {
     pio_sm_config c = pio_get_default_sm_config();
-    sm_config_set_wrap(&c, offset + read_rga_wrap_target, offset + read_rga_wrap);
-    return c;
-}
-#endif
-
-// ----------------- //
-// rga_access_simple //
-// ----------------- //
-
-#define rga_access_simple_wrap_target 2
-#define rga_access_simple_wrap 16
-#define rga_access_simple_pio_version 1
-
-static const uint16_t rga_access_simple_program_instructions[] = {
-    0x80a0, //  0: pull   block
-    0xa027, //  1: mov    x, osr
-            //     .wrap_target
-    0x2f05, //  2: wait   0 gpio, 5              [15]
-    0xe048, //  3: set    y, 8
-    0xa002, //  4: mov    pins, y
-    0x4008, //  5: in     pins, 8
-    0xa046, //  6: mov    y, isr
-    0x00b0, //  7: jmp    x != y, 16
-    0x2f85, //  8: wait   1 gpio, 5              [15]
-    0xa0c2, //  9: mov    isr, y
-    0x8000, // 10: push   noblock
-    0xe050, // 11: set    y, 16
-    0xa002, // 12: mov    pins, y
-    0x4010, // 13: in     pins, 16
-    0x8020, // 14: push   block
-    0xc000, // 15: irq    nowait 0
-    0x2085, // 16: wait   1 gpio, 5
-            //     .wrap
-};
-
-#if !PICO_NO_HARDWARE
-static const struct pio_program rga_access_simple_program = {
-    .instructions = rga_access_simple_program_instructions,
-    .length = 17,
-    .origin = -1,
-    .pio_version = rga_access_simple_pio_version,
-#if PICO_PIO_VERSION > 0
-    .used_gpio_ranges = 0x1
-#endif
-};
-
-static inline pio_sm_config rga_access_simple_program_get_default_config(uint offset) {
-    pio_sm_config c = pio_get_default_sm_config();
-    sm_config_set_wrap(&c, offset + rga_access_simple_wrap_target, offset + rga_access_simple_wrap);
+    sm_config_set_wrap(&c, offset + rga_read_wrap_target, offset + rga_read_wrap);
     return c;
 }
 #endif

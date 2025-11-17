@@ -43,5 +43,6 @@
         "functional": "c",
         "random": "c",
         "set": "c"
-    }
+    },
+    "cortex-debug.variableUseNaturalFormat": false
 }

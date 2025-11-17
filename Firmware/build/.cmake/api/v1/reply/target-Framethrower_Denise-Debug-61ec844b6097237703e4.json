@@ -86,7 +86,7 @@
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 47,
+				"line" : 48,
 				"parent" : 0
 			},
 			{
@@ -98,7 +98,7 @@
 			{
 				"command" : 7,
 				"file" : 0,
-				"line" : 48,
+				"line" : 47,
 				"parent" : 0
 			},
 			{
@@ -159,7 +159,7 @@
 				"command" : 12,
 				"file" : 4,
 				"line" : 206,
-				"parent" : 9
+				"parent" : 11
 			},
 			{
 				"command" : 12,
@@ -1914,16 +1914,16 @@
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 5,
-			"id" : "bs2_default_library::@9e89cb6b53d747b62405"
-		},
-		{
 			"backtrace" : 10,
-			"id" : "Framethrower_Denise_video_capture_pio_h::@6890427a1f51a3e7e1df"
+			"id" : "Framethrower_Denise_rga_access_pio_h::@6890427a1f51a3e7e1df"
 		},
 		{
 			"backtrace" : 12,
-			"id" : "Framethrower_Denise_rga_access_pio_h::@6890427a1f51a3e7e1df"
+			"id" : "Framethrower_Denise_video_capture_pio_h::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "bs2_default_library::@9e89cb6b53d747b62405"
 		}
 	],
 	"id" : "Framethrower_Denise::@6890427a1f51a3e7e1df",

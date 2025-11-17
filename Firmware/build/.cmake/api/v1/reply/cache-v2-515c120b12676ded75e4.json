@@ -1962,7 +1962,7 @@
 					"value" : "No help, variable specified on the command line."
 				}
 			],
-			"type" : "STRING",
+			"type" : "UNINITIALIZED",
 			"value" : "c:/Python311/python.exe"
 		},
 		{

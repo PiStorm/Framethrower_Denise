@@ -25,6 +25,7 @@
 #include "fifo.h"
 #include "mipi.h"
 #include "video_capture.pio.h"
+#include "rga_access.pio.h"
 
 // =============================================================================
 // --- Definitionen & Globale Variablen ---
@@ -40,6 +41,8 @@
 #define csync 23
 #define pixelclock 22
 #define cck 21
+#define rga_base 24
+
 
 // Globale Puffer und FIFO
 __attribute__((aligned(4))) uint16_t framebuffer[ACTIVE_VIDEO * LINES_PER_FRAME];
@@ -56,8 +59,8 @@ PIO pio_rga = pio1;
 
 uint sm_video, sm_vsync;
 uint sm_rga_read, sm_rga_write;
-volatile uint16_t rga_1F4 = 0;
-volatile uint16_t rga_1F6 = 0;
+volatile uint32_t rga_1F4 = 0;
+volatile uint32_t rga_1F6 = 0;
 
 // Interrupt Global
 volatile bool vsync_detected = false;
@@ -79,7 +82,7 @@ volatile int scanline_level_laced = 4;
 // =============================================================================
 
 // Wird bei VSYNC vom PIO aufgerufen
-void __not_in_flash_func(pio_irq_handler)() {
+void __not_in_flash_func(pio_video_irq_handler)() {
  
     if (pio_interrupt_get(pio_video, 0)) {
         pio_interrupt_clear(pio_video, 0); 
@@ -96,6 +99,27 @@ void __not_in_flash_func(pio_irq_handler)() {
     if (pio_interrupt_get(pio_video, 1)) {
         pio_interrupt_clear(pio_video, 1); 
         lines++;   
+    }
+}
+
+// Wird bei RGA Match vom PIO aufgerufen
+void __not_in_flash_func(pio_rga_irq_handler)() {
+//    void pio_rga_irq_handler() {
+ 
+    if (pio_interrupt_get(pio_rga, 1)) {
+        pio_interrupt_clear(pio_rga, 0);
+        rga_1F4 =  pio_sm_get_blocking(pio_rga, sm_rga_read);
+        //rga_1F6 = rga_1F4 * rga_1F4;
+    }
+
+    if (pio_interrupt_get(pio_rga, 0)) {
+        pio_interrupt_clear(pio_rga, 0);
+        rga_1F6++;
+
+        rga_1F4 =  (pio_sm_get_blocking(pio_rga, sm_rga_read) >> 0);
+
+        scanline_level_laced = (rga_1F4 & 0xff00) >> 8;
+        scanline_level  = rga_1F4 & 0x00ff;
     }
 }
 
@@ -149,10 +173,6 @@ static inline uint16_t __attribute__((always_inline)) __not_in_flash_func(conver
 }
 
 void __not_in_flash_func(set_brightness_fast_levels)(uint16_t* line, int count, int level) {
-
-    //if (level >= 4) {
-    //    return;
-    //}
 
     uint32_t* p32 = (uint32_t*)line;
     int loop_count = count >> 1;
@@ -262,32 +282,71 @@ void setup_video_capture_sm(uint offset) {
     sm_video = pio_claim_unused_sm(pio_video, true);
     pio_sm_config c = video_capture_program_get_default_config(offset);
     sm_config_set_in_pins(&c, 0);
-    sm_config_set_in_shift(&c, true,true,32);
+    //sm_config_set_in_shift(&c, true,true,32);
     pio_sm_set_consecutive_pindirs(pio_video, sm_video, 0, 32, false);
     sm_config_set_wrap(&c, offset + video_capture_wrap_target, offset + video_capture_wrap);
     sm_config_set_in_shift(&c, true, true, 1);
     pio_sm_init(pio_video, sm_video, offset, &c);
     pio_sm_set_enabled(pio_video, sm_video, false);
+
+}
+
+
+void setup_rga_capture_sm(uint offset) {
+
+    pio_set_gpio_base(pio_rga, 16);
+    sm_rga_read = pio_claim_unused_sm(pio_rga, true);
+    pio_sm_config c = rga_read_program_get_default_config(offset);
+
+    
+    sm_config_set_in_pins(&c, rga_base);
+    /*
+    for (int pin = rga_base; pin <= rga_base+24; pin++) {       
+        gpio_set_function(pin, PIO_FUNCSEL_NUM(pio_rga, pin));
+    }    
+    */
+    
+    //pio_sm_set_consecutive_pindirs(pio_rga, sm_rga_read, rga_base, rga_base+24, false);
+    sm_config_set_wrap(&c, offset + rga_read_wrap_target, offset + rga_read_wrap);
+    pio_sm_init(pio_rga, sm_rga_read, offset, &c);
+
+    pio_sm_put_blocking(pio_rga, sm_rga_read,(0xDFF1F2 >> 1) & 0xFF);
+    pio_sm_set_enabled(pio_rga, sm_rga_read, true);
+    pio_sm_exec(pio_rga, sm_rga_read, pio_encode_pull(false,false));
+    pio_sm_exec(pio_rga, sm_rga_read, pio_encode_mov( pio_x , pio_osr));
 }
 
 
 // =============================================================================
 // --- Core 1 Entry ---
 // =============================================================================
+//void __not_in_flash_func(core1_entry)() {
+
 void core1_entry() {
     // Konfiguriere den PIO-Interrupt für VSYNC
     pio_set_irq0_source_enabled(pio_video, pis_interrupt0, true);
-    irq_set_exclusive_handler(PIO0_IRQ_0, pio_irq_handler);
+    irq_set_exclusive_handler(PIO0_IRQ_0, pio_video_irq_handler);
     irq_set_enabled(PIO0_IRQ_0, true);
 
     pio_set_irq1_source_enabled(pio_video, pis_interrupt1, true);
-    irq_set_exclusive_handler(PIO0_IRQ_1, pio_irq_handler);
+    irq_set_exclusive_handler(PIO0_IRQ_1, pio_video_irq_handler);
     irq_set_enabled(PIO0_IRQ_1, true);
+
+    //Konfiguriere den PIO-Interrupt für RGA
+    pio_set_irq0_source_enabled(pio_rga, pis_interrupt0, true);
+    irq_set_exclusive_handler(PIO1_IRQ_0, pio_rga_irq_handler);
+    irq_set_enabled(PIO1_IRQ_0, true);
+
+    pio_set_irq1_source_enabled(pio_rga, pis_interrupt0, true);
+    irq_set_exclusive_handler(PIO1_IRQ_0, pio_rga_irq_handler);
+    irq_set_enabled(PIO1_IRQ_0, true);
 
 
     uint16_t y = 0;
 
     while (1) {
+
+ 
         if (vsync_detected) {
             vsync_detected = false; 
             vsync_go = true;
@@ -302,6 +361,7 @@ void core1_entry() {
                 video_go=true;
                 while(!video_go){}
             }
+                   // rga_1F6 =  (pio_sm_get_blocking(pio_rga, sm_rga_read) << 1);// pio_sm_get_blocking(pio_rga, sm_rga_read);
         }
     }
 }
@@ -349,10 +409,14 @@ int __not_in_flash_func(main)(void) {
     gpio_set_input_hysteresis_enabled(cck, true);
 
     // PIO-Programme laden und State Machines einrichten
+    pio_set_gpio_base(pio_rga, 16);
     uint offset_vsync = pio_add_program(pio_video, &vsync_detect_program);
     uint offset_video = pio_add_program(pio_video, &video_capture_program);
+    uint offset_rga_read = pio_add_program(pio_rga, &rga_read_program);
     setup_vsync_detect_sm(offset_vsync);
     setup_video_capture_sm(offset_video);
+    setup_rga_capture_sm(offset_rga_read);
+
     pio_sm_put_blocking(pio_video, sm_video, ((SAMPLES_PER_LINE+HBLANK) / 2) - 1);
 
     bus_ctrl_hw->priority = BUSCTRL_BUS_PRIORITY_DMA_W_BITS | BUSCTRL_BUS_PRIORITY_DMA_R_BITS;
@@ -364,6 +428,10 @@ int __not_in_flash_func(main)(void) {
 
     uint32_t lines_read_count = 0;
     bool frame_active = false;
+
+    //pio_set_irq1_source_enabled(pio_rga, pis_interrupt0, true);
+    //irq_set_exclusive_handler(PIO1_IRQ_0, pio_rga_irq_handler);
+    //irq_set_enabled(PIO1_IRQ_0, true);
 
     while (1) {
 

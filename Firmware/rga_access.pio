@@ -1,115 +1,20 @@
-; © Copyright 2025 Claude Schwarz
-; SPDX-License-Identifier: MIT
-
-.program read_rga
-; RP2350B-Version mit GPIOBASE=16 Remapping.
-; Alle Pin-Nummern hier sind PIO-interne, remappte Pins.
-;
-; PHYSISCH    -> PIO-INTERN
-; GP21 (Strobe) -> 5
-; GP24 (Addr)   -> 8
-; GP32 (Data)   -> 16
-
-; CPU pusht NUR die 8-Bit ZIEL-ADRESSE
-
-    irq set 0
-    ; 1. 8-Bit Ziel-Adresse von CPU holen
-    pull block          
-    mov x, osr          ; Speichern in X (Ziel-Adresse)
+.program rga_read
 
 .wrap_target
-    ; --- Adress-Phase ---
-    ; Lade ADDR_BASE (PIO-Pin 8) statisch in Y
-    set y, 8            
-    
-    ; Warte auf Strobe (Adresse) auf PIO-Pin 5
-    wait 0 gpio 5
-    irq set 0      
-    
-    mov pins, y         
-    in pins, 8          
-    mov y, isr          ; Kopiere gelesene Adresse nach Y
-    jmp x!=y no_match   ; Vergleiche X (Ziel) mit Y (Gelesen)
+    wait 0 gpio 21
+    in pins, 8
+    in null, 24
+    mov y, isr 
+    jmp x!=y no_match 
 
-; --- Daten-Phase (Match!) ---
-match_found:
-    wait 1 gpio 5      ; Warte auf Strobe LOW (Ende Adress-Zyklus)
-    
-    ; Lade DATA_BASE (PIO-Pin 16) statisch in Y
-    set y, 16           
-    
-    ; Warte auf NÄCHSTEN Strobe HIGH (Daten-Zyklus)
-    ;wait 0 gpio 5      
-    
-    ; Setze 'in_base' auf Data-Basis (PIO-Pin 16)
-    mov pins, y         
-    ; Lese 16 Daten-Pins (PIO 16-31 -> Physisch GP32-47)
-    in pins, 16         
-    
-    push                ; Schiebe 16-Bit-Daten in RX FIFO
-    irq set 0           ; Löse IRQ 0 aus
-
-    ;wait 0 gpio 5       ; Warte auf Strobe LOW (Ende Daten-Zyklus)
-    
-
-
-; --- Kein Match ---
-no_match:
-    wait 1 gpio 5       ; Warte nur auf Strobe LOW
-    
-.wrap
-
-.program rga_access_simple
-; RP2350B-Version mit GPIOBASE=16 Remapping (für pio1)
-; Alle Pin-Nummern sind PIO-interne, remappte Pins.
-;
-; PHYSISCH    -> PIO-INTERN
-; GP21 (Strobe) -> 5
-; GP24 (Addr)   -> 8
-; GP32 (Data)   -> 16
-
-; CPU pusht NUR die 8-Bit ZIEL-ADRESSE
-    pull block          
-    mov x, osr          ; 1. Ziel-Adresse in X
-
-.wrap_target
-    ; 1. Warte auf Strobe LOW
-    wait 0 gpio 5 [15]      
-
-    ; 2. Lese Adresse
-    set y, 8            ; PIO-Pin 8 (Addr-Basis)
-    mov pins, y         
-    in pins, 8          
-    
-    ; 3. Vergleiche (und sichere Adresse in Y)
-    mov y, isr          
-    jmp x!=y no_match   
-
-; --- 5. ADRESSE STIMMT (Match) ---
-    ; 5a. Warte auf Strobe HIGH
-    wait 1 gpio 5  [15]          
-
-    ; 5b. Pushe die 8-bit Adresse (wie gewünscht)
-    mov isr, y          ; (Adresse aus Y zurückholen)
-    push noblock        
-
-    ; 5c. Lese Daten
-    set y, 16           ; PIO-Pin 16 (Data-Basis)
-    mov pins, y
-    in pins, 16
-    
-    ; 5d. Pushe die 16-bit Daten
-    push                
-    
-    ; 5e. Löse IRQ aus
+; --- ADRESSE STIMMT (Match) ---
+    wait 1 gpio 21
+    in pins, 24
+    in null, 16
+    push
     irq set 0
-    
-    ; (fällt durch zu .wrap, wartet auf nächstes LOW)
 
-; --- 4. ADRESSE STIMMT NICHT (No Match) ---
+; --- ADRESSE STIMMT NICHT (No Match) ---
 no_match:
-    ; Warten, bis der Strobe-Zyklus (HIGH) vorbei ist,
-    ; bevor wir auf den nächsten LOW warten.
-    wait 1 gpio 5       
-
+   wait 1 gpio 21
 .wrap
