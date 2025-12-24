@@ -1,6 +1,6 @@
 ## Framethrower Denise - PiStorm Amiga native video passtrough
 
-Framethrower samples the Amiga Video from Denise,converts it to a MIPI CSI2 datastream, which the Raspberry Pi on PiStorm can receive and show on HDMI
+Framethrower samples the Amiga Video from Denise and converts it to a MIPI CSI2 datastream which the Raspberry Pi on PiStorm can receive and show on HDMI
 
 - [Hardware files, including Gerbers,BOM and Pick&Place](Hardware)
 - [Firmware](Firmware)

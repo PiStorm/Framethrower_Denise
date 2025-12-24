@@ -1,6 +1,6 @@
 ## Hardware Setup
 
-You need a Raspberry Pi camera cable or a generic A/B Type 15pin 1.0mm pitch FPC
+In addition to the Framethrower itself, you will need a Raspberry Pi camera cable or a generic A/B Type 15pin 1.0mm pitch FPC
 
 1. Remove Denise from the Socket 
 2. Place Framethrower into the Denise Socket
@@ -14,38 +14,26 @@ You need a Raspberry Pi camera cable or a generic A/B Type 15pin 1.0mm pitch FPC
 
 There are some known limitations and bugs with this early support in Emu68
 
-1. Boot Mode passtrough is broken with unicam.smooth scaler settings
+1. Boot Mode passthrough is broken with unicam.smooth scaler settings
 2. NTSC modes shown "garbage" in the lower part of the screen
 3. unicam.smooth scaler settings **might** lead to recoverable gurus on workbench
 
-This limitations and bugs are already addressed and upcoming Emu68 1.1 will probably have this fixed :)
+These limitations and bugs are already addressed (albeit not in a currently released version of Emu68) and the upcoming Emu68 1.1 will probably have this fixed :)
 
 The easiest way to configure Emu68 for Framethrower is to edit the cmdline.txt file on the Emu68 SD-Card FAT partition.
-If there is no cmdline.txt to be found anywhere on the SD card (please search for the file, some readymade distributions put them elsewhere) 
-then just create one with a text editor.
-Keep in mind, with cmdline.txt all parameters ***must*** be written in just one line, seperated by space
 
-By adding these parameters at the end of the old parameter list you can enable Framethrower
-
-
-
+Normally the cmdline.txt file is in the root directory of the FAT partition. However, please also search for the file in sub-directories (or check the config.txt file for a line "cmdline=path to cmdline.txt") as some readymade distributions have it elsewhere. If there is no cmdline.txt to be found anywhere on the SD cardthen just create one with a text editor. Keep in mind, with cmdline.txt all parameters ***must*** be written in just one line, seperated by space. By adding these parameters at the end of the old parameter list you can enable Framethrower
 
 ```unicam.boot unicam.integer``` 
 
 This enables integer/pixel perfect passtrough and automatic RTG/Native switching
 
-
-
 ```unicam.boot unicam.smooth unicam.b=20 unicam.c=0 unicam.phase=60```
 
 This enables scaled to 4:3 fullscreen passtrough and automatic RTG/Native switching
 
-
-
-
-
-Its advised to set the HDMI output to 50Hz for a PAL Amiga, otherwise you likely notice strong tearing effects.
-To do this here are exemplary two settings for config.txt
+It's advised to set the HDMI output to 50Hz for a PAL Amiga, otherwise you likely notice strong tearing effects.
+Here are two example settings for config.txt
 
 720p50Hz Output :
 
@@ -69,16 +57,16 @@ hdmi_mode=31
 
 ## Framethrower Firmware update
 
-At a later stage there will be a Amiga based Firmware update utility, but until then Firmware updates
-must be done by the build in USB-C interface. No driver or special tools are needed for that.
-Just make sure you use a USB-C to USB-A cable, as a direct USB-C to USB-C connection wont work
+At a later stage there will be a Amiga based Firmware update utility. Until then, Firmware updates
+must be done by the built in USB-C interface. No driver or special tools are needed for that.
+Just make sure you use a USB-C to USB-A cable, as a direct USB-C to USB-C connection won't work.
 
 Precompiled Firmware .UF2, ready to flash : [Firmware](https://github.com/PiStorm/Framethrower_Denise/raw/refs/heads/main/Firmware/build/Framethrower_Denise.uf2)
 
 1. Power off the Amiga
 2. Press and hold the button on Framethrower
 3. While the button is still pressed, power on the Amiga
-4. You can release now the button and connect a USB-C to USB-A Cable to Framethrower
-5. Connecting the USB Cable to a PC immediatly a drive called "RP2350" will show up
-6. Just copy or drag&drop the Firmware .UF2 file to the RP2350 drive
-7. The drive will disapear, the Framethrower is updated
+4. Release the button and connect a USB-C to USB-A Cable to Framethrower
+5. Upon connecting the USB Cable to a PC, a drive called "RP2350" will show up
+6. Copy or drag and drop the Firmware .UF2 file to the RP2350 drive
+7. The drive will disappear (i.e be dismounted) and the Framethrower is updated
