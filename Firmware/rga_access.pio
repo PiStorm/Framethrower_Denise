@@ -1,5 +1,4 @@
 .program rga_read
-
 .wrap_target
     wait 0 gpio 21
     in pins, 8
@@ -17,4 +16,27 @@
 ; --- ADRESSE STIMMT NICHT (No Match) ---
 no_match:
    wait 1 gpio 21
-.wrap
+.wrap 
+
+
+
+
+.program rga_write
+.wrap_target
+    wait 0 gpio 21
+    in pins, 8
+    in null, 24
+    mov y, isr 
+    jmp x!=y no_match 
+
+; --- ADRESSE STIMMT (Match) ---
+    MOV PINDIRS, ~NULL
+    MOV PINS, OSR
+    irq set 1
+    pull
+
+; --- ADRESSE STIMMT NICHT (No Match) ---
+no_match:
+   wait 1 gpio 21
+   MOV PINDIRS, NULL
+.wrap 

@@ -21,10 +21,10 @@ static const uint16_t video_capture_program_instructions[] = {
     0x2597, //  0: wait   1 gpio, 23             [5]
     0x2517, //  1: wait   0 gpio, 23             [5]
     0x2597, //  2: wait   1 gpio, 23             [5]
-    0x2014, //  3: wait   0 gpio, 20
-    0x2594, //  4: wait   1 gpio, 20             [5]
+    0x2016, //  3: wait   0 gpio, 22
+    0x2796, //  4: wait   1 gpio, 22             [7]
     0x4000, //  5: in     pins, 32
-    0x2514, //  6: wait   0 gpio, 20             [5]
+    0x2716, //  6: wait   0 gpio, 22             [7]
     0x4000, //  7: in     pins, 32
     0x0044, //  8: jmp    x--, 4
             //     .wrap
@@ -69,7 +69,7 @@ static inline void video_capture_program_init(PIO pio, uint sm, uint offset, uin
 // ------------ //
 
 #define vsync_detect_wrap_target 0
-#define vsync_detect_wrap 14
+#define vsync_detect_wrap 15
 #define vsync_detect_pio_version 1
 
 static const uint16_t vsync_detect_program_instructions[] = {
@@ -82,20 +82,21 @@ static const uint16_t vsync_detect_program_instructions[] = {
     0xa242, //  5: nop                           [2]
     0x0044, //  6: jmp    x--, 4
     0xc000, //  7: irq    nowait 0
-    0x20a0, //  8: wait   1 pin, 0
-    0xe052, //  9: set    y, 18
-    0xe03f, // 10: set    x, 31
-    0xa342, // 11: nop                           [3]
-    0x004b, // 12: jmp    x--, 11
-    0x008a, // 13: jmp    y--, 10
-    0x0000, // 14: jmp    0
+    0x3f40, //  8: wait   0 irq, 0               [31]
+    0x20a0, //  9: wait   1 pin, 0
+    0xe052, // 10: set    y, 18
+    0xe03f, // 11: set    x, 31
+    0xa342, // 12: nop                           [3]
+    0x004c, // 13: jmp    x--, 12
+    0x008b, // 14: jmp    y--, 11
+    0x0000, // 15: jmp    0
             //     .wrap
 };
 
 #if !PICO_NO_HARDWARE
 static const struct pio_program vsync_detect_program = {
     .instructions = vsync_detect_program_instructions,
-    .length = 15,
+    .length = 16,
     .origin = -1,
     .pio_version = vsync_detect_pio_version,
 #if PICO_PIO_VERSION > 0

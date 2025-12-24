@@ -11,12 +11,12 @@
 wait 1 gpio 23 [5]
 wait 0 gpio 23 [5]
 wait 1 gpio 23 [5]
-wait 0 gpio 20
+wait 0 gpio 22
 
 pixelloop:
-    wait 1 gpio 20[5]
+    wait 1 gpio 22[7]
     in pins, 32
-    wait 0 gpio 20[5]
+    wait 0 gpio 22[7]
     in pins, 32
     jmp x-- pixelloop
 ;.wrap 
@@ -43,7 +43,6 @@ static inline void video_capture_program_init(PIO pio, uint sm, uint offset, uin
 %}
 
 
-
 .program vsync_detect
 
 ; --- ARMED STATE ---
@@ -62,7 +61,7 @@ low_loop:
 
 fire_irq:
     irq set 0            ; Interrupt auslösen
-    ;wait 0 irq 0 [31]    ; Warten, bis CPU den IRQ bestätigt hat (Synchronisation)
+    wait 0 irq 0 [31]    ; Warten, bis CPU den IRQ bestätigt hat (Synchronisation)
 
 rearm_wait_high:
     wait 1 pin 0; [31]
@@ -80,6 +79,7 @@ inner_rearm_loop:
     jmp y-- outer_rearm_loop
     jmp start
 .wrap
+
 
 % c-sdk {
 static inline void vsync_detect_program_init(PIO pio, uint sm, uint offset, uint pin) {

@@ -50,3 +50,45 @@ static inline pio_sm_config rga_read_program_get_default_config(uint offset) {
 }
 #endif
 
+// --------- //
+// rga_write //
+// --------- //
+
+#define rga_write_wrap_target 0
+#define rga_write_wrap 10
+#define rga_write_pio_version 1
+
+static const uint16_t rga_write_program_instructions[] = {
+            //     .wrap_target
+    0x2015, //  0: wait   0 gpio, 21
+    0x4008, //  1: in     pins, 8
+    0x4078, //  2: in     null, 24
+    0xa046, //  3: mov    y, isr
+    0x00a9, //  4: jmp    x != y, 9
+    0xa06b, //  5: mov    pindirs, ~null
+    0xa007, //  6: mov    pins, osr
+    0xc001, //  7: irq    nowait 1
+    0x80a0, //  8: pull   block
+    0x2095, //  9: wait   1 gpio, 21
+    0xa063, // 10: mov    pindirs, null
+            //     .wrap
+};
+
+#if !PICO_NO_HARDWARE
+static const struct pio_program rga_write_program = {
+    .instructions = rga_write_program_instructions,
+    .length = 11,
+    .origin = -1,
+    .pio_version = rga_write_pio_version,
+#if PICO_PIO_VERSION > 0
+    .used_gpio_ranges = 0x2
+#endif
+};
+
+static inline pio_sm_config rga_write_program_get_default_config(uint offset) {
+    pio_sm_config c = pio_get_default_sm_config();
+    sm_config_set_wrap(&c, offset + rga_write_wrap_target, offset + rga_write_wrap);
+    return c;
+}
+#endif
+

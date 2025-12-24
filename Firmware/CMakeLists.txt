@@ -38,7 +38,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(Framethrower_Denise Framethrower_Denise.c mipi.c fifo.c)
+add_executable(Framethrower_Denise Framethrower_Denise.c mipi.c fifo.c rga_device.c)
 
 pico_set_program_name(Framethrower_Denise "Framethrower_Denise")
 pico_set_program_version(Framethrower_Denise "0.1")
@@ -64,16 +64,19 @@ target_include_directories(Framethrower_Denise PRIVATE
 target_link_libraries(Framethrower_Denise 
         hardware_dma
         hardware_pio
+        hardware_adc
+        hardware_flash
+        hardware_watchdog
         pico_multicore
         hardware_clocks
         )
 
 target_compile_definitions(Framethrower_Denise PRIVATE
-        PLL_SYS_REFDIV=1
-        PLL_SYS_VCO_FREQ_HZ=1344000000
-        PLL_SYS_POSTDIV1=4
-        PLL_SYS_POSTDIV2=1
-        SYS_CLK_HZ=336000000
+        #PLL_SYS_REFDIV=1
+        #PLL_SYS_VCO_FREQ_HZ=1344000000
+        #PLL_SYS_POSTDIV1=4
+        #PLL_SYS_POSTDIV2=1
+        #SYS_CLK_HZ=336000000
         PICO_XOSC_STARTUP_DELAY_MULTIPLIER=128 #this gives the cheap jlcpcb crystal a bit time to stabilize...
         #PICO_PIO_USE_GPIO_BASE=1
 
@@ -83,9 +86,9 @@ target_compile_definitions(Framethrower_Denise PRIVATE
         #PLL_USB_POSTDIV2=1
         #USB_CLK_HZ=270000000
 )
-
+pico_set_binary_type(Framethrower_Denise copy_to_ram)
 set_property(TARGET Framethrower_Denise APPEND_STRING PROPERTY LINK_FLAGS "-Wl,--print-memory-usage")
 set_property(TARGET Framethrower_Denise PROPERTY COMPILE_WARNING_AS_ERROR ON)
 add_compile_definitions(PICO_PIO_USE_GPIO_BASE=1)
+#add_compile_definitions(PICO_EMBED_XIP_SETUP=1)
 pico_add_extra_outputs(Framethrower_Denise)
-
