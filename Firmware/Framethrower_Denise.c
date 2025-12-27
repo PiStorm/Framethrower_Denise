@@ -36,9 +36,9 @@
 #define LINES_PER_FRAME 288
 #define LINES_PER_FRAME_NTSC 240
 #define ACTIVE_VIDEO 720
-#define HBLANK 72
+#define HBLANK 84
 #define SAMPLES_PER_LINE 720
-#define VBLANK_LINES 14
+#define VBLANK_LINES 19
 
 // GPIO Pin-Definitionen
 #define csync 23
@@ -71,6 +71,7 @@ volatile uint32_t lines;
 volatile uint32_t last_total_lines;
 volatile bool laced = false;
 volatile bool isPAL = true;
+volatile bool prev_isPAL = true;
 volatile bool video_go = false;
 volatile bool vsync_go = true;
 volatile bool is_odd_field = true;
@@ -190,6 +191,48 @@ static inline uint16_t __attribute__((always_inline)) __not_in_flash_func(conver
     return (uint16_t)result;
 }
 
+//Optimized to 9 cycles -> ~35Mpix/sec @ 320Mhz
+//Assumes an input format of xxxxRRRRGGGGBBBB
+static inline uint16_t __attribute__((always_inline)) __not_in_flash_func(convert_12_to_565_optimized)(uint16_t pixel_in) {
+    
+    uint32_t result, temp1, temp2;
+
+    __asm volatile (
+        /* --- Schritt 1: Blau-Komponente bearbeiten (Bits 0-3) --- */
+        // Extrahiere 4-Bit Blau in das Ergebnisregister.
+        "ubfx   %[res], %[in], #0, #4        \n\t"
+        // Skaliere Blau auf 5 Bit: bbbbb = (bbbb << 1) | (bbbb >> 3)
+        "lsr    %[t1], %[res], #3            \n\t"
+        "orr    %[res], %[t1], %[res], lsl #1 \n\t"
+        
+        /* --- Schritt 2: Grün-Komponente bearbeiten (Bits 4-7) --- */
+        // Extrahiere 4-Bit Grün.
+        "ubfx   %[t1], %[in], #4, #4        \n\t"
+        // Skaliere Grün auf 6 Bit: gggggg = (gggg << 2) | (gggg >> 2)
+        "lsr    %[t2], %[t1], #2            \n\t"
+        "orr    %[t1], %[t2], %[t1], lsl #2 \n\t"
+        
+        /* --- Schritt 3: Rot-Komponente vorbereiten (Bits 8-11) --- */
+        // Extrahiere 4-Bit Rot.
+        "ubfx   %[t2], %[in], #8, #4        \n\t"
+
+        /* --- Schritt 4: Finale Kombination --- */
+        // Füge das skalierte Grün (gggggg) an Bit-Position 5 in das Ergebnis ein.
+        "bfi    %[res], %[t1], #5, #6        \n\t"
+        // Skaliere Rot auf 5 Bit.
+        "lsr    %[t1], %[t2], #3            \n\t"
+        "orr    %[t2], %[t1], %[t2], lsl #1 \n\t"
+        // Füge das skalierte Rot (rrrrr) an Bit-Position 11 in das Ergebnis ein.
+        "bfi    %[res], %[t2], #11, #5       \n\t"
+
+        : [res] "=&r" (result), [t1] "=&r" (temp1), [t2] "=&r" (temp2)
+        : [in] "r" (pixel_in)
+    );
+
+    return (uint16_t)result;
+}
+
+
 void __not_in_flash_func(set_brightness_fast_levels)(uint16_t* line, int count, int level) {
 
     uint32_t* p32 = (uint32_t*)line;
@@ -308,7 +351,6 @@ void setup_video_capture_sm(uint offset) {
     pio_sm_set_enabled(pio_video, sm_video, false);
 
 }
-
 
 void setup_rga_read_sm(uint offset) {
 
@@ -489,10 +531,17 @@ int __not_in_flash_func(main)(void) {
 
     #else
         if (!frame_active) {
+
             // Warten auf den Beginn eines neuen Frames
             if(vsync_go){
+
                 vsync_go = false;    
                 while(mipi_busy){}mipiCsiFrameStart();
+                if(!isPAL) {
+                    for (int u = 0; u < 48-1; u++) {
+                        while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
+                    }
+                }
                 frame_active = true;
                 lines_read_count = 0;
             }
@@ -540,7 +589,20 @@ int __not_in_flash_func(main)(void) {
                     mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
                     while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
                     while(mipi_busy){} mipiCsiFrameEnd();
+                  
+                    //Bei wechsel von PAL auf NTSC ein schwarzer Frame zum löschen
+                    //des unicam Buffers auf dem Pi
+                    if(prev_isPAL != isPAL) {
+                        while(mipi_busy){}mipiCsiFrameStart();
+                        for (uint i = 0; i <= 575; i++) {
+                            while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
+                        }
+                        while(mipi_busy){} mipiCsiFrameEnd();
+                        vsync_go = false;
+                    }
+                    prev_isPAL=isPAL;
                     frame_active = false;
+                    
                 }
             }
         }
