@@ -1,5 +1,6 @@
 // © Copyright 2025 Claude Schwarz
 // SPDX-License-Identifier: MIT
+
 #ifndef RGA_DEVICE_H
 #define RGA_DEVICE_H
 

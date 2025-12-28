@@ -36,6 +36,27 @@ project(Framethrower_Denise C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+
+find_package(Git)
+
+if(GIT_FOUND)
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_HASH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+else()
+    set(GIT_HASH "unknown")
+endif()
+
+# 3. Die Header-Datei generieren
+# CMake nimmt version.h.in, ersetzt @GIT_HASH@ und speichert es als version.h
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/version.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/fwversion.h
+)
+
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(Framethrower_Denise Framethrower_Denise.c mipi.c fifo.c rga_device.c)

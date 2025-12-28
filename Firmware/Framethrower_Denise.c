@@ -28,6 +28,7 @@
 #include "video_capture.pio.h"
 #include "rga_access.pio.h"
 #include "rga_device.h"
+#include "video_state.h"
 
 
 // =============================================================================
@@ -49,12 +50,9 @@
 
 // Globale Puffer und FIFO
 __attribute__((aligned(4))) uint16_t framebuffer[ACTIVE_VIDEO * LINES_PER_FRAME];
-//__attribute__((aligned(4))) uint16_t line1[ACTIVE_VIDEO];
 __attribute__((aligned(4))) __attribute__((section(".scratch_x"))) uint16_t line1[ACTIVE_VIDEO];
 __attribute__((aligned(4))) __attribute__((section(".scratch_y"))) uint16_t line2[ACTIVE_VIDEO];
 __attribute__((aligned(4))) __attribute__((section(".scratch_y"))) uint16_t temp_scanline[ACTIVE_VIDEO];
-//__attribute__((aligned(4))) uint16_t line2[ACTIVE_VIDEO];
-//__attribute__((aligned(4))) uint16_t temp_scanline[ACTIVE_VIDEO];
 __attribute__((aligned(4))) uint16_t blackline [ACTIVE_VIDEO];
 
 extern volatile bool mipi_busy;
@@ -71,9 +69,9 @@ volatile uint32_t rga_1F6 = 0;
 // Interrupt Global
 volatile bool vsync_detected = false;
 volatile uint32_t lines;
-volatile uint32_t last_total_lines;
-volatile bool laced = false;
-volatile bool isPAL = true;
+//volatile uint32_t last_total_lines;
+//volatile bool laced = false;
+//volatile bool isPAL = true;
 volatile bool prev_isPAL = true;
 volatile bool video_go = false;
 volatile bool vsync_go = true;
@@ -81,8 +79,17 @@ volatile bool is_odd_field = true;
 volatile bool isPAL_prev = true;
 volatile bool clear_screen = false;
 
-volatile int scanline_level = 4;
-volatile int scanline_level_laced = 4;
+//volatile int scanline_level = 4;
+//volatile int scanline_level_laced = 4;
+
+
+VideoState video_config = {
+    .laced = false,
+    .isPAL = true,
+    .last_total_lines = 0,   // Standardwert, da im Prompt keiner angegeben war
+    .scanline_level = 4,
+    .scanline_level_laced = 4
+};
 
 
 // =============================================================================
@@ -95,12 +102,12 @@ void __not_in_flash_func(pio_video_irq_handler)() {
     if (pio_interrupt_get(pio_video, 0)) {
         pio_interrupt_clear(pio_video, 0); 
         vsync_detected = true;
-        laced = last_total_lines == lines  ? false : true;
-        isPAL = last_total_lines <= 300 ? false : true;
-        if(isPAL_prev &  !isPAL)clear_screen=true; else clear_screen=false;
-        isPAL_prev = isPAL;
+        video_config.laced = video_config.last_total_lines == lines  ? false : true;
+        video_config.isPAL = video_config.last_total_lines <= 300 ? false : true;
+        if(isPAL_prev &  !video_config.isPAL)clear_screen=true; else clear_screen=false;
+        isPAL_prev = video_config.isPAL;
         is_odd_field = (lines % 2 != 0);
-        last_total_lines = lines;
+        video_config.last_total_lines = lines;
         lines = 0;
     }
 
@@ -431,11 +438,11 @@ void core1_entry() {
             vsync_go = true;
 
             //Vblank abwarten
-            if(!isPAL) {while (lines <= (is_odd_field? VBLANK_LINES : VBLANK_LINES-1)){}} else       //NTSC
-                       {while (lines <= (!(last_total_lines % 2)? VBLANK_LINES : VBLANK_LINES-1)){}} //PAL 
+            if(!video_config.isPAL) {while (lines <= (is_odd_field? VBLANK_LINES : VBLANK_LINES-1)){}} else       //NTSC
+                       {while (lines <= (!(video_config.last_total_lines % 2)? VBLANK_LINES : VBLANK_LINES-1)){}} //PAL 
     
             // Aktive Videozeilen einlesen
-            for (y = 0; y < (isPAL? LINES_PER_FRAME-1 : LINES_PER_FRAME_NTSC-1); y++) {
+            for (y = 0; y < (video_config.isPAL? LINES_PER_FRAME-1 : LINES_PER_FRAME_NTSC-1); y++) {
                 get_pio_line(line1);
                 video_go=true;
                 while(!video_go){}
@@ -549,7 +556,7 @@ int __not_in_flash_func(main)(void) {
 
                 vsync_go = false;    
                 while(mipi_busy){}mipiCsiFrameStart();
-                if(!isPAL) {
+                if(!video_config.isPAL) {
                     for (int u = 0; u < 48-1; u++) {
                         while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
                     }
@@ -563,26 +570,26 @@ int __not_in_flash_func(main)(void) {
                 memcpy(line2,line1, ACTIVE_VIDEO*2);
                 video_go=false; 
 
-                if(laced) {
-                    if(isPAL){
+                if(video_config.laced) {
+                    if(video_config.isPAL){
                         if (is_odd_field) {
                             memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
-                            set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level_laced);
+                            set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,video_config.scanline_level_laced);
                             mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
                             while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                         } else {
-                            set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,scanline_level_laced); 
+                            set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,video_config.scanline_level_laced); 
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                             while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
                     }else{
                         if (!is_odd_field) {                       
                             memcpy(temp_scanline,line2,ACTIVE_VIDEO*2);
-                            set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,scanline_level_laced); 
+                            set_brightness_fast_levels(temp_scanline, ACTIVE_VIDEO,video_config.scanline_level_laced); 
                             mipiCsiSendLong(0x22, (uint8_t*)temp_scanline, ACTIVE_VIDEO*2);
                             while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                         } else {                            
-                            set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,scanline_level_laced); 
+                            set_brightness_fast_levels(framebuffer + (ACTIVE_VIDEO * lines_read_count), ACTIVE_VIDEO,video_config.scanline_level_laced); 
                             mipiCsiSendLong(0x22, (uint8_t*) framebuffer + (ACTIVE_VIDEO*2 * lines_read_count), ACTIVE_VIDEO*2);
                             while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                         }
@@ -590,21 +597,21 @@ int __not_in_flash_func(main)(void) {
                     memcpy(framebuffer + (ACTIVE_VIDEO * lines_read_count),line2, ACTIVE_VIDEO*2);
                 } else {
                     mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
-                    set_brightness_fast_levels(line2, ACTIVE_VIDEO,scanline_level);
+                    set_brightness_fast_levels(line2, ACTIVE_VIDEO,video_config.scanline_level);
                     while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)line2, ACTIVE_VIDEO*2);
                 }
 
                 lines_read_count++;
 
                 // Prüfen, ob der Frame vollständig übertragen wurde
-                if (lines_read_count >= (isPAL ? LINES_PER_FRAME-1 : LINES_PER_FRAME_NTSC-1)) {
+                if (lines_read_count >= (video_config.isPAL ? LINES_PER_FRAME-1 : LINES_PER_FRAME_NTSC-1)) {
                     mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
                     while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
                     while(mipi_busy){} mipiCsiFrameEnd();
                   
                     //Bei wechsel von PAL auf NTSC ein schwarzer Frame zum löschen
                     //des unicam Buffers auf dem Pi
-                    if(prev_isPAL != isPAL) {
+                    if(prev_isPAL != video_config.isPAL) {
                         while(mipi_busy){}mipiCsiFrameStart();
                         for (uint i = 0; i <= 575; i++) {
                             while(mipi_busy){} mipiCsiSendLong(0x22, (uint8_t*)blackline, ACTIVE_VIDEO*2);
@@ -612,7 +619,7 @@ int __not_in_flash_func(main)(void) {
                         while(mipi_busy){} mipiCsiFrameEnd();
                         vsync_go = false;
                     }
-                    prev_isPAL=isPAL;
+                    prev_isPAL=video_config.isPAL;
                     frame_active = false;
                     
                 }

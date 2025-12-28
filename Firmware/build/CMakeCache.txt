@@ -267,6 +267,9 @@ Framethrower_Denise_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 Framethrower_Denise_SOURCE_DIR:STATIC=Y:/Projects/FramethrowerDenise/Framethrower_Denise/Firmware
 
+//Git command line client
+GIT_EXECUTABLE:FILEPATH=C:/Program Files/Git/cmd/git.exe
+
 //PICO target board (e.g. pico, pico2)
 PICO_BOARD:STRING=pimoroni_pga2350
 
@@ -512,8 +515,12 @@ DOXYGEN_DOT_EXECUTABLE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: DOXYGEN_EXECUTABLE
 DOXYGEN_EXECUTABLE-ADVANCED:INTERNAL=1
 FAMILY_MCUS:INTERNAL=RP2040
+//Details about finding Git
+FIND_PACKAGE_MESSAGE_DETAILS_Git:INTERNAL=[C:/Program Files/Git/cmd/git.exe][v2.47.0.windows.1()]
 //Details about finding Python3
 FIND_PACKAGE_MESSAGE_DETAILS_Python3:INTERNAL=[c:/Python311/python.exe][cfound components: Interpreter ][v3.11.9()]
+//ADVANCED property for variable: GIT_EXECUTABLE
+GIT_EXECUTABLE-ADVANCED:INTERNAL=1
 PICO_32BIT:INTERNAL=1
 PICO_ARM:INTERNAL=1
 PICO_BOOT_STAGE2_DIR:INTERNAL=C:/Users/claud/.pico-sdk/sdk/2.1.1/src/rp2350/boot_stage2

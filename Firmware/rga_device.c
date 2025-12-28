@@ -11,10 +11,14 @@
 #include "hardware/pio.h"
 #include "pico/stdlib.h"
 #include <string.h>
+#include "fwversion.h"
+#include "video_state.h"
 
 // Globale RingBuffer
 RingBuffer rb_rx = { .head = 0, .tail = 0 };
 RingBuffer rb_tx = { .head = 0, .tail = 0 };
+
+VideoState video_status;
 
 // Interne Variablen
 __attribute__((aligned(4))) uint8_t ram_disk[RAM_DISK_SIZE] = {0};
@@ -29,6 +33,18 @@ __attribute__((aligned(4))) uint32_t current_staging_addr = FLASH_STAGING_OFFSET
 __attribute__((aligned(4))) uint8_t sector_buf[FLASH_SECTOR_SIZE]; 
 
 void rga_device_init(void) {
+}
+
+// String Helper: Holt 2 Zeichen basierend auf Offset
+static uint16_t get_string_chunk(const char* str, uint16_t offset) {
+    size_t len = strlen(str);
+    if (offset >= len) return 0x0000; 
+
+    uint8_t c1 = (uint8_t)str[offset];
+    uint8_t c2 = 0;
+    if (offset + 1 < len) c2 = (uint8_t)str[offset + 1];
+
+    return (c1 << 8) | c2; // High Byte zuerst
 }
 
 static uint16_t __not_in_flash_func(calc_crc)(uint16_t* buf, int len) {
@@ -69,7 +85,14 @@ static void __not_in_flash_func(process_complete_packet)(uint16_t* p, int len) {
     uint16_t resp_data_hi = 0;
     uint16_t resp_data_lo = 0;
 
-    if (cmd == CMD_FLASH_ERASE) {
+    if (cmd == CMD_GET_VERSION) {
+        resp_data_lo = get_string_chunk(FW_VERSION, p[4]);
+    }
+    else if (cmd == CMD_GET_GIT) {
+        resp_data_lo = get_string_chunk(GIT_HASH, p[4]);
+    }
+
+    else if (cmd == CMD_FLASH_ERASE) {
         //uint32_t ints = save_and_disable_interrupts();
         flash_range_erase(FLASH_STAGING_OFFSET, 1024 * 1024); // 1MB löschen
         //restore_interrupts(ints);
