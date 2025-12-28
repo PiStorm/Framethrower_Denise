@@ -21,7 +21,7 @@ Its still a work in progress, but I want to release the project now
 - :heavy_check_mark:  PAL and NTSC
 - :soon: Amiga based config tool (e.g. for scanlines)
 - :x: Amiga audio passtrough
-- :x: Amiga based firmware update tool
+- :heavy_check_mark: Amiga based firmware update tool
 
 ## Authors
 Claude Schwarz
