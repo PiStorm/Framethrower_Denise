@@ -1,3 +1,6 @@
+// © Copyright 2025 Claude Schwarz
+// SPDX-License-Identifier: MIT
+
 #ifndef RGA_HOST_H
 #define RGA_HOST_H
 
