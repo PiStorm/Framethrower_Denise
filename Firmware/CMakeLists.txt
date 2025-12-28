@@ -113,3 +113,4 @@ set_property(TARGET Framethrower_Denise PROPERTY COMPILE_WARNING_AS_ERROR ON)
 add_compile_definitions(PICO_PIO_USE_GPIO_BASE=1)
 #add_compile_definitions(PICO_EMBED_XIP_SETUP=1)
 pico_add_extra_outputs(Framethrower_Denise)
+ 

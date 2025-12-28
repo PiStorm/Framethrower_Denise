@@ -5,7 +5,7 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define GIT_HASH "f9c4042"
+#define GIT_HASH "81c0a62"
 #define FW_VERSION "1.0.0"
 
 #endif // VERSION_H
