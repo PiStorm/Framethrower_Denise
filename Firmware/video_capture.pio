@@ -11,12 +11,12 @@
 wait 1 gpio 23 [5]
 wait 0 gpio 23 [5]
 wait 1 gpio 23 [5]
-wait 0 gpio 20
+wait 0 gpio 22
 
 pixelloop:
-    wait 1 gpio 20[5]
+    wait 1 gpio 22[7]
     in pins, 32
-    wait 0 gpio 20[5]
+    wait 0 gpio 22[7]
     in pins, 32
     jmp x-- pixelloop
 ;.wrap 

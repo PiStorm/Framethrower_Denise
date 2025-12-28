@@ -79,3 +79,7 @@
 5	527	7886342461592412	build.ninja	5a4d61d5a79beaa
 25	130	7886342462119319	CMakeFiles/Framethrower_Denise.dir/rga_device.c.obj	dadba65b8a516e9b
 130	263	7886342463176863	Framethrower_Denise.elf	b68f93effd22ac6e
+11	100	7886367353891725	video_capture.pio.h	e9a5546a378623e1
+11	100	7886367353891725	Y:/Projects/FramethrowerDenise/Framethrower_Denise/Firmware/build/video_capture.pio.h	e9a5546a378623e1
+101	354	7886367353912803	CMakeFiles/Framethrower_Denise.dir/Framethrower_Denise.c.obj	9e2f4436d1e430e3
+354	499	7886367356436887	Framethrower_Denise.elf	b68f93effd22ac6e
