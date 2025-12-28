@@ -1,3 +1,6 @@
+// © Copyright 2025 Claude Schwarz
+// SPDX-License-Identifier: MIT
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -9,4 +12,4 @@ typedef struct {
     volatile int scanline_level_laced;
 } VideoState;
 
-extern VideoState video_state;
+extern volatile VideoState video_state;

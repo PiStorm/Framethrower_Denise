@@ -1,3 +1,6 @@
+// © Copyright 2025 Claude Schwarz
+// SPDX-License-Identifier: MIT
+
 // version.h.in
 #ifndef VERSION_H
 #define VERSION_H

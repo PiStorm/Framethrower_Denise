@@ -13,10 +13,10 @@
 #define CMD_READ         0x01 //reads the ram disk
 #define CMD_WRITE        0x02 //writes the ram disk
 //..//
-#define CMD_FLASH_ERASE  0x10 // Erase staging
-#define CMD_FLASH_DATA   0x11 // Write staging
-#define CMD_FLASH_COMMIT 0x12 // Commit staging to main flash and reboot
-#define CMD_SAVE_SETTING 0x13 // Write scanline and deinterlace settings into flash
+#define CMD_FLASH_ERASE  0x10 //erase staging
+#define CMD_FLASH_DATA   0x11 //write staging
+#define CMD_FLASH_COMMIT 0x12 //commit staging to main flash and reboot
+#define CMD_SAVE_SETTING 0x13 //write scanline and deinterlace settings into flash
 //..//
 #define CMD_GET_VERSION  0x20 //returns the version string
 #define CMD_GET_GIT      0x21 //returns the git hash string
@@ -26,7 +26,6 @@
 //..//
 #define CMD_SET_SCANLINE 0x28 //sets the scanline settings
 #define CMD_SET_DEINT    0x29 //sets the deinterlace settings
-
 
 #define STATUS_OK        0x0000
 #define STATUS_ERR_ADDR  0x0001
@@ -42,5 +41,14 @@
 // Settings Area beginnt bei 2 MB Offset
 #define FLASH_SETTINGS_OFFSET 0x00200000
 
+// --- Video Status Struct (Wire Format) ---
+typedef struct {
+    uint8_t laced;        
+    uint8_t isPAL;        
+    uint8_t _padding[2];  
+    uint32_t last_total_lines;
+    int32_t scanline_level;
+    int32_t scanline_level_laced;
+} RGA_VideoStatus;
 
 #endif // RGA_COMMON_H

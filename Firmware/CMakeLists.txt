@@ -57,9 +57,9 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/fwversion.h
 )
 
-# Add executable. Default name is the project name, version 0.1
+# Add executable. Default name is the project name, version 0.1 
 
-add_executable(Framethrower_Denise Framethrower_Denise.c mipi.c fifo.c rga_device.c)
+add_executable(Framethrower_Denise Framethrower_Denise.c mipi.c rga_device.c)
 
 pico_set_program_name(Framethrower_Denise "Framethrower_Denise")
 pico_set_program_version(Framethrower_Denise "0.1")

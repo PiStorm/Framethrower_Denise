@@ -18,8 +18,6 @@
 RingBuffer rb_rx = { .head = 0, .tail = 0 };
 RingBuffer rb_tx = { .head = 0, .tail = 0 };
 
-VideoState video_status;
-
 // Interne Variablen
 __attribute__((aligned(4))) uint8_t ram_disk[RAM_DISK_SIZE] = {0};
 __attribute__((aligned(4))) uint16_t rx_packet[8];
@@ -35,7 +33,20 @@ __attribute__((aligned(4))) uint8_t sector_buf[FLASH_SECTOR_SIZE];
 void rga_device_init(void) {
 }
 
-// String Helper: Holt 2 Zeichen basierend auf Offset
+static uint16_t get_memory_chunk(const void* base_ptr, uint16_t total_size, uint16_t offset) {
+    if (offset >= total_size) return 0x0000;
+
+    const uint8_t* ptr = (const uint8_t*)base_ptr;
+    uint8_t c1 = ptr[offset];
+    uint8_t c2 = 0;
+    
+    if (offset + 1 < total_size) {
+        c2 = ptr[offset + 1];
+    }
+    return (c1 << 8) | c2; // High Byte zuerst
+}
+
+
 static uint16_t get_string_chunk(const char* str, uint16_t offset) {
     size_t len = strlen(str);
     if (offset >= len) return 0x0000; 
@@ -90,6 +101,24 @@ static void __not_in_flash_func(process_complete_packet)(uint16_t* p, int len) {
     }
     else if (cmd == CMD_GET_GIT) {
         resp_data_lo = get_string_chunk(GIT_HASH, p[4]);
+    }
+
+    else if (cmd == CMD_GET_STATUS) {
+        RGA_VideoStatus snapshot = {0};         
+        snapshot.laced = video_state.laced ? 1 : 0;
+        snapshot.isPAL = video_state.isPAL ? 1 : 0;
+        snapshot.last_total_lines = video_state.last_total_lines;
+        snapshot.scanline_level = video_state.scanline_level;
+        snapshot.scanline_level_laced = video_state.scanline_level_laced;
+        resp_data_lo = get_memory_chunk(&snapshot, sizeof(RGA_VideoStatus), p[4]);
+    }
+
+    else if (cmd == CMD_SET_SCANLINE) {
+        uint16_t payload = p[4];
+        uint8_t lvl_normal = (payload >> 8) & 0xFF;
+        uint8_t lvl_laced = payload & 0xFF;
+        if (lvl_normal <= 4) video_state.scanline_level = lvl_normal;
+        if (lvl_laced <= 4) video_state.scanline_level_laced = lvl_laced;
     }
 
     else if (cmd == CMD_FLASH_ERASE) {
