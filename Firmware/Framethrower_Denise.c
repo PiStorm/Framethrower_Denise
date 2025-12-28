@@ -49,9 +49,12 @@
 
 // Globale Puffer und FIFO
 __attribute__((aligned(4))) uint16_t framebuffer[ACTIVE_VIDEO * LINES_PER_FRAME];
-__attribute__((aligned(4))) uint16_t line1[ACTIVE_VIDEO];
-__attribute__((aligned(4))) uint16_t line2[ACTIVE_VIDEO];
-__attribute__((aligned(4))) uint16_t temp_scanline[ACTIVE_VIDEO];
+//__attribute__((aligned(4))) uint16_t line1[ACTIVE_VIDEO];
+__attribute__((aligned(4))) __attribute__((section(".scratch_x"))) uint16_t line1[ACTIVE_VIDEO];
+__attribute__((aligned(4))) __attribute__((section(".scratch_y"))) uint16_t line2[ACTIVE_VIDEO];
+__attribute__((aligned(4))) __attribute__((section(".scratch_y"))) uint16_t temp_scanline[ACTIVE_VIDEO];
+//__attribute__((aligned(4))) uint16_t line2[ACTIVE_VIDEO];
+//__attribute__((aligned(4))) uint16_t temp_scanline[ACTIVE_VIDEO];
 __attribute__((aligned(4))) uint16_t blackline [ACTIVE_VIDEO];
 
 extern volatile bool mipi_busy;
@@ -422,7 +425,7 @@ void core1_entry() {
 
     while (1) {
 
- 
+        __wfi();
         if (vsync_detected) {
             vsync_detected = false; 
             vsync_go = true;
@@ -446,6 +449,15 @@ void core1_entry() {
 // --- Main Funktion (Core 0) ---
 // =============================================================================
 int __not_in_flash_func(main)(void) {
+
+    hw_set_bits(&powman_hw->vreg_ctrl, POWMAN_PASSWORD_BITS | POWMAN_VREG_CTRL_UNLOCK_BITS);
+
+    // Wait for any prior change to finish before making a new change
+    while (powman_hw->vreg & POWMAN_VREG_UPDATE_IN_PROGRESS_BITS)
+        tight_loop_contents();
+    hw_set_bits(&powman_hw->vreg, POWMAN_PASSWORD_BITS | POWMAN_VREG_HIZ_BITS);
+    while (powman_hw->vreg & POWMAN_VREG_UPDATE_IN_PROGRESS_BITS)
+        tight_loop_contents();
 
     //Flash divider und OC
     uint clkdiv = 3;
