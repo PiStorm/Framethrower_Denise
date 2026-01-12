@@ -28,7 +28,7 @@ Normally the cmdline.txt file is in the root directory of the FAT partition. How
 
 This enables integer/pixel perfect passtrough and automatic RTG/Native switching
 
-```unicam.boot unicam.smooth unicam.b=20 unicam.c=0 unicam.phase=60```
+```unicam.boot unicam.smooth```
 
 This enables scaled to 4:3 fullscreen passtrough and automatic RTG/Native switching
 
